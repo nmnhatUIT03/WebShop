@@ -1,0 +1,453 @@
+﻿@model WebShop.Models.Product
+@{
+    ViewData["Title"] = "Xóa sản phẩm";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<!-- CSS tùy chỉnh với phông Montserrat và màu sắc tương phản cao -->
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;800&display=swap');
+
+    body {
+        background: #CBD5E0;
+        font-family: 'Montserrat', sans-serif;
+        color: #1A202C;
+        overflow-x: hidden;
+    }
+
+    .container {
+        max-width: 1440px;
+        padding: 0 20px;
+        margin: 0 auto;
+    }
+
+    .page-header {
+        background: linear-gradient(135deg, #FFFFFF 0%, #CBD5E0 100%);
+        padding: 20px 30px; /* Padding đã được thêm theo yêu cầu trước */
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        margin-bottom: 30px;
+    }
+
+    .header-title {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #1A202C;
+        text-align: center;
+    }
+
+    .header-sub-title {
+        text-align: center;
+    }
+
+    .breadcrumb {
+        background: none;
+        padding: 0;
+        margin: 0;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.9rem;
+        color: #4A5568;
+    }
+
+    .breadcrumb-item {
+        color: #4A5568;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+        .breadcrumb-item:hover {
+            color: #f05a00;
+        }
+
+        .breadcrumb-item.active {
+            color: #1A202C;
+            font-weight: 500;
+        }
+
+        .breadcrumb-item + .breadcrumb-item::before {
+            content: '>';
+            margin: 0 10px;
+            color: #4A5568;
+        }
+
+    .card {
+        background: #FFFFFF;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        overflow: hidden;
+        transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+        }
+
+    .card-body {
+        padding: 30px;
+    }
+
+    .product-info-table {
+        font-family: 'Montserrat', sans-serif;
+    }
+
+        .product-info-table .info-item {
+            margin-bottom: 15px;
+        }
+
+        .product-info-table .info-label {
+            font-weight: 800; /* Tăng độ đậm lên 800 thay vì 700 */
+            color: #1A202C;
+            margin-bottom: 5px;
+            /* Có thể thêm font-size: 0.95rem; nếu muốn lớn hơn */
+        }
+
+        .product-info-table .info-value {
+            font-size: 0.9rem;
+            color: #1A202C;
+        }
+
+        .product-info-table ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+            .product-info-table ul li {
+                margin-bottom: 5px;
+                color: #1A202C;
+            }
+
+    .badge {
+        display: inline-flex;
+        align-items: center;
+        font-size: 0.8rem;
+        padding: 5px 10px;
+        border-radius: 4px;
+    }
+
+    .badge-success {
+        background: #f05a00;
+        color: #FFFFFF;
+    }
+
+    .badge-danger {
+        background: #F56565;
+        color: #FFFFFF;
+    }
+
+    .badge-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-right: 8px;
+    }
+
+    .btn {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border-radius: 8px;
+        padding: 10px 20px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-danger {
+        background: #F56565;
+        border: none;
+        color: #FFFFFF;
+    }
+
+        .btn-danger:hover {
+            background: #E53E3E;
+            box-shadow: 0 6px 20px rgba(245, 101, 101, 0.5);
+        }
+
+    .btn-success {
+        background: #f05a00;
+        border: none;
+        color: #FFFFFF;
+    }
+
+        .btn-success:hover {
+            background: #d94f00;
+            box-shadow: 0 6px 20px rgba(240, 90, 0, 0.5);
+        }
+
+    .btn-primary {
+        background: #1A202C;
+        border: none;
+        color: #FFFFFF;
+    }
+
+        .btn-primary:hover {
+            background: #2D3748;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+        }
+
+    .btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        transition: left 0.5s ease;
+    }
+
+    .btn:hover::before {
+        left: 100%;
+    }
+
+    .product-image {
+        text-align: center;
+        padding: 20px;
+    }
+
+        .product-image img {
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            max-width: 300px;
+            max-height: 300px;
+            height: auto;
+        }
+
+            .product-image img:hover {
+                transform: scale(1.05);
+            }
+
+    @@media (max-width: 767.98px) {
+        .card-body {
+            padding: 20px;
+        }
+
+        .product-info-table .info-value {
+            font-size: 0.8rem;
+        }
+
+        .btn {
+            padding: 8px 15px;
+            font-size: 0.7rem;
+        }
+
+        .product-image img {
+            max-width: 150px;
+            max-height: 150px;
+        }
+    }
+
+    @@media (max-width: 575.98px) {
+        .page-header {
+            padding: 20px 0;
+        }
+
+        .header-title {
+            font-size: 1.5rem;
+        }
+
+        .breadcrumb {
+            font-size: 0.8rem;
+        }
+
+        .card-body {
+            padding: 15px;
+        }
+
+        .product-info-table .info-value {
+            font-size: 0.75rem;
+        }
+
+        .btn {
+            padding: 6px 12px;
+            font-size: 0.65rem;
+        }
+
+        .product-image img {
+            max-width: 120px;
+            max-height: 120px;
+        }
+    }
+</style>
+
+<div class="page-header">
+    <h2 class="header-title">Xóa sản phẩm: @(Model?.ProductName ?? "Không xác định")</h2>
+    <div class="header-sub-title">
+        <nav class="breadcrumb breadcrumb-dash">
+            <a asp-area="Admin" asp-controller="HomeAdmin" asp-action="Index" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Home</a>
+            <a class="breadcrumb-item" asp-area="Admin" asp-controller="AdminProducts" asp-action="Index">Danh sách sản phẩm</a>
+            <span class="breadcrumb-item active">Xóa sản phẩm: @(Model?.ProductName ?? "Không xác định")</span>
+        </nav>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="row product-info-table">
+                    <div class="col-md-6">
+                        <div class="info-item">
+                            <div class="info-label">ID:</div>
+                            <div class="info-value">@(Model?.ProductId.ToString() ?? "0")</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Tên sản phẩm:</div>
+                            <div class="info-value">@(Model?.ProductName ?? "Chưa xác định")</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Mô tả:</div>
+                            <div class="info-value">@(Model?.ShortDesc ?? "Chưa xác định")</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Giá bán:</div>
+                            <div class="info-value">@(Model?.Price.HasValue == true ? Model.Price.Value.ToString("#,##0") + " VND" : "Chưa xác định")</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Giá giảm:</div>
+                            <div class="info-value">@(Model?.Discount.HasValue == true && Model.Discount > 0 ? Model.Discount.Value.ToString() + "%" : "Không có giảm giá")</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Danh mục:</div>
+                            <div class="info-value">@(Model?.Cat?.CatName ?? "Không có danh mục")</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-item">
+                            <div class="info-label">Ngày tạo:</div>
+                            <div class="info-value">@(Model?.DateCreated?.ToString("dd/MM/yyyy HH:mm") ?? "Chưa xác định")</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Ngày chỉnh sửa:</div>
+                            <div class="info-value">@(Model?.DateModified?.ToString("dd/MM/yyyy HH:mm") ?? "Chưa chỉnh sửa")</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Tiêu đề:</div>
+                            <div class="info-value">@(Model?.Title ?? "Chưa xác định")</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Meta Description:</div>
+                            <div class="info-value">@(Model?.MetaDesc ?? "Chưa xác định")</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Meta Keywords:</div>
+                            <div class="info-value">@(Model?.MetaKey ?? "Chưa xác định")</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Tags:</div>
+                            <div class="info-value">@(Model?.Tags ?? "Chưa xác định")</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Số biến thể:</div>
+                    <div class="info-value">@(ViewBag.VariantCount ?? 0)</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Số chương trình khuyến mãi:</div>
+                    <div class="info-value">@(ViewBag.PromotionCount ?? 0)</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Số bình luận:</div>
+                    <div class="info-value">@(ViewBag.CommentCount ?? 0)</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="product-image">
+                    @if (!string.IsNullOrEmpty(Model?.Thumb))
+                    {
+                        @if (!Model.Thumb.StartsWith("/"))
+                        {
+                            <img src="@Url.Content("/" + Model.Thumb)" alt="@(Model?.Title ?? Model?.ProductName ?? "Ảnh sản phẩm")" style="max-width: 300px; max-height: 300px; object-fit: contain;" onerror="this.src='/products/default.jpg'; this.onerror=null;" />
+                        }
+                        else
+                        {
+                            <img src="@Url.Content(Model.Thumb)" alt="@(Model?.Title ?? Model?.ProductName ?? "Ảnh sản phẩm")" style="max-width: 300px; max-height: 300px; object-fit: contain;" onerror="this.src='/products/default.jpg'; this.onerror=null;" />
+                        }
+                    }
+                    else
+                    {
+                        <img src="/products/default.jpg" alt="Ảnh mặc định" style="max-width: 300px; max-height: 300px; object-fit: contain;" />
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="mt-3 text-center">
+            <button type="button" class="btn btn-danger mr-2" data-toggle="modal" data-target="#confirmDeleteModal"><i class="far fa-trash-alt m-r-5"></i>Xác nhận xóa</button>
+            <a class="btn btn-success" asp-action="Index"><i class="fas fa-times m-r-5"></i>Hủy bỏ</a>
+        </div>
+    </div>
+</div>
+
+<!-- Modal xác nhận xóa -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeleteModalLabel">Xác nhận xóa sản phẩm</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Bạn có chắc chắn muốn xóa sản phẩm <strong>@Model.ProductName</strong>?</p>
+                <ul>
+                    <li>Số biến thể: @ViewBag.VariantCount</li>
+                    <li>Số đơn hàng chưa hoàn tất: @ViewBag.PendingOrderCount (@ViewBag.PendingOrderIds)</li>
+                    <li>Số chương trình khuyến mãi: @ViewBag.PromotionCount</li>
+                    <li>Số bình luận: @ViewBag.CommentCount</li>
+                </ul>
+                @if (ViewBag.PendingOrderCount > 0)
+                {
+                    <p class="text-danger">Sản phẩm đang liên quan đến @ViewBag.PendingOrderCount đơn hàng chưa hoàn tất (ID: @ViewBag.PendingOrderIds). Xóa sản phẩm có thể gây lỗi!</p>
+                }
+                else if (ViewBag.PromotionCount > 0)
+                {
+                    <p class="text-danger">Sản phẩm đang thuộc @ViewBag.PromotionCount chương trình khuyến mãi. Xóa sản phẩm có thể ảnh hưởng đến khuyến mãi!</p>
+                }
+                else if (ViewBag.CommentCount > 0)
+                {
+                    <p class="text-warning">Sản phẩm có @ViewBag.CommentCount bình luận, tất cả sẽ bị xóa.</p>
+                }
+                <p class="text-danger">Hành động này không thể hoàn tác!</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                @if (ViewBag.CanDelete)
+                {
+                    <form asp-controller="AdminProducts" asp-action="Delete" method="post" style="display:inline;">
+                        <input type="hidden" name="id" value="@Model.ProductId" />
+                        <button type="submit" class="btn btn-danger"><i class="far fa-trash-alt m-r-5"></i>Xác nhận</button>
+                    </form>
+                }
+                else
+                {
+                    <p class="text-danger">Không thể xóa do sản phẩm liên quan đến đơn hàng chưa hoàn tất.</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.card-header').on('click', function () {
+                var $collapse = $(this).next('.collapse');
+                $collapse.collapse('toggle');
+                var arrow = $(this).find('#arrowIcon');
+                if ($collapse.hasClass('show')) {
+                    arrow.removeClass('fa-chevron-down').addClass('fa-chevron-up');
+                } else {
+                    arrow.removeClass('fa-chevron-up').addClass('fa-chevron-down');
+                }
+            });
+        });
+    </script>
+}

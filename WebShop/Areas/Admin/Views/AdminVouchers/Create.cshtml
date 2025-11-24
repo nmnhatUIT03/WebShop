@@ -1,0 +1,77 @@
+﻿@model WebShop.Areas.Admin.Controllers.VoucherViewModel
+@{
+    ViewData["Title"] = "Tạo mới voucher";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container">
+    <div class="page-header">
+        <h2 class="header-title">Tạo mới voucher</h2>
+        <div class="header-sub-title">
+            <nav class="breadcrumb breadcrumb-dash">
+                <a asp-area="Admin" asp-controller="HomeAdmin" asp-action="Index" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Home</a>
+                <a asp-area="Admin" asp-controller="AdminVouchers" asp-action="Index" class="breadcrumb-item">Danh sách Voucher</a>
+                <span class="breadcrumb-item active">Tạo mới voucher</span>
+            </nav>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <form asp-action="Create" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="VoucherCode" class="form-label">Mã Voucher</label>
+                    <input asp-for="VoucherCode" class="form-control" required />
+                    <span asp-validation-for="VoucherCode" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DiscountType" class="form-label">Loại Giảm Giá</label>
+                    <select asp-for="DiscountType" class="form-select" required>
+                        <option value="Percentage">Phần trăm</option>
+                        <option value="Fixed">Cố định</option>
+                    </select>
+                    <span asp-validation-for="DiscountType" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DiscountValue" class="form-label">Giá trị giảm</label>
+                    <input asp-for="DiscountValue" class="form-control" type="number" step="0.01" min="0" required />
+                    <small class="form-text text-muted">Nhập phần trăm (ví dụ: 10) nếu loại là Phần trăm, hoặc giá trị cố định nếu loại là Cố định.</small>
+                    <span asp-validation-for="DiscountValue" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="MaxUsage" class="form-label">Số lần sử dụng tối đa</label>
+                    <input asp-for="MaxUsage" class="form-control" type="number" min="1" required />
+                    <span asp-validation-for="MaxUsage" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="MinOrderValue" class="form-label">Giá trị đơn tối thiểu</label>
+                    <input asp-for="MinOrderValue" class="form-control" type="number" step="0.01" min="0" required />
+                    <span asp-validation-for="MinOrderValue" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="EndDate" class="form-label">Ngày hết hạn</label>
+                    <input asp-for="EndDate" class="form-control" type="date" required />
+                    <span asp-validation-for="EndDate" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DefaultUserMaxUsage" class="form-label">Số lần tối đa/người</label>
+                    <input asp-for="DefaultUserMaxUsage" class="form-control" type="number" value="1" readonly />
+                    <span asp-validation-for="DefaultUserMaxUsage" class="text-danger"></span>
+                </div>
+                <div class="mt-3 text-center">
+                    <button type="submit" class="btn btn-success mr-2"><i class="anticon anticon-save m-r-5"></i>Tạo mới</button>
+                    <a class="btn btn-back" asp-action="Index"><i class="fas fa-undo m-r-5"></i>Quay lại</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

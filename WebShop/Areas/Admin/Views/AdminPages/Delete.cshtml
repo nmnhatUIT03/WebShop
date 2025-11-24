@@ -1,0 +1,98 @@
+﻿@model WebShop.Models.Page
+
+@{
+    ViewData["Title"] = "Delete";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+<div class="page-header">
+
+    <div class="header-sub-title">
+        <nav class="breadcrumb breadcrumb-dash">
+            <a asp-area="Admin" asp-controller="Home" asp-action="Index" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Home</a>
+            <a class="breadcrumb-item" asp-area="Admin" asp-controller="AdminPages" asp-action="Index">Danh sách page</a>
+            <span class="breadcrumb-item active">Thông tin page</span>
+        </nav>
+    </div>
+</div>
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">Bạn có muốn xóa tin tức: @Model.Title</h4>
+        <div class="table-responsive">
+            <table class="product-info-table m-t-20">
+                <tbody>
+                    <tr>
+                        <td>ID:</td>
+                        <td class="text-dark font-weight-semibold">@Model.PageId</td>
+                    </tr>
+                    <tr>
+                        <td>Tên trang(Pages):</td>
+                        <td>@Model.Title</td>
+                    </tr>
+
+                    @*<tr>
+                        <td>Mô tả:</td>
+                        <td>@Model.Contents</td>
+                    </tr>*@
+                   @* <tr>
+                        <td>Ngày tạo:</td>
+                        <td>@Model.CreatedDate</td>
+                    </tr>*@
+                    @*<tr>
+                        <td>MetaKey:</td>
+                        <td>@Model.MetaKey</td>
+                    </tr>
+                    <tr>
+                        <td>MetaDesc:</td>
+                        <td>@Model.MetaDesc</td>
+                    </tr>*@
+
+                    @*<tr>
+                    <td>Tags:</td>
+                    <td>@Model.Tags</td>
+                    </tr>*@
+                    <tr>
+                        <td>Ảnh:</td>
+                        <td>
+                            <img width="200px" ; height="200px" src="~/images/pages/@Model.Thumb" alt="@Model.Title" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Xác nhận xóa:</td>
+                        <td>
+                            <form asp-controller="AdminPages" asp-action="Delete" asp-route-id="@Model.PageId">
+                                <input type="hidden" asp-for="PageId" />
+                                <button type="submit" class="btn btn-danger btn-tone"><i class="far fa-trash-alt m-r-5"></i>Xác nhận xóa</button> |
+                                <a class="btn btn-success btn-tone m-r-5" asp-action="Index"><i class="fas fa-times m-r-5"></i>Hủy bỏ</a>
+                            </form>
+                        </td>
+
+                    </tr>
+
+
+                </tbody>
+
+            </table>
+            @*<div class="card-footer text-center">
+            <form asp-action="Delete">
+            <input type="hidden" asp-for="ProductId" />
+            <input type="submit" value="Xác Nhận Xóa" class="btn btn-danger" /> |
+            </form>
+
+            <a asp-controller="AdminPages" asp-action="Index" class="btn btn-danger">
+            <i class="fa fa-chevron-left">&nbsp;</i>Quay lại
+            </a>
+            </div>*@
+        </div>
+        @*       <div class="card-footer text-center">
+        <form asp-action="Delete">
+        <input type="hidden" asp-for="PageId" />
+        <input type="submit" value="Xác Nhận Xóa" class="btn btn-danger" /> |
+        <a asp-controller="AdminPages" asp-action="Index" class="btn btn-danger">
+        <i class="fa fa-chevron-left">&nbsp;</i>Quay lại
+        </a>
+        </form>
+
+
+        </div>*@
+    </div>
+</div>

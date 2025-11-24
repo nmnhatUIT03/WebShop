@@ -1,0 +1,115 @@
+﻿@model WebShop.Models.Page
+@using System.IO
+
+@{
+    ViewData["Title"] = "Chỉnh sửa page: " + Model.PageName;
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<form asp-controller="AdminPages" asp-action="Edit" asp-route-id="@Model.PageId" method="post" enctype="multipart/form-data">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="PageId" />
+    <div class="page-header no-gutters has-tab">
+        <div class="d-md-flex m-b-15 align-items-center justify-content-between">
+            <div class="media align-items-center m-b-15">
+                <div class="page-header">
+                    <h2 class="header-title">Danh sách trang</h2>
+                    <div class="header-sub-title">
+                        <nav class="breadcrumb breadcrumb-dash">
+                            <a asp-area="Admin" asp-controller="HomeAdmin" asp-action="Index" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Home</a>
+                            <a class="breadcrumb-item" asp-area="Admin" asp-controller="AdminPages" asp-action="Index">Danh sách trang</a>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <div class="m-b-15">
+                <button class="btn btn-primary">
+                    <i class="far fa-save fa-lg"></i>
+                    <span>Cập nhật</span>
+                </button>
+            </div>
+        </div>
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#product-edit-basic">Thông tin Page</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#product-edit-option">Thông tin SEO</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#product-edit-description">Mô tả</a>
+            </li>
+        </ul>
+    </div>
+    <div class="tab-content m-t-15">
+        <div class="tab-pane fade show active" id="product-edit-basic">
+            <div class="card" style="background-color: #FAEAEA">
+                <div class="card-body">
+                    <div class="form-group">
+                        <label class="font-weight-semibold" for="PageName">Tên page</label>
+                        <input type="text" class="form-control" asp-for="PageName">
+                        <span asp-validation-for="PageName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="font-weight-semibold" for="fThumb">Ảnh đại diện</label>
+                        <input name="fThumb" type="file" class="form-control-file" id="fThumb">
+                        <span class="text-danger" asp-validation-for="Thumb"></span>
+                        @if (!string.IsNullOrEmpty(Model.Thumb) && Model.Thumb != "default.jpg" && System.IO.File.Exists(System.IO.Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", Model.Thumb)))
+                        {
+                            <div class="m-t-10">
+                                <label>Ảnh hiện tại:</label><br />
+                                <img width="100px" height="100px" src="~/@Model.Thumb" alt="@Model.Title" />
+                            </div>
+                        }
+                    </div>
+                    <div class="form-group">
+                        <label class="font-weight-semibold" for="productStatus">Trạng thái</label>
+                        <select class="custom-select" id="productStatus" name="Published" asp-for="Published">
+                            <option value="true">Hoạt động</option>
+                            <option value="false">Ngừng hoạt động</option>
+                        </select>
+                        <span asp-validation-for="Published" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="product-edit-option">
+            <div class="card">
+                <div class="card-body">
+                    <div class="form-group">
+                        <label class="font-weight-semibold" for="MetaDesc">MetaDesc</label>
+                        <input type="text" class="form-control" asp-for="MetaDesc">
+                        <span asp-validation-for="MetaDesc" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="font-weight-semibold" for="MetaKey">MetaKey</label>
+                        <input type="text" class="form-control" asp-for="MetaKey">
+                        <span asp-validation-for="MetaKey" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="product-edit-description">
+            <div class="card">
+                <div class="card-body">
+                    <div class="form-group">
+                        <label class="font-weight-semibold" for="Title">Mô tả</label>
+                        <input type="text" class="form-control" asp-for="Title">
+                        <span asp-validation-for="Title" class="text-danger"></span>
+                        <p class="mt-2" style="color: #666666;">Tiêu đề hiện tại: <strong>@Model.Title</strong></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<div class="text-left">
+    <a class="btn btn-primary btn-sm" asp-action="Index"><i class="fas fa-undo m-r-5 fa-lg"></i>Quay lại</a>
+</div>
+
+@section Scripts {
+    <!-- page js -->
+    <script src="~/Adminassets/vendors/select2/select2.min.js"></script>
+    <script src="~/Adminassets/vendors/quill/quill.min.js"></script>
+    <script src="~/Adminassets/js/pages/e-commerce-product-edit.js"></script>
+}

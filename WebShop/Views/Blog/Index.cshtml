@@ -1,0 +1,369 @@
+﻿@using PagedList.Core.Mvc;
+
+@model PagedList.Core.IPagedList<WebShop.Models.TinTuc>
+@{
+    ViewData["Title"] = "Blog Index" + ViewBag.CurrentPage;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Begin Main Content Area -->
+<main class="main-content">
+    <div class="carousel-area">
+        <div class="carousel-container">
+            <div id="demo" class="carousel slide" data-bs-ride="carousel">
+                <!-- Indicators/dots -->
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#demo" data-bs-slide-to="0" class="active"></button>
+                    <button type="button" data-bs-target="#demo" data-bs-slide-to="1"></button>
+                    <button type="button" data-bs-target="#demo" data-bs-slide-to="2"></button>
+                </div>
+                <!-- The slideshow/carousel -->
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="~/assets/img/blog/blogbanner.jpg" alt="Los Angeles" class="d-block w-100">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="~/assets/img/blog/blogbanner1.jpg" alt="Chicago" class="d-block w-100">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="~/assets/img/blog/blogbanner2.jpg" alt="New York" class="d-block w-100">
+                    </div>
+                </div>
+                <!-- Left and right controls/icons -->
+                <button class="carousel-control-prev" type="button" data-bs-target="#demo" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#demo" data-bs-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- Thêm tiêu đề và mô tả -->
+    <div class="header-info">
+        <div class="container">
+            <div class="row justify-content-center text-center">
+                <div class="col-12">
+                    <h2 class="header-title">Tin nổi bật</h2>
+                    <p class="header-desc">Khám phá những bài viết mới nhất về thời trang và phong cách sống.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="blog-area section-space-y-axis-100">
+        <div class="container">
+            <div class="row">
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var item in Model)
+                    {
+                        <div class="col-md-6">
+                            <div class="blog-item">
+                                <div class="blog-img img-zoom-effect">
+                                    <a asp-controller="Blog" asp-action="Details" asp-route-id="@item.PostId">
+                                        @if (!string.IsNullOrEmpty(item.Thumb) && item.Thumb != "default.jpg")
+                                        {
+                                            <img class="img-full" src="/@item.Thumb" style="width:100%;height:250px;object-fit:cover;" alt="@item.Title" />
+                                        }
+                                        else
+                                        {
+                                            <img class="img-full" src="/images/news/default.jpg" style="width:100%;height:250px;object-fit:cover;" alt="Default" />
+                                        }
+                                    </a>
+                                </div>
+                                <br />
+                                <div class="blog-content">
+                                    <div class="blog-meta text-dim-gray pb-3">
+                                        <ul style="list-style-type: none;">
+                                            <li class="date"><i class="far fa-calendar-alt fa-lg"></i> @item.CreatedDate?.ToShortDateString()</li>
+                                            <li>
+                                                <span class="comments me-3">
+                                                    <a href="javascript:void(0)">2 Comments</a>
+                                                </span>
+                                                <span class="link-share">
+                                                    <a href="javascript:void(0)">Share</a>
+                                                </span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <h5 class="title mb-4">
+                                        <a asp-controller="Blog" asp-action="Details" asp-route-id="@item.PostId">@item.Title</a>
+                                    </h5>
+                                    <p class="short-desc mb-5">@item.Scontents</p>
+                                    <div class="button-wrap">
+                                        <a class="btn btn-custom-size lg-size btn-link rounded-0" asp-controller="Blog" asp-action="Details" asp-route-id="@item.PostId">Xem thêm</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="col-12">
+                        <p>Chưa có tin tức nào.</p>
+                    </div>
+                }
+
+                <div class="col-lg-12">
+                    <div class="pagination-area pt-10">
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination">
+                                <pager class="page-container" list="@Model" options="@PagedListRenderOptions.Bootstrap4PageNumbersOnly" asp-area="" asp-controller="Blog" asp-action="Index" />
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<!-- Main Content Area End Here -->
+
+<style>
+    .main-content {
+        font-family: 'Roboto', sans-serif;
+    }
+
+    .carousel-area {
+        position: relative;
+        padding: 0;
+    }
+
+    .carousel-container {
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+        max-height: 550px; /* Slightly taller for desktop */
+        border-radius: 8px; /* Rounded corners for elegance */
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        background: #ffffff; /* White background for a clean look */
+    }
+
+    .carousel-inner img {
+        border-radius: 8px; /* Match container rounding */
+        width: 100%;
+        max-height: 550px; /* Match container height */
+        object-fit: cover; /* Crisp, filled images */
+        transition: transform 0.5s ease, opacity 0.5s ease; /* Smoother transitions */
+    }
+
+        .carousel-inner img:hover {
+            transform: scale(1.03); /* Subtler zoom effect */
+            opacity: 0.95; /* Slight fade for elegance */
+        }
+
+    .carousel-indicators {
+        bottom: 10px;
+        margin-bottom: 0;
+    }
+
+        .carousel-indicators button {
+            background-color: rgba(255, 255, 255, 0.5); /* Semi-transparent */
+            border-radius: 50%;
+            width: 8px; /* Smaller, refined indicators */
+            height: 8px;
+            margin: -12px 6px;
+            transition: background-color 0.3s ease;
+        }
+
+        .carousel-indicators .active {
+            background-color: #ffffff; /* Fully opaque active indicator */
+        }
+
+    .carousel-control-prev,
+    .carousel-control-next {
+        width: 4%; /* Slimmer controls */
+        opacity: 0.7; /* Subtle appearance */
+        transition: opacity 0.3s ease;
+    }
+
+        .carousel-control-prev:hover,
+        .carousel-control-next:hover {
+            opacity: 1; /* Full opacity on hover */
+        }
+
+    .header-info {
+        padding: 40px 0;
+        background: #ffffff;
+        margin-top: -20px;
+    }
+
+    .header-title {
+        font-size: 3.2rem;
+        font-weight: 900;
+        color: #222222;
+        margin-top: 25px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+
+    .header-desc {
+        font-size: 1.2rem;
+        color: #666666;
+        margin-bottom: 0;
+        font-style: italic;
+    }
+
+    .blog-area {
+        padding: 40px 0;
+        background-color: #ffffff;
+        border-radius: 0;
+    }
+
+    .blog-item {
+        background: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+        margin-bottom: 20px;
+    }
+
+        .blog-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+    .blog-img img {
+        border-radius: 8px 8px 0 0;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+        .blog-img img:hover {
+            transform: scale(1.05);
+        }
+
+    .blog-content {
+        padding: 20px;
+    }
+
+    .blog-meta ul {
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .blog-meta li {
+        font-size: 0.9rem;
+        color: #666666;
+    }
+
+    .blog-meta a {
+        color: #666666;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+        .blog-meta a:hover {
+            color: #333333;
+        }
+
+    .title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 15px;
+    }
+
+        .title a {
+            color: #333333;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+            .title a:hover {
+                color: #000000;
+            }
+
+    .short-desc {
+        font-size: 0.9rem;
+        color: #666666;
+        line-height: 1.6;
+    }
+
+    .button-wrap a {
+        font-size: 0.9rem;
+        color: #ffffff;
+        background: linear-gradient(135deg, #333333 0%, #666666 100%);
+        padding: 10px 20px;
+        border-radius: 8px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+        .button-wrap a:hover {
+            background: linear-gradient(135deg, #666666 0%, #999999 100%);
+            color: #ffffff;
+        }
+
+    .pagination-area {
+        padding-top: 20px;
+    }
+
+    .pagination {
+        justify-content: center;
+    }
+
+        .pagination .page-item .page-link {
+            border-radius: 8px;
+            margin: 0 5px;
+            font-size: 0.9rem;
+            color: #333333;
+            background-color: #ffffff;
+            border: 1px solid #d5d5d5;
+            transition: all 0.3s ease;
+        }
+
+            .pagination .page-item .page-link:hover {
+                background-color: #333333;
+                color: #ffffff;
+                border-color: #333333;
+            }
+
+        .pagination .page-item.active .page-link {
+            background: linear-gradient(135deg, #333333 0%, #666666 100%);
+            color: #ffffff;
+            border-color: #333333;
+        }
+
+    @@media (max-width: 800.98px) {
+        .carousel-container
+
+    {
+        max-height: 350px; /* Slightly taller for mobile */
+    }
+
+    .carousel-inner img {
+        max-height: 350px;
+        object-fit: cover;
+    }
+
+    .blog-img img {
+        height: 200px;
+    }
+
+    .header-title {
+        font-size: 2rem;
+    }
+
+    .header-desc {
+        font-size: 1rem;
+    }
+
+    .title {
+        font-size: 1.1rem;
+    }
+
+    .short-desc {
+        font-size: 0.85rem;
+    }
+
+    .button-wrap a {
+        font-size: 0.85rem;
+        padding: 2px 15px;
+    }
+
+    }
+</style>

@@ -1,0 +1,377 @@
+﻿@model WebShop.Areas.Admin.Models.CustomerPointsDetailsViewModel
+@using System.Globalization
+@{
+    ViewData["Title"] = "Chi tiết check-in và đổi quà";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap');
+
+    body {
+        background: #CBD5E0;
+        font-family: 'Montserrat', sans-serif;
+        color: #1A202C;
+        font-weight: 400;
+        overflow-x: hidden;
+    }
+
+    .container {
+        max-width: 1440px;
+        padding: 0 20px;
+        margin: 0 auto;
+    }
+
+    .page-header {
+        background: linear-gradient(135deg, #FFFFFF 0%, #CBD5E0 100%);
+        padding: 20px 30px;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        margin-bottom: 30px;
+    }
+
+    .header-title {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 1.8rem;
+        font-weight: 500;
+        color: #1A202C;
+        text-align: center;
+    }
+
+    .header-sub-title {
+        text-align: center;
+    }
+
+    .breadcrumb {
+        background: none;
+        padding: 0;
+        margin: 0;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.9rem;
+        color: #4A5568;
+        display: flex;
+        justify-content: center;
+    }
+
+    .breadcrumb-item {
+        color: #4A5568;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+        .breadcrumb-item:hover {
+            color: #f05a00;
+        }
+
+        .breadcrumb-item.active {
+            color: #1A202C;
+            font-weight: 500;
+        }
+
+        .breadcrumb-item + .breadcrumb-item::before {
+            content: '>';
+            margin: 0 10px;
+            color: #4A5568;
+        }
+
+    .card {
+        background: #FFFFFF;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        overflow: hidden;
+        transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+        }
+
+    .card-body {
+        padding: 20px;
+    }
+
+    .card-title {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 1.5rem;
+        font-weight: 400;
+        color: #1A202C;
+        margin-bottom: 20px;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    .table {
+        font-family: 'Montserrat', sans-serif;
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+        .table th {
+            font-weight: 600;
+            color: #1A202C;
+            padding: 15px;
+            background: #F7FAFC;
+            border-bottom: 2px solid #E2E8F0;
+            font-size: 0.9rem;
+            text-align: left;
+        }
+
+        .table td {
+            padding: 15px;
+            vertical-align: middle;
+            border-bottom: 1px solid #E2E8F0;
+            color: #2D3748;
+            font-size: 0.9rem;
+        }
+
+        .table tr:hover {
+            background: #F7FAFC;
+        }
+
+    .btn {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border-radius: 8px;
+        padding: 8px 15px;
+        transition: all 0.3s ease;
+        border: none;
+        color: #FFFFFF;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-back {
+        background: linear-gradient(to right, #a8a8a8 0%, #a8a8a8 100%);
+    }
+
+        .btn-back:hover {
+            background: linear-gradient(to right, #a8a8a8 0%, #a8a8a8 80%, #9a9a9a 100%);
+            box-shadow: 0 6px 20px rgba(168, 168, 168, 0.5);
+        }
+
+    .btn-confirm {
+        background: #28a745;
+    }
+
+        .btn-confirm:hover {
+            background: #218838;
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.5);
+        }
+
+    .btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        transition: left 0.5s ease;
+    }
+
+    .btn:hover::before {
+        left: 100%;
+    }
+
+    @@media (max-width: 767.98px) {
+        .card-body {
+            padding: 15px;
+        }
+
+        .table th, .table td {
+            padding: 10px;
+            font-size: 0.8rem;
+        }
+
+        .btn {
+            padding: 6px 12px;
+            font-size: 0.7rem;
+        }
+    }
+
+    @@media (max-width: 575.98px) {
+        .page-header {
+            padding: 15px 0;
+        }
+
+        .header-title {
+            font-size: 1.5rem;
+        }
+
+        .breadcrumb {
+            font-size: 0.8rem;
+        }
+
+        .card-body {
+            padding: 10px;
+        }
+
+        .table th, .table td {
+            padding: 8px;
+            font-size: 0.75rem;
+        }
+
+        .btn {
+            padding: 1px 4px;
+            height: 24px;
+            font-size: 0.65rem;
+        }
+    }
+</style>
+
+<div class="container">
+    <div class="page-header">
+        <h2 class="header-title">Chi tiết check-in và đổi quà - @(Model?.FullName ?? "Khách hàng không xác định")</h2>
+        <div class="header-sub-title">
+            <nav class="breadcrumb breadcrumb-dash">
+                <a asp-area="Admin" asp-controller="HomeAdmin" asp-action="Index" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Home</a>
+                <a asp-area="Admin" asp-controller="AdminCustomerPoints" asp-action="Index" class="breadcrumb-item">Thống kê check-in và đổi quà</a>
+                <span class="breadcrumb-item active">Chi tiết</span>
+            </nav>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Lịch sử check-in</h4>
+            <div class="table-responsive">
+                <table class="table table-hover e-commerce-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Ngày check-in</th>
+                            <th>Điểm tích lũy</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model?.CheckIns != null && Model.CheckIns.Any())
+                        {
+                            foreach (var item in Model.CheckIns)
+                            {
+                                <tr>
+                                    <td>@item.CheckInHistoryId</td>
+                                    <td>@item.CheckInDate.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                                    <td>@item.PointsEarned</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="3" class="text-center">Không có lịch sử check-in.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-body">
+            <h4 class="card-title">Quà đã đổi (Đã xác nhận)</h4>
+            <div class="table-responsive">
+                <table class="table table-hover e-commerce-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tên quà</th>
+                            <th>Ngày đổi</th>
+                            <th>Điểm sử dụng</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model?.RedeemedRewards != null && Model.RedeemedRewards.Any())
+                        {
+                            foreach (var item in Model.RedeemedRewards)
+                            {
+                                <tr>
+                                    <td>@item.Id</td>
+                                    <td>@(item.RewardName ?? "Chưa xác định")</td>
+                                    <td>@item.RedeemedAt.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                                    <td>@item.PointsUsed</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="4" class="text-center">Không có quà đã đổi.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-body">
+            <h4 class="card-title">Quà chưa xác nhận</h4>
+            <div class="table-responsive">
+                <table class="table table-hover e-commerce-table">
+                    "
+
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tên quà</th>
+                            <th>Ngày đổi</th>
+                            <th>Điểm sử dụng</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model?.UnconfirmedRewards != null && Model.UnconfirmedRewards.Any())
+                        {
+                            foreach (var item in Model.UnconfirmedRewards)
+                            {
+                                <tr>
+                                    <td>@item.Id</td>
+                                    <td>@(item.RewardName ?? "Chưa xác định")</td>
+                                    <td>@item.RedeemedAt.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                                    <td>@item.PointsUsed</td>
+                                    <td>
+                                        <form asp-action="ConfirmReward" asp-route-rewardId="@item.Id" method="post">
+                                            <button type="submit" class="btn btn-confirm">
+                                                <i class="fas fa-check m-r-5"></i>
+                                                <span>Xác nhận giao quà</span>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="5" class="text-center">Không có quà chưa xác nhận.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-right mt-4">
+        <a asp-action="Index" class="btn btn-back">
+            <i class="fas fa-undo m-r-5"></i>
+            <span>Quay lại</span>
+        </a>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+}

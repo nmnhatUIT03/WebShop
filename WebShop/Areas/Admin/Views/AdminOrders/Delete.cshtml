@@ -1,0 +1,324 @@
+﻿@model WebShop.Models.Order
+
+@{
+    ViewData["Title"] = "Xóa Đơn Hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    var orderDetails = ViewBag.OrderDetails as List<OrderDetail>;
+}
+
+<style>
+    body {
+        background: #CBD5E0;
+        font-family: 'Montserrat', sans-serif;
+        color: #1A202C;
+    }
+
+    .card {
+        background: #FFFFFF;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        transition: transform 0.3s;
+    }
+
+        .card:hover {
+            transform: translateY(-3px);
+        }
+
+    .card-body {
+        padding: 20px;
+    }
+
+    .card-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #1A202C;
+        margin-bottom: 20px;
+    }
+
+    .page-header {
+        background: linear-gradient(135deg, #FFFFFF 0%, #CBD5E0 100%);
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        margin-bottom: 20px;
+    }
+
+    .breadcrumb {
+        background: none;
+        padding: 0;
+        font-size: 0.9rem;
+        color: #4A5568;
+    }
+
+    .breadcrumb-item {
+        color: #4A5568;
+        text-decoration: none;
+    }
+
+        .breadcrumb-item:hover {
+            color: #f05a00;
+        }
+
+        .breadcrumb-item.active {
+            color: #1A202C;
+            font-weight: 500;
+        }
+
+        .breadcrumb-item + .breadcrumb-item::before {
+            content: '>';
+            margin: 0 8px;
+        }
+
+    .table {
+        border-collapse: separate;
+        border-spacing: 0 8px;
+    }
+
+        .table thead th {
+            background: #EDF2F7;
+            color: #1A202C;
+            font-size: 0.9rem;
+            padding: 10px;
+            text-align: center;
+            border: none;
+        }
+
+        .table tbody tr {
+            background: #FFFFFF;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .table tbody td {
+            padding: 12px;
+            font-size: 0.9rem;
+            text-align: center;
+            border: none;
+        }
+
+    .btn {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        border-radius: 8px;
+        padding: 8px 16px;
+        transition: all 0.3s;
+    }
+
+    .btn-danger {
+        background: #F56565;
+        color: #FFFFFF;
+    }
+
+        .btn-danger:hover {
+            background: #E53E3E;
+        }
+
+    .btn-success {
+        background: #f05a00;
+        border: none;
+        color: #FFFFFF;
+    }
+
+        .btn-success:hover {
+            background: #d94f00;
+        }
+    @@media (max-width: 767px) {
+        .card-body
+
+    {
+        padding: 15px;
+    }
+
+    .table thead th, .table tbody td {
+        font-size: 0.8rem;
+        padding: 8px;
+    }
+
+    .btn {
+        padding: 6px 12px;
+        font-size: 0.7rem;
+    }
+
+    }
+    @@media (max-width: 575px) {
+        .page-header
+
+    {
+        padding: 15px;
+    }
+
+    .table thead th, .table tbody td {
+        font-size: 0.75rem;
+        padding: 6px;
+    }
+
+    .btn {
+        padding: 5px 10px;
+        font-size: 0.65rem;
+    }
+
+    }
+</style>
+
+<div class="page-header">
+    <div class="header-sub-title">
+        <nav class="breadcrumb breadcrumb-dash">
+            <a asp-area="Admin" asp-controller="Home" asp-action="Index" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Home</a>
+            <a class="breadcrumb-item" asp-area="Admin" asp-controller="AdminOrders" asp-action="Index">Danh sách đơn hàng</a>
+            <span class="breadcrumb-item active">Xóa đơn hàng: @Model.OrderId</span>
+        </nav>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">Xác nhận xóa đơn hàng</h4>
+        <p>Bạn có chắc chắn muốn xóa đơn hàng <strong>#@Model.OrderId</strong> không? Hành động này sẽ đánh dấu đơn hàng là đã xóa và hoàn trả số lượng tồn kho.</p>
+        <div class="table-responsive">
+            <table class="product-info-table m-t-20">
+                <tbody>
+                    <tr>
+                        <td><strong>Mã khách hàng:</strong></td>
+                        <td class="text-dark font-weight-semibold">@Model.CustomerId</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Mã đơn hàng:</strong></td>
+                        <td>@Model.OrderId</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tên người nhận:</strong></td>
+                        <td>@(Model.ReceiverName ?? "N/A")</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Địa chỉ:</strong></td>
+                        <td>@(Model.Address ?? "N/A")</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Ngày mua hàng:</strong></td>
+                        <td>@(Model.OrderDate?.ToString("dd/MM/yyyy HH:mm") ?? "N/A")</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Ngày giao hàng:</strong></td>
+                        <td>@(Model.ShipDate?.ToString("dd/MM/yyyy HH:mm") ?? "N/A")</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Ngày thanh toán:</strong></td>
+                        <td>@(Model.PaymentDate?.ToString("dd/MM/yyyy HH:mm") ?? "N/A")</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Trạng thái đơn hàng:</strong></td>
+                        <td>@(Model.TransactStatus?.Status ?? "N/A")</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tổng tiền:</strong></td>
+                        <td>@(Model.TotalMoney.HasValue? Model.TotalMoney.Value.ToString("#,##0") + " VNĐ" : "0 VNĐ")</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Khuyến mãi:</strong></td>
+                        <td>@(Model.Promotion?.PromotionName ?? "Không có")</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Mã giảm giá:</strong></td>
+                        <td>@(Model.Voucher?.VoucherCode ?? "Không có")</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        @if (orderDetails != null && orderDetails.Any())
+        {
+            <h5 class="m-t-20">Chi tiết đơn hàng</h5>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Sản phẩm</th>
+                            <th>Kích thước</th>
+                            <th>Màu sắc</th>
+                            <th>Số lượng</th>
+                            <th>Đơn giá</th>
+                            <th>Tổng</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var detail in orderDetails)
+                        {
+                            <tr>
+                                <td>@(detail.ProductDetail?.Product?.ProductName ?? "N/A")</td>
+                                <td>@(detail.ProductDetail?.Size?.SizeName ?? "N/A")</td>
+                                <td>@(detail.ProductDetail?.Color?.ColorName ?? "N/A")</td>
+                                <td>@(detail.Amount ?? 0)</td>
+                                <td>@(detail.Price?.ToString("#,##0") ?? "0") VNĐ</td>
+                                <td>@(detail.Total?.ToString("#,##0") ?? "0") VNĐ</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+
+        <div class="m-t-20">
+            <form asp-controller="AdminOrders" asp-action="DeleteConfirmed" asp-route-id="@Model.OrderId" method="post" id="deleteForm">
+                @Html.AntiForgeryToken()
+                <input type="button" value="Xác nhận xóa" class="btn btn-danger" id="confirmDeleteBtn" />
+                <a class="btn btn-success btn-tone m-r-5" asp-action="Index"><i class="fas fa-times m-r-5 fa-lg"></i>Hủy bỏ</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#confirmDeleteBtn').click(function () {
+                if (confirm('Bạn có chắc chắn muốn xóa đơn hàng #@Model.OrderId không?')) {
+                    var form = $('#deleteForm');
+                    $.ajax({
+                        url: form.attr('action'),
+                        type: form.attr('method'),
+                        data: form.serialize(),
+                        dataType: 'json',
+                        success: function (response) {
+                            if (response.success) {
+                                toastr.success('Xóa đơn hàng thành công!');
+                                // Chuyển hướng về Index và làm mới bảng
+                                window.location.href = response.redirectTo + '?refresh=true';
+                            } else {
+                                toastr.error(response.message);
+                            }
+                        },
+                        error: function (xhr) {
+                            toastr.error('Đã xảy ra lỗi khi xóa đơn hàng.');
+                            console.log('Error:', xhr.responseText);
+                        }
+                    });
+                }
+            });
+
+            // Kiểm tra query string để làm mới bảng khi quay lại từ Delete
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('refresh') === 'true') {
+                $.ajax({
+                    url: '@Url.Action("FilterOrder", "AdminOrders", new { area = "Admin" })',
+                    type: 'GET',
+                    data: { page: 1, search: '@ViewBag.Search', status: '@ViewBag.Status' },
+                    success: function (response) {
+                        if (response.success) {
+                            $('#records_table').html(response.html);
+                            toastr.success('Cập nhật danh sách đơn hàng thành công!');
+                        } else {
+                            $('#records_table').html('<tr><td colspan="10" style="text-align: center; color: #4A5568;">' + response.message + '</td></tr>');
+                            toastr.error(response.message);
+                        }
+                    },
+                    error: function (xhr) {
+                        toastr.error('Lỗi khi tải danh sách đơn hàng!');
+                        console.log('Error:', xhr.responseText);
+                    }
+                });
+            }
+        });
+    </script>
+}

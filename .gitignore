@@ -1,0 +1,37 @@
+# Binaries
+bin/
+obj/
+*.dll
+*.exe
+*.pdb
+
+# Visual Studio
+.vs/
+.vscode/
+*.user
+*.sln.iml
+*.suo
+
+# NuGet
+*.nupkg
+packages/
+
+# Build results
+Debug/
+Release/
+x64/
+x86/
+
+# IDE
+.DS_Store
+Thumbs.db
+
+# Node/npm
+node_modules/
+package-lock.json
+yarn.lock
+
+# Environment
+.env
+appsettings.*.json
+!appsettings.json

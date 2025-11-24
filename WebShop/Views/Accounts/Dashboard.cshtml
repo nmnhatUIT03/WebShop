@@ -1,0 +1,290 @@
+﻿@model WebShop.Models.Customer
+@using System.Globalization
+
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<Order> DanhSachDonHang = ViewBag.DonHang;
+    WebShop.ModelViews.ChangePasswordViewModel changePassword = new WebShop.ModelViews.ChangePasswordViewModel();
+}
+
+<main class="main-content" style="background: #E6ECEF; padding: 20px; display: flex; justify-content: center;">
+    <div class="dashboard-container" style="width: 90%; max-width: 1200px; display: flex; flex-direction: column; gap: 20px;">
+        <div class="account-page-area" style="display: flex; background: #FFFFFF; box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05); border-radius: 15px; border: 1px solid #D3E0EA; overflow: hidden;">
+            <div class="sidebar" style="width: 250px; background: #A9B7C2; color: #2E4057; padding: 20px; border-right: 1px solid #D3E0EA; display: flex; flex-direction: column; gap: 5px;">
+                <ul class="list-group nav myaccount-tab-trigger" id="account-page-tab" role="tablist" style="text-align: left; list-style: none; padding: 0;">
+                    <li class="nav-item">
+                        <a class="list-group-item text-dark fw-medium rounded-0 active" id="account-dashboard-tab" data-bs-toggle="tab" href="#account-dashboard" role="tab" aria-controls="account-dashboard" aria-selected="true" style="background: #A9B7C2; color: #2E4057; padding: 15px 20px; border-bottom: 1px solid #D3E0EA; text-decoration: none; display: flex; align-items: center;">
+                            <i class="fa fa-user me-2"></i> Thông tin tài khoản
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="list-group-item text-dark fw-medium rounded-0" id="account-orders-tab" data-bs-toggle="tab" href="#account-orders" role="tab" aria-controls="account-orders" aria-selected="false" style="background: #A9B7C2; color: #2E4057; padding: 15px 20px; border-bottom: 1px solid #D3E0EA; text-decoration: none; display: flex; align-items: center;">
+                            <i class="fa fa-shopping-cart me-2"></i> Danh sách đơn hàng
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="list-group-item text-dark fw-medium rounded-0" id="account-details-tab" data-bs-toggle="tab" href="#account-details" role="tab" aria-controls="account-details" aria-selected="false" style="background: #A9B7C2; color: #2E4057; padding: 15px 20px; border-bottom: 1px solid #D3E0EA; text-decoration: none; display: flex; align-items: center;">
+                            <i class="fa fa-lock me-2"></i> Thay đổi mật khẩu
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="list-group-item text-dark fw-medium rounded-0" id="account-logout-tab" href="/dang-xuat.html" role="tab" aria-selected="false" style="background: #A9B7C2; color: #2E4057; padding: 15px 20px; text-decoration: none; display: flex; align-items: center;">
+                            <i class="fa fa-sign-out me-2"></i> Đăng xuất
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="content" style="flex: 1; background: #F0F4F8; padding: 20px; border-left: 1px solid #D3E0EA; border-radius: 0 15px 15px 0; min-height: 400px; display: flex; flex-direction: column; gap: 20px;">
+                <div class="tab-content myaccount-tab-content" id="account-page-tab-content" style="flex: 1; display: flex; flex-direction: column; gap: 20px;">
+                    <div class="tab-pane fade show active" id="account-dashboard" role="tabpanel" aria-labelledby="account-dashboard-tab">
+                        <div class="myaccount-dashboard">
+                            <h4 class="small-title text-dark fw-bold mb-3">Thông tin tài khoản</h4>
+                            <hr style="border-color: #D3E0EA;" />
+                            <form asp-action="UpdateProfile" asp-controller="Accounts" method="post" id="updateProfileForm" enctype="multipart/form-data">
+                                <div class="info-container" style="background: #FFFFFF; border: 1px solid #D3E0EA; border-radius: 10px; padding: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: center;">
+                                    <div class="form-group">
+                                        <label class="form-label text-dark"><i class="fa fa-user me-2"></i> Họ và tên</label>
+                                        <input type="text" class="form-control" name="FullName" value="@Model.FullName" required />
+                                        <span class="text-danger field-validation-error"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label text-dark"><i class="fa fa-phone me-2"></i> Số điện thoại</label>
+                                        <input type="tel" class="form-control" name="Phone" value="@Model.Phone" required pattern="[0-9]{10}" />
+                                        <span class="text-danger field-validation-error"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label text-dark"><i class="fa fa-envelope me-2"></i> Email</label>
+                                        <input type="email" class="form-control" name="Email" value="@Model.Email" readonly />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label text-dark"><i class="fa fa-map-marker me-2"></i> Địa chỉ</label>
+                                        <input type="text" class="form-control" name="Address" value="@Model.Address" required />
+                                        <span class="text-danger field-validation-error"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label text-dark"><i class="fa fa-calendar me-2"></i> Ngày sinh</label>
+                                        <input type="date" class="form-control" name="Birthday" value="@(Model.Birthday?.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture))" />
+                                        <span class="text-danger field-validation-error"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label text-dark"><i class="fa fa-image me-2"></i> Avatar</label>
+                                        <div class="avatar-preview" style="margin-bottom: 10px;">
+                                            @if (!string.IsNullOrEmpty(Model.Avatar))
+                                            {
+                                                <img src="@Model.Avatar" alt="Avatar" class="img-fluid" style="max-width: 100px; border-radius: 50%;" />
+                                            }
+                                            else
+                                            {
+                                                <span>Chưa có avatar</span>
+                                            }
+                                        </div>
+                                        <input type="file" class="form-control" name="AvatarFile" accept="image/*" />
+                                        <span class="text-danger field-validation-error"></span>
+                                    </div>
+                                </div>
+                                <div class="button-container" style="margin-top: auto; text-align: right; padding-top: 20px;">
+                                    <button type="submit" class="btn btn-custom" style="background-color: #FF6200; color: #FFFFFF; border: 1px solid #2E4057; padding: 12px 25px; border-radius: 8px; transition: background-color 0.3s; font-size: 16px;">
+                                        <i class="fa fa-save me-2"></i> Lưu thay đổi
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="account-orders" role="tabpanel" aria-labelledby="account-orders-tab">
+                        <div class="myaccount-orders">
+                            <h4 class="small-title text-dark fw-bold mb-3">Danh sách đơn hàng</h4>
+                            <hr style="border-color: #D3E0EA;" />
+                            @await Html.PartialAsync("_DonhangPartialView", DanhSachDonHang)
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="account-details" role="tabpanel" aria-labelledby="account-details-tab">
+                        @await Html.PartialAsync("_ChangePasswordPartialView", changePassword)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+</main>
+
+<style>
+    .dashboard-hero {
+        border-radius: 15px;
+    }
+
+    .dashboard-card {
+        border-radius: 15px;
+    }
+
+    .myaccount-tab-trigger .nav-item .list-group-item {
+        background: #A9B7C2;
+        color: #2E4057;
+        border: none;
+        padding: 15px 20px;
+        transition: all 0.3s;
+        text-align: left;
+        border-bottom: 1px solid #D3E0EA;
+        display: flex;
+        align-items: center;
+    }
+
+        .myaccount-tab-trigger .nav-item .list-group-item.active {
+            background: #A9B7C2;
+            color: #2E4057;
+            border-left: 4px solid #FF6200;
+        }
+
+        .myaccount-tab-trigger .nav-item .list-group-item:hover {
+            background: #8FA3B4;
+            color: #2E4057;
+        }
+
+    .myaccount-tab-content {
+        background: #F0F4F8;
+        border-radius: 0 15px 15px 0;
+        min-height: 400px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .small-title {
+        font-size: 1.5rem;
+        position: relative;
+    }
+
+        .small-title::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background: #FF6200;
+        }
+
+    .form-control {
+        border: 1px solid #D3E0EA;
+        border-radius: 8px;
+        padding: 10px;
+        transition: border-color 0.3s;
+        background: #FFFFFF;
+        color: #2E4057;
+        font-size: 14px;
+    }
+
+        .form-control:focus {
+            border-color: #FF6200;
+            box-shadow: 0 0 5px rgba(255, 98, 0, 0.3);
+        }
+
+    .btn-custom {
+        border-radius: 8px;
+        padding: 12px 25px;
+        font-weight: 500;
+        color: #000000;
+        border: 1px solid #D3E0EA;
+        font-size: 16px;
+    }
+
+        .btn-custom:hover {
+            background-color: #CC4D00;
+            color: #000000;
+        }
+
+    .text-danger {
+        font-size: 12px;
+        margin-top: 5px;
+    }
+
+    @@media (max-width: 991px) {
+        .account-page-area {
+            flex-direction: column;
+        }
+
+        .sidebar {
+            width: 100%;
+        }
+
+        .content {
+            width: 100%;
+            border-left: none;
+            border-radius: 0;
+        }
+
+        .info-container {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+@section Scripts {
+    <script src="~/lib/font-awesome/js/all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#updateProfileForm").validate({
+                rules: {
+                    FullName: {
+                        required: true,
+                        maxlength: 100
+                    },
+                    Phone: {
+                        required: true,
+                        pattern: /^[0-9]{10}$/,
+                        remote: {
+                            url: "/Accounts/ValidatePhone",
+                            type: "get",
+                            data: {
+                                phone: function () {
+                                    return $("#Phone").val();
+                                }
+                            }
+                        }
+                    },
+                    Address: {
+                        required: true,
+                        maxlength: 200
+                    },
+                    Birthday: {
+                        date: true
+                    },
+                    AvatarFile: {
+                        accept: "image/*"
+                    }
+                },
+                messages: {
+                    FullName: {
+                        required: "Vui lòng nhập họ và tên",
+                        maxlength: "Họ và tên không được vượt quá 100 ký tự"
+                    },
+                    Phone: {
+                        required: "Vui lòng nhập số điện thoại",
+                        pattern: "Số điện thoại phải là 10 chữ số",
+                        remote: "Số điện thoại đã được sử dụng"
+                    },
+                    Address: {
+                        required: "Vui lòng nhập địa chỉ",
+                        maxlength: "Địa chỉ không được vượt quá 200 ký tự"
+                    },
+                    Birthday: {
+                        date: "Vui lòng nhập ngày sinh hợp lệ"
+                    },
+                    AvatarFile: {
+                        accept: "Vui lòng chọn file hình ảnh hợp lệ"
+                    }
+                },
+                errorPlacement: function (error, element) {
+                    error.appendTo(element.closest(".form-group").find(".text-danger"));
+                },
+                submitHandler: function (form) {
+                    form.submit();
+                }
+            });
+        });
+    </script>
+}

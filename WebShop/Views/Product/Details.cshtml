@@ -1,0 +1,434 @@
+﻿@model WebShop.ModelViews.ProductHomeVM
+
+@{
+    ViewData["Title"] = Model.ProductName;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var lsProducts = Model.lsProducts ?? new List<WebShop.Models.Product>();
+    var defaultThumb = !string.IsNullOrEmpty(Model.Thumb) 
+        ? (Model.Thumb.StartsWith("/") || Model.Thumb.StartsWith("~") 
+            ? Model.Thumb 
+            : "/images/products/" + Model.Thumb)
+        : "/images/products/default.jpg";
+}
+
+<!-- Shop Details Section Begin -->
+<section class="shop-details" style="background: #FFFFFF; padding: 30px 0; position: relative;">
+    <div class="product__details__pic">
+        <div class="container-fluid">
+            <div class="row">
+                <!--div class="col-lg-12">
+                    <!-- Breadcrumb đã được xóa -->
+            </div>
+        </div>
+        <div class="row align-items-start justify-content-center">
+            <div class="col-lg-1 col-md-1 d-none d-md-block">
+                <ul class="nav nav-tabs product__details__pic__thumbs" role="tablist" style="display: flex; flex-direction: column; gap: 10px; padding-top: 0; height: 400px; justify-content: space-between;">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#tabs-1" role="tab">
+                            <img src="@Url.Content(defaultThumb)" alt="@Model.ProductName" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 2px solid rgba(230, 69, 0, 0.2); transition: border-color 0.3s ease;" onerror="this.src='https://via.placeholder.com/80x80?text=Image+Not+Found';">
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#tabs-2" role="tab">
+                            <img src="@Url.Content(defaultThumb)" alt="@Model.ProductName" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 2px solid rgba(230, 69, 0, 0.2); transition: border-color 0.3s ease;" onerror="this.src='https://via.placeholder.com/80x80?text=Image+Not+Found';">
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#tabs-3" role="tab">
+                            <img src="@Url.Content(defaultThumb)" alt="@Model.ProductName" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 2px solid rgba(230, 69, 0, 0.2); transition: border-color 0.3s ease;" onerror="this.src='https://via.placeholder.com/80x80?text=Image+Not+Found';">
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#tabs-4" role="tab">
+                            <img src="@Url.Content(defaultThumb)" alt="@Model.ProductName" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 2px solid rgba(230, 69, 0, 0.2); transition: border-color 0.3s ease;" onerror="this.src='https://via.placeholder.com/80x80?text=Image+Not+Found';">
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-lg-5 col-md-6">
+                <div class="product__details__pic__main" style="position: relative; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);">
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="tabs-1" role="tabpanel">
+                            <div class="product__details__pic__item">
+                                <img class="img-full" src="@Url.Content(defaultThumb)" alt="@Model.ProductName" style="width: 100%; height: auto; max-height: 400px; object-fit: contain; transition: transform 0.5s ease;" onerror="this.src='https://via.placeholder.com/500x500?text=Image+Not+Found';">
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="tabs-2" role="tabpanel">
+                            <div class="product__details__pic__item">
+                                <img class="img-full" src="@Url.Content(defaultThumb)" alt="@Model.ProductName" style="width: 100%; height: auto; max-height: 400px; object-fit: contain; transition: transform 0.5s ease;" onerror="this.src='https://via.placeholder.com/500x500?text=Image+Not+Found';">
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="tabs-3" role="tabpanel">
+                            <div class="product__details__pic__item">
+                                <img class="img-full" src="@Url.Content(defaultThumb)" alt="@Model.ProductName" style="width: 100%; height: auto; max-height: 400px; object-fit: contain; transition: transform 0.5s ease;" onerror="this.src='https://via.placeholder.com/500x500?text=Image+Not+Found';">
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="tabs-4" role="tabpanel">
+                            <div class="product__details__pic__item">
+                                <img class="img-full" src="@Url.Content(defaultThumb)" alt="@Model.ProductName" style="width: 100%; height: auto; max-height: 400px; object-fit: contain; transition: transform 0.5s ease;" onerror="this.src='https://via.placeholder.com/500x500?text=Image+Not+Found';">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5 col-md-6">
+                <div class="product__details__text" style="padding: 30px; background: rgba(255, 255, 255, 0.95); border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);">
+                    <h4 style="font-family: 'Playfair Display', serif; font-size: 2rem; color: #0A0A0A; margin-bottom: 20px; letter-spacing: 1px; text-align: center;">@Model.ProductName</h4>
+                    <div class="rating" style="font-family: 'Lora', serif; font-size: 0.9rem; color: #A0A0A0; margin-bottom: 20px; text-align: center;">
+                        <i class="fa fa-star" style="color: #e64500;"></i>
+                        <i class="fa fa-star" style="color: #e64500;"></i>
+                        <i class="fa fa-star" style="color: #e64500;"></i>
+                        <i class="fa fa-star" style="color: #e64500;"></i>
+                        <i class="fa fa-star-o" style="color: #A0A0A0;"></i>
+                        <span style="margin-left: 10px;">- 5 Reviews</span>
+                    </div>
+                    <h4 style="font-family: 'Lora', serif; font-size: 1.8rem; color: #FF4444; margin-bottom: 20px; text-align: center;">
+                        <span>@(Model.DiscountPrice.HasValue? Model.DiscountPrice.Value.ToString("#,##0") : Model.Price.Value.ToString("#,##0")) VNĐ</span>
+                        @if (Model.DiscountPrice.HasValue && Model.DiscountPrice.Value != Model.Price.Value)
+                        {
+                            <span style="font-size: 1rem; color: #A0A0A0; text-decoration: line-through; margin-left: 10px;">@Model.Price.Value.ToString("#,##0") VNĐ</span>
+                        }
+                    </h4>
+                    <div class="product__details__option" style="margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 15px; align-items: center;">
+                        <div class="product__details__option__size" style="flex: 1; min-width: 200px;">
+                            <span style="font-family: 'Lora', serif; font-size: 1.2rem; color: #0A0A0A; font-weight: bold; margin-right: 10px;">Size:</span>
+                            <div style="display: flex; gap: 10px; align-items: center;">
+                                <span style="font-family: 'Lora', serif; font-size: 0.85rem; color: #0A0A0A; padding: 8px 12px; border: 1px solid #A0A0A0; border-radius: 4px;">S</span>
+                                <span style="font-family: 'Lora', serif; font-size: 0.85rem; color: #0A0A0A; padding: 8px 12px; border: 1px solid #A0A0A0; border-radius: 4px;">M</span>
+                                <span style="font-family: 'Lora', serif; font-size: 0.85rem; color: #0A0A0A; padding: 8px 12px; border: 1px solid #A0A0A0; border-radius: 4px;">L</span>
+                                <span style="font-family: 'Lora', serif; font-size: 0.85rem; color: #0A0A0A; padding: 8px 12px; border: 1px solid #A0A0A0; border-radius: 4px;">XL</span>
+                            </div>
+                        </div>
+                        <div class="product__details__option__color" style="flex: 1; min-width: 200px;">
+                            <span style="font-family: 'Lora', serif; font-size: 1.2rem; color: #0A0A0A; font-weight: bold; margin-right: 10px;">Color:</span>
+                            <div style="display: flex; gap: 10px; align-items: center;">
+                                <span style="display: inline-block; width: 24px; height: 24px; border-radius: 50%; background: #000000; border: 2px solid #A0A0A0;"></span>
+                                <span style="display: inline-block; width: 24px; height: 24px; border-radius: 50%; background: #FFFFFF; border: 2px solid #A0A0A0;"></span>
+                                <span style="display: inline-block; width: 24px; height: 24px; border-radius: 50%; background: #F5F5DC; border: 2px solid #A0A0A0;"></span>
+                                <span style="display: inline-block; width: 24px; height: 24px; border-radius: 50%; background: #8B4513; border: 2px solid #A0A0A0;"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product__details__cart__option" style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                        <div class="add-to-cart" style="flex: 1; display: flex; gap: 10px;">
+                            <a href="javascript:void(0)" class="primary-btn open-variant-modal btn-custom-dark" data-product-id="@Model.ProductId" data-action="add-to-cart" style="background: #e64500; color: #FFFFFF; padding: 12px 15px; font-family: 'Lora', serif; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; border-radius: 4px; transition: all 0.3s ease; text-decoration: none; flex: 1; text-align: center; white-space: nowrap;">Thêm vào giỏ hàng</a>
+                            <a href="javascript:void(0)" class="primary-btn open-variant-modal btn-custom-dark" data-product-id="@Model.ProductId" data-action="buy-now" style="background: #0A0A0A; color: #FFFFFF; padding: 12px 15px; font-family: 'Lora', serif; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; border-radius: 4px; transition: all 0.3s ease; text-decoration: none; flex: 1; text-align: center; white-space: nowrap;">Mua ngay</a>
+                        </div>
+                    </div>
+                    <div class="product__details__last__option" style="font-family: 'Lora', serif; font-size: 0.9rem; color: #A0A0A0; text-align: center;">
+                        <h5 style="font-family: 'Playfair Display', serif; font-size: 1.2rem; color: #0A0A0A; margin-bottom: 10px;"><span>Đảm bảo thanh toán an toàn</span></h5>
+                        <img src="~/img/shop-details/details-payment.png" alt="Payment Methods" style="width: 200px; margin-bottom: 10px;" onerror="this.src='https://via.placeholder.com/200x50?text=Payment+Methods';">
+                        <ul style="list-style: none; display: inline-block; margin-left: -200px; margin-top: -20px;">
+                            <li><span style="color: #0A0A0A;">Categories:</span> @Model.category?.CatName</li>
+                            <li><span style="color: #0A0A0A;">Tag:</span> @(string.IsNullOrEmpty(Model.Tags) ? "Không có từ khóa" : Model.Tags)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div class="product__details__content" style="margin-top:-100px;">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="product__details__tab">
+                        <ul class="nav nav-tabs" role="tablist" style="border-bottom: 2px solid #E0E0E0; margin-bottom: 10px; display: flex; justify-content: center;">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-toggle="tab" href="#tabs-5" role="tab" style="font-family: 'Playfair Display', serif; font-size: 1.2rem; color: #0A0A0A; padding: 10px 20px; text-transform: uppercase; letter-spacing: 1px; transition: color 0.3s ease;">Mô tả</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content" style="background: #F8F9FA; padding: 15px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);">
+                            <div class="tab-pane active" id="tabs-5" role="tabpanel">
+                                <p style="font-family: 'Lora', serif; font-size: 1rem; color: #666666; line-height: 1.8; margin: 0;">@Model.Description</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Related Products -->
+    <div class="related-products" style="padding: 60px 0; background: #F8F9FA;">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h3 style="font-family: 'Playfair Display', serif; font-size: 2.5rem; color: #0A0A0A; text-align: center; margin-bottom: 40px; letter-spacing: 2px; position: relative;">
+                        Sản Phẩm Liên Quan
+                        <span style="position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); width: 80px; height: 1px; background: #A0A0A0;"></span>
+                    </h3>
+                </div>
+            </div>
+            <div class="row">
+                @if (lsProducts.Any())
+                {
+                    foreach (var item in lsProducts)
+                    {
+                        string url = $"/{item.Alias}-{item.ProductId}.html";
+                        decimal? finalPrice = item.Discount.HasValue ? item.Price.Value * (1 - (item.Discount.Value / 100m)) : item.Price;
+                        <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
+                            <div class="product-item" style="background: #FFFFFF; border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); overflow: hidden; transition: transform 0.4s ease, box-shadow 0.4s ease;">
+                                <div class="product-img" style="position: relative; overflow: hidden;">
+                                    <a href="@url">
+                                        @{
+                                            var relatedThumb = !string.IsNullOrEmpty(item.Thumb) 
+                                                ? (item.Thumb.StartsWith("/") || item.Thumb.StartsWith("~") 
+                                                    ? item.Thumb 
+                                                    : "/images/products/" + item.Thumb)
+                                                : "/images/products/default.jpg";
+                                        }
+                                        <img src="@Url.Content(relatedThumb)" alt="@item.ProductName" style="width: 100%; height: 200px; object-fit: cover; transition: transform 0.5s ease;" onerror="this.src='/images/products/default.jpg';">
+                                    </a>
+                                    @if (item.Discount.HasValue && item.Discount.Value > 0)
+                                    {
+                                        <div class="discount-badge" style="position: absolute; top: 10px; left: 10px; background: #FF4444; color: #FFFFFF; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold;">
+                                            -@((int)item.Discount.Value)%
+                                        </div>
+                                    }
+                                </div>
+                                <div class="product-text" style="padding: 15px; text-align: center;">
+                                    <h6 style="font-family: 'Playfair Display', serif; font-size: 1rem; color: #0A0A0A; margin-bottom: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                        <a href="@url" style="color: #0A0A0A; text-decoration: none;">@item.ProductName</a>
+                                    </h6>
+                                    <p style="font-family: 'Lora', serif; font-size: 0.9rem; color: #A0A0A0;">
+                                        @if (item.Discount.HasValue && item.Discount.Value > 0)
+                                        {
+                                            <span style="text-decoration: line-through;">@item.Price.Value.ToString("#,##0") VNĐ</span>
+                                            <span style="color: #FF4444; margin-left: 10px;">@finalPrice.Value.ToString("#,##0") VNĐ</span>
+                                        }
+                                        else
+                                        {
+                                            <span>@item.Price.Value.ToString("#,##0") VNĐ</span>
+                                        }
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p style="text-align: center; font-family: 'Lora', serif; color: #A0A0A0; width: 100%;">Không có sản phẩm liên quan.</p>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Shop Details Section End -->
+
+<style>
+    /* Shop Details Section */
+    .shop-details {
+        background: #FFFFFF;
+        padding: 30px 0;
+        position: relative;
+        font-family: 'Lora', serif;
+    }
+
+    .container-fluid {
+        padding-left: 20px;
+        padding-right: 20px;
+        max-width: 1400px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .product__details__pic__main {
+        margin-left: 0;
+        text-align: center;
+    }
+
+        .product__details__pic__main img:hover {
+            transform: scale(1.05);
+        }
+
+    .product__details__pic__thumbs .nav-link.active img {
+        border-color: #e64500;
+        opacity: 1;
+    }
+
+    .product__details__pic__thumbs .nav-link img:hover {
+        border-color: #e64500;
+        opacity: 1;
+    }
+
+    .product__details__text {
+        transition: box-shadow 0.4s ease;
+    }
+
+    .btn-custom-dark {
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+        .btn-custom-dark:hover {
+            background: #d53f00;
+            box-shadow: 0 0 12px rgba(230, 69, 0, 0.3);
+            transform: translateY(-2px);
+            color: #FFFFFF;
+            text-decoration: none;
+        }
+
+        .btn-custom-dark::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-custom-dark:hover::before {
+            left: 100%;
+        }
+
+    .product__details__tab .nav-tabs .nav-link {
+        border: none;
+        border-bottom: 3px solid transparent;
+        transition: border-color 0.3s ease;
+    }
+
+        .product__details__tab .nav-tabs .nav-link.active,
+        .product__details__tab .nav-tabs .nav-link:hover {
+            border-bottom: 3px solid #e64500;
+            color: #e64500;
+        }
+
+    .related-products .product-item:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+    }
+
+        .related-products .product-item:hover .product-img img {
+            transform: scale(1.05);
+        }
+
+    /* Responsive Design */
+    @@media (max-width: 767.98px) {
+        .shop-details {
+            padding: 20px 0;
+        }
+
+        .product__details__pic__main img {
+            height: auto;
+            max-height: 300px;
+        }
+
+        .product__details__pic__thumbs {
+            display: none;
+        }
+
+        .col-lg-1.d-none.d-md-block {
+            display: none;
+        }
+
+        .col-lg-5.col-md-6:first-child {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+
+        .col-lg-5.col-md-6:last-child {
+            flex: 0 0 100%;
+            max-width: 100%;
+            margin-top: 20px;
+        }
+
+        .product__details__text {
+            padding: 20px;
+        }
+
+            .product__details__text h4 {
+                font-size: 1.5rem;
+            }
+
+                .product__details__text h4 span {
+                    font-size: 1.2rem;
+                }
+
+        .product__details__cart__option {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .add-to-cart a {
+            width: 100%;
+            text-align: center;
+            margin-left: 0 !important;
+            margin-top: 10px;
+        }
+
+        .product__details__tab .nav-tabs .nav-link {
+            font-size: 1rem;
+            padding: 8px 15px;
+        }
+
+        .related-products .product-item {
+            margin-bottom: 20px;
+        }
+    }
+
+    @@media (max-width: 575.98px) {
+        .product__details__pic__main img {
+            height: auto;
+            max-height: 250px;
+        }
+
+        .product__details__text h4 {
+            font-size: 1.2rem;
+        }
+
+            .product__details__text h4 span {
+                font-size: 1rem;
+            }
+
+        .product__details__option__size span,
+        .product__details__option__color span {
+            font-size: 0.8rem;
+        }
+
+        .product__details__tab .nav-tabs .nav-link {
+            font-size: 0.9rem;
+            padding: 6px 10px;
+        }
+    }
+</style>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.open-variant-modal').on('click', function (e) {
+                e.preventDefault();
+                var $button = $(this);
+                var productId = $button.data('product-id');
+                var actionType = $button.data('action');
+
+                $.ajax({
+                    url: '/Home/GetVariantPopup',
+                    type: 'GET',
+                    data: { productId: productId, actionType: actionType },
+                    success: function (response) {
+                        if (typeof response === 'object' && !response.success) {
+                            toastr.error(response.message || 'Lỗi khi tải thông tin sản phẩm.');
+                            return;
+                        }
+                        $('body').append(response);
+                        $('#variantModal').modal('show');
+                        $('#actionType').val(actionType);
+
+                        $('#variantModal').on('hidden.bs.modal', function () {
+                            $(this).remove();
+                        });
+                    },
+                    error: function () {
+                        toastr.error('Lỗi khi tải thông tin sản phẩm.');
+                    }
+                });
+            });
+        });
+    </script>
+}

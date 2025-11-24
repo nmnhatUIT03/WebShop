@@ -1,0 +1,472 @@
+﻿@using WebShop.Areas.Admin.Models
+@model DashBoardViewModel
+@{
+    ViewData["Title"] = "Admin Dashboard";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    body {
+        background-color: #FFFFFF;
+        color: #333333;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .card {
+        background-color: #F5F5F5;
+        border: 1px solid #E0E0E0;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+    .card-header {
+        background-color: #212121;
+        color: #FFFFFF;
+        border-radius: 10px 10px 0 0;
+        padding: 15px;
+        font-weight: 500;
+    }
+
+    .card-body {
+        padding: 20px;
+    }
+
+    .header-section {
+        background-color: #212121;
+        color: #FFFFFF;
+        padding: 15px;
+        font-weight: 500;
+        border-radius: 10px 10px 0 0;
+    }
+
+    .table-section {
+        padding: 15px;
+        background-color: transparent;
+    }
+
+    .body-section {
+        padding: 20px;
+    }
+
+    .text-muted {
+        color: #666666 !important;
+    }
+
+    .badge-dot {
+        background-color: #B0BEC5;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+    }
+
+    .progress {
+        background-color: #D3D3D3;
+        border-radius: 5px;
+        height: 8px;
+    }
+
+    .progress-bar {
+        background-color: #FF5722;
+        border-radius: 5px;
+    }
+
+    .form-control {
+        border-color: #E0E0E0;
+        border-radius: 5px;
+        padding: 8px 12px;
+        font-size: 14px;
+        color: #FFFFFF;
+        background-color: #424242;
+        -webkit-text-fill-color: #FFFFFF;
+    }
+
+        .form-control:focus {
+            background-color: #424242;
+            color: #FFFFFF;
+            -webkit-text-fill-color: #FFFFFF;
+            border-color: #FF5722;
+            box-shadow: 0 0 5px rgba(255, 87, 34, 0.5);
+        }
+
+        .form-control option {
+            background-color: #424242;
+            color: #FFFFFF;
+            -webkit-text-fill-color: #FFFFFF;
+        }
+
+    #fetchRevenue {
+        background-color: #FF5722;
+        color: #FFFFFF;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-weight: 500;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+        #fetchRevenue:hover {
+            background-color: #E64A19;
+            transform: scale(1.05);
+        }
+
+    #revenueTable {
+        background-color: transparent;
+    }
+
+        #revenueTable td {
+            white-space: nowrap;
+            padding: 8px;
+        }
+
+        #revenueTable .week-label {
+            color: #FF5722;
+            background-color: transparent;
+            font-weight: 500;
+        }
+
+        #revenueTable .bg-info {
+            background-color: #B0BEC5 !important;
+            border-radius: 5px;
+            padding: 5px 10px;
+            display: inline-block;
+            color: #212121;
+        }
+
+    h2 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin: 0;
+        color: #FFFFFF;
+    }
+
+    .display-2 {
+        color: #212121;
+        font-weight: 700;
+        font-size: 2.5rem;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .mt-4 {
+        margin-top: 1.5rem;
+    }
+
+    .card-body h2 {
+        color: #FF5722;
+    }
+
+    .date-label {
+        font-weight: bold; /* In đậm các nhãn tháng, từ ngày, đến ngày */
+    }
+</style>
+
+<div id="layoutSidenav">
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid px-4">
+                <div class="row">
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <p class="m-b-0 text-muted">Tổng đơn hàng</p>
+                                        <h2 class="m-b-0">@Model.tongdh</h2>
+                                    </div>
+                                </div>
+                                <div class="mt-4">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex align-items-center">
+                                            <span class="badge-dot m-r-10"></span>
+                                            <span class="text-muted font-weight-semibold">Mục tiêu tháng</span>
+                                        </div>
+                                        <span class="text-muted font-weight-semibold">70%</span>
+                                    </div>
+                                    <div class="progress w-100 mt-2">
+                                        <div class="progress-bar" style="width: 70%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <p class="m-b-0 text-muted">Đơn hàng chưa duyệt</p>
+                                        <h2 class="m-b-0">@Model.tongdhchuaduyet</h2>
+                                    </div>
+                                </div>
+                                <div class="mt-4">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex align-items-center">
+                                            <span class="badge-dot m-r-10"></span>
+                                            <span class="text-muted font-weight-semibold">Mục tiêu cần thực hiện</span>
+                                        </div>
+                                        <span class="text-muted font-weight-semibold">60%</span>
+                                    </div>
+                                    <div class="progress w-100 mt-2">
+                                        <div class="progress-bar" style="width: 60%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <p class="m-b-0 text-muted">Tổng khách hàng</p>
+                                        <h2 class="m-b-0">@Model.tongnguoidung</h2>
+                                    </div>
+                                </div>
+                                <div class="mt-4">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex align-items-center">
+                                            <span class="badge-dot m-r-10"></span>
+                                            <span class="text-muted font-weight-semibold">Mục tiêu tháng</span>
+                                        </div>
+                                        <span class="text-muted font-weight-semibold">45%</span>
+                                    </div>
+                                    <div class="progress w-100 mt-2">
+                                        <div class="progress-bar" style="width: 45%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <p class="m-b-0 text-muted">Tổng sản phẩm</p>
+                                        <h2 class="m-b-0">@Model.tongsp</h2>
+                                    </div>
+                                </div>
+                                <div class="mt-4">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex align-items-center">
+                                            <span class="badge-dot m-r-10"></span>
+                                            <span class="text-muted font-weight-semibold">Mục tiêu tháng</span>
+                                        </div>
+                                        <span class="text-muted font-weight-semibold">50%</span>
+                                    </div>
+                                    <div class="progress w-100 mt-2">
+                                        <div class="progress-bar" style="width: 50%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-xl-12">
+                        <div id="dateFilter" class="mb-4">
+                            <form asp-action="Index" method="get" id="dateForm">
+                                <div class="form-group d-flex align-items-center flex-wrap">
+                                    <label for="monthSelect" class="date-label text-muted mr-3 mb-2">Chọn tháng:</label>
+                                    <select id="monthSelect" name="month" class="form-control mb-2" style="width: 150px;">
+                                        @for (int i = 1; i <= 12; i++)
+                                        {
+                                            if (i == Model.SelectedMonth)
+                                            {
+                                                <option value="@i" selected>Tháng @i</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@i">Tháng @i</option>
+                                            }
+                                        }
+                                    </select>
+                                    <label for="fromDate" class="date-label text-muted ml-3 mr-3 mb-2">Từ ngày:</label>
+                                    <input type="date" id="fromDate" class="form-control mb-2" style="width: 180px;" />
+                                    <label for="toDate" class="date-label text-muted ml-3 mr-3 mb-2">Đến ngày:</label>
+                                    <input type="date" id="toDate" class="form-control mb-2" style="width: 180px;" />
+                                    <button id="fetchRevenue" class="btn ml-3 mb-2" type="button">Lấy dữ liệu</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-xl-12">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h2><i class="fas fa-chart-bar me-2"></i> Số lượng hàng bán</h2>
+                                <hr class="bg-light" style="border-top: 1px solid #E0E0E0;" />
+                            </div>
+                            <div class="card-body"><canvas id="myBarChart" width="100" height="40"></canvas></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-xl-12">
+                        <div class="header-section">
+                            <h2><i class="fas fa-chart-bar me-2"></i> Doanh thu</h2>
+                            <hr class="bg-light" style="border-top: 1px solid #E0E0E0;" />
+                        </div>
+                        <div class="table-section">
+                            <table class="table mt-3" id="revenueTable">
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                        <div class="body-section">
+                            <canvas id="revenueChart" width="100" height="40"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </main>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            let revenueChart, salesChart;
+
+            function fetchRevenue() {
+                const month = $("#monthSelect").val();
+                const fromDate = $("#fromDate").val();
+                const toDate = $("#toDate").val();
+
+                $.ajax({
+                    url: '/Admin/HomeAdmin/GetRevenueByDateRange',
+                    type: 'GET',
+                    data: { month: month, fromDate: fromDate, toDate: toDate },
+                    success: function (data) {
+                        console.log('API Response (Revenue):', data);
+                        const tableBody = $("#revenueTable tbody");
+                        tableBody.empty();
+
+                        const revenueData = data.$values || data;
+
+                        if (!Array.isArray(revenueData)) {
+                            tableBody.append('<tr><td><div class="text-dark p-2 bg-info text-center">Không có dữ liệu doanh thu</div></td></tr>');
+                            if (revenueChart) revenueChart.destroy();
+                            revenueChart = new Chart(document.getElementById('revenueChart').getContext('2d'), {
+                                type: 'bar',
+                                data: { labels: [], datasets: [] },
+                                options: {
+                                    scales: { x: { ticks: { maxRotation: 0, minRotation: 0, padding: 10 } }, y: { beginAtZero: true, ticks: { callback: value => value.toLocaleString('vi-VN') + ' VNĐ' } } },
+                                    plugins: { legend: { display: false } }
+                                }
+                            });
+                            return;
+                        }
+
+                        const limitedRevenueData = revenueData.slice(0, 4);
+
+                        limitedRevenueData.forEach(item => {
+                            const width = Math.min((item.totalRevenue / 20000000) * 100, 100);
+                            tableBody.append(
+                                `<tr><td><span class="week-label"><b>${item.week}:</b></span> <div class="text-dark p-2 bg-info d-inline-block" style="width: ${Math.round(width)}%; min-width: 100px;">${item.totalRevenue.toLocaleString('vi-VN')} VNĐ</div></td></tr>`
+                            );
+                        });
+
+                        if (revenueChart) revenueChart.destroy();
+                        const ctxRevenue = document.getElementById('revenueChart').getContext('2d');
+                        revenueChart = new Chart(ctxRevenue, {
+                            type: 'bar',
+                            data: {
+                                labels: limitedRevenueData.map(item => item.week),
+                                datasets: [{
+                                    label: 'Doanh thu (VNĐ)',
+                                    data: limitedRevenueData.map(item => item.totalRevenue),
+                                    backgroundColor: ['#FF5722', '#757575', '#B0BEC5', '#CFD8DC'],
+                                    borderColor: ['#FF5722', '#757575', '#B0BEC5', '#CFD8DC'],
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                scales: {
+                                    x: { ticks: { maxRotation: 0, minRotation: 0, padding: 10 } },
+                                    y: {
+                                        beginAtZero: true,
+                                        ticks: { callback: value => value.toLocaleString('vi-VN') + ' VNĐ' }
+                                    }
+                                },
+                                plugins: { legend: { display: true, labels: { color: '#333333' } } }
+                            }
+                        });
+                    },
+                    error: function (xhr) {
+                        console.error('AJAX Error (Revenue):', xhr.responseText);
+                        alert(xhr.responseText || "Đã xảy ra lỗi khi lấy dữ liệu doanh thu.");
+                    }
+                });
+
+                $.ajax({
+                    url: '/Admin/HomeAdmin/GetSalesByCategory',
+                    type: 'GET',
+                    data: { month: month, fromDate: fromDate, toDate: toDate },
+                    success: function (data) {
+                        console.log('API Response (Sales):', data);
+                        const salesData = data.$values || data;
+
+                        if (!Array.isArray(salesData) || salesData.length === 0) {
+                            if (salesChart) salesChart.destroy();
+                            salesChart = new Chart(document.getElementById('myBarChart').getContext('2d'), {
+                                type: 'bar',
+                                data: { labels: [], datasets: [] },
+                                options: {
+                                    scales: { y: { beginAtZero: true, ticks: { callback: value => value } } },
+                                    plugins: { legend: { display: false } }
+                                }
+                            });
+                            return;
+                        }
+
+                        if (salesChart) salesChart.destroy();
+                        const ctxSales = document.getElementById('myBarChart').getContext('2d');
+                        salesChart = new Chart(ctxSales, {
+                            type: 'bar',
+                            data: {
+                                labels: salesData.map(item => item.category),
+                                datasets: [{
+                                    label: 'Số lượng bán',
+                                    data: salesData.map(item => item.quantity),
+                                    backgroundColor: ['#FF5722', '#757575', '#B0BEC5', '#CFD8DC', '#90A4AE', '#B0BEC5'],
+                                    borderColor: ['#FF5722', '#757575', '#B0BEC5', '#CFD8DC', '#90A4AE', '#B0BEC5'],
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                        ticks: { callback: value => value, color: '#333333' }
+                                    }
+                                },
+                                plugins: { legend: { display: true, labels: { color: '#333333' } } }
+                            }
+                        });
+                    },
+                    error: function (xhr) {
+                        console.error('AJAX Error (Sales):', xhr.responseText);
+                        alert(xhr.responseText || "Đã xảy ra lỗi khi lấy dữ liệu số lượng hàng bán.");
+                    }
+                });
+            }
+
+            $("#monthSelect, #fromDate, #toDate").change(fetchRevenue);
+            $("#fetchRevenue").click(fetchRevenue);
+
+            fetchRevenue();
+        });
+    </script>
+}

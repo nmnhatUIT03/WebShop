@@ -1,0 +1,512 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        /* Sticky Header Styling */
+        .header-container {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.8);
+            border-bottom: 1px solid #d5d5d5;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            transition: transform 0.3s ease-in-out;
+        }
+
+            .header-container.hidden {
+                transform: translateY(-100%);
+            }
+
+        /* Ensure header doesn't overlap hero banner */
+        .hero {
+            margin-top: 0 !important;
+        }
+
+        /* Fix banner arrow and white block (remove unwanted overlay) */
+        .header__top__right,
+        .header__top__left {
+            position: static;
+        }
+
+        /* Navigation dropdown hover effect */
+        .header__menu ul li {
+            position: relative;
+        }
+
+        .header__menu .dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: #ffffff;
+            border: 1px solid #d5d5d5;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            padding: 8px 0;
+            min-width: 150px;
+            z-index: 1000;
+            display: none;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .header__menu ul li:hover .dropdown {
+            display: block;
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Ensure dropdown items are styled correctly */
+        .header__menu .dropdown li a:hover {
+            color: #666666;
+        }
+
+        /* Hover effects */
+        a:hover,
+        .header__menu ul li a:hover,
+        .header__top__links a:hover,
+        .offcanvas__links a:hover,
+        .header__nav__option a:hover,
+        .canvas__open:hover {
+            color: #666666 !important;
+        }
+
+        .header__top__links a::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            bottom: -2px;
+            left: 0;
+            background-color: #ff6200;
+            transform: scaleX(0);
+            transform-origin: bottom right;
+            transition: transform 0.3s ease-out;
+        }
+
+        .header__top__links a:hover::after {
+            transform: scaleX(1);
+            transform-origin: bottom left;
+        }
+
+        .header__logo img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .header__nav__option a:hover img {
+            transform: scale(1.1);
+        }
+
+        /* Ensure navigation links are clickable */
+        .header__menu ul li a {
+            z-index: 1001 !important;
+            pointer-events: auto !important;
+        }
+
+        /* Responsive adjustments */
+        @@media (max-width: 991px) {
+            .header__main {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .header__menu ul {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 5px;
+            }
+
+            .header__menu ul li a {
+                padding: 0 5px;
+                font-size: 0.75rem;
+                z-index: 1001 !important;
+                pointer-events: auto !important;
+            }
+
+            .header__nav__option {
+                margin-top: 10px;
+                margin-left: 0;
+                transform: translateX(0) !important;
+            }
+
+        }
+
+        @@media (max-width: 767.98px) {
+            .header-container
+
+        {
+            padding: 5px 0;
+        }
+
+        .header__logo img {
+            max-width: 120px;
+        }
+
+        .header__top__left p {
+            font-size: 0.7rem;
+        }
+
+        .header__top__links a {
+            font-size: 0.7rem;
+            margin-left: 6px;
+        }
+
+        .header__menu {
+            display: none;
+        }
+
+            .header__menu.active {
+                display: block !important;
+            }
+
+        .canvas__open {
+            display: block;
+        }
+
+        .header__menu a,
+        .offcanvas__links a {
+            font-size: 0.8rem;
+        }
+
+        .header__nav__option img {
+            width: 25px;
+        }
+
+        .cart-count {
+            font-size: 0.9rem;
+        }
+
+        }
+
+        @@media (max-width: 575.98px) {
+            .header-container
+
+        {
+            padding: 3px 0;
+        }
+
+        .header__logo img {
+            max-width: 100px;
+        }
+
+        .header__menu a,
+        .offcanvas__links a {
+            font-size: 0.7rem;
+        }
+
+        .header__nav__option img {
+            width: 20px;
+        }
+
+        .cart-count {
+            font-size: 0.8rem;
+        }
+
+        }
+
+        /* Category Menu Styles */
+        .category-menu-wrapper {
+            position: relative;
+            display: inline-block;
+            margin: 0 10px;
+        }
+
+        .category-menu-btn {
+            background-color: #c41e3a;
+            color: white;
+            padding: 10px 18px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .category-menu-btn:hover {
+            background-color: #a01730;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .category-menu-btn i {
+            font-size: 16px;
+        }
+
+        /* Dropdown Menu Styles */
+        .category-dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: white;
+            border: none;
+            border-radius: 4px;
+            min-width: 220px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            margin-top: 8px;
+        }
+
+        /* Show dropdown on hover */
+        .category-menu-wrapper:hover .category-dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            color: #333;
+            text-decoration: none !important;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f5f5f5;
+            color: #c41e3a;
+            text-decoration: none !important;
+        }
+
+        .dropdown-item i {
+            font-size: 16px;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .dropdown-item span {
+            font-weight: 500;
+            text-decoration: none !important;
+        }
+        
+        .dropdown-item:focus,
+        .dropdown-item:active,
+        .dropdown-item:visited {
+            text-decoration: none !important;
+        }
+
+        /* Animation for dropdown items */
+        .category-dropdown-menu .dropdown-item {
+            animation: slideIn 0.3s ease forwards;
+            opacity: 0;
+        }
+
+        .category-menu-wrapper:hover .dropdown-item {
+            opacity: 1;
+        }
+
+        .category-dropdown-menu .dropdown-item:nth-child(1) { animation-delay: 0.05s; }
+        .category-dropdown-menu .dropdown-item:nth-child(2) { animation-delay: 0.1s; }
+        .category-dropdown-menu .dropdown-item:nth-child(3) { animation-delay: 0.15s; }
+        .category-dropdown-menu .dropdown-item:nth-child(4) { animation-delay: 0.2s; }
+        .category-dropdown-menu .dropdown-item:nth-child(5) { animation-delay: 0.25s; }
+
+        @@keyframes slideIn {
+            from {
+                transform: translateX(-10px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section Begin -->
+    <header class="header header-container">
+        <div class="header__top" style="background: linear-gradient(to right, rgba(224, 224, 224, 0.8), rgba(245, 245, 245, 0.8)); padding: 2px 0; transition: background 0.3s ease;">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-6 col-md-7">
+                        <div class="header__top__left">
+                            <p style="font-size: 0.8rem; color: #666666; margin: 0; font-weight: 400;">Miễn phí vận chuyển, bảo đảm đổi trả hoặc hoàn tiền trong 30 ngày.</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-5">
+                        <div class="header__top__right">
+                            <div class="header__top__links">
+                                <a href="@Url.Action("CheckInView", "Home")" id="checkin-btn" style="color: #ff6200; font-size: 0.8rem; font-weight: 700; text-decoration: none; margin-left: 8px; transition: color 0.3s ease; position: relative;">
+                                    <i class="fas fa-calendar-check"></i> Điểm danh
+                                </a>
+                                <a asp-controller="Accounts" asp-action="Login" style="color: #000000; font-size: 0.8rem; font-weight: 700; text-decoration: none; margin-left: 8px; transition: color 0.3s ease; position: relative;">Đăng nhập</a>
+                                <a href="/dang-ky.html" style="color: #000000; font-size: 0.8rem; font-weight: 700; text-decoration: none; margin-left: 8px; transition: color 0.3s ease; position: relative;">Đăng ký</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row align-items-center header__main" style="display: flex; justify-content: space-between; align-items: center; height: auto;">
+                <div class="col-lg-3 col-md-3">
+                    <div class="header__logo">
+                        <a asp-controller="Home" asp-action="Index"><img src="~/assets/images/logo/logoadmin1.jpg" style="max-width: 150px; height: auto; transition: transform 0.3s ease, box-shadow 0.3s ease; border-radius: 8px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);" /></a>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6">
+                    <nav class="header__menu mobile-menu">
+                        <ul style="list-style: none; padding: 0; margin: 0; display: flex; justify-content: center; align-items: center; gap: 10px; white-space: nowrap; flex-wrap: nowrap;">
+                            <!-- Category Menu Button with Dropdown -->
+                            <li class="category-menu-wrapper" style="position: relative; display: flex; align-items: center;">
+                                <button class="category-menu-btn" type="button">
+                                    <span>DANH MỤC SẢN PHẨM</span>
+                                </button>
+                                
+                                <!-- Dropdown Menu -->
+                                <div class="category-dropdown-menu">
+                                    <a href="/shop.html?categoryId=1009" class="dropdown-item"><span>Giày dép</span></a>
+                                    <a href="/shop.html?categoryId=1010" class="dropdown-item"><span>Quần Jeans</span></a>
+                                    <a href="/shop.html?categoryId=1011" class="dropdown-item"><span>Túi xách Ví</span></a>
+                                    <a href="/shop.html?categoryId=1013" class="dropdown-item"><span>Phụ Kiện</span></a>
+                                    <a href="/shop.html?categoryId=1018" class="dropdown-item"><span>Áo thun</span></a>
+                                    <a href="/shop.html?categoryId=1020" class="dropdown-item"><span>Đồ thể thao</span></a>
+                                    <a href="/shop.html?categoryId=1022" class="dropdown-item"><span>Chân váy</span></a>
+                                    <a href="/shop.html?categoryId=1033" class="dropdown-item"><span>Áo sơ mi</span></a>
+                                    <a href="/shop.html?categoryId=1034" class="dropdown-item"><span>Áo khoác</span></a>
+                                    <a href="/shop.html?categoryId=1035" class="dropdown-item"><span>Quần Short</span></a>
+                                </div>
+                            </li>
+
+                            <li style="position: relative; display: flex; align-items: center;"><a asp-controller="Home" asp-action="Index" style="color: #000000; font-size: 0.85rem; font-weight: 600; text-decoration: none; text-transform: uppercase; letter-spacing: 1px; transition: color 0.3s ease; padding: 0 10px;">Trang Chủ</a></li>
+                            <li style="position: relative; display: flex; align-items: center;"><a asp-controller="Shop" asp-action="Index" style="color: #000000; font-size: 0.85rem; font-weight: 600; text-decoration: none; text-transform: uppercase; letter-spacing: 1px; transition: color 0.3s ease; padding: 0 10px;">Cửa Hàng</a></li>
+                            <li style="position: relative; display: flex; align-items: center;">
+                                <a asp-controller="Page" asp-action="Index" style="color: #000000; font-size: 0.85rem; font-weight: 600; text-decoration: none; text-transform: uppercase; letter-spacing: 1px; transition: color 0.3s ease; padding: 0 10px;">Trang</a>
+                            </li>
+                            <li style="position: relative; display: flex; align-items: center;">
+                                <a asp-controller="Blog" asp-action="Index" style="color: #000000; font-size: 0.85rem; font-weight: 600; text-decoration: none; text-transform: uppercase; letter-spacing: 1px; transition: color 0.3s ease; padding: 0 10px;">Tin Tức</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                <div class="col-lg-3 col-md-3">
+                    <div class="header__nav__option" style="display: flex; align-items: center; justify-content: flex-end; gap: 15px; transform: translateX(-180px) !important; position: relative;">
+                        <a href="cart.html" class="cart-link" style="color: #000000; text-decoration: none; display: flex; align-items: center; position: relative; transition: color 0.3s ease;">
+                            <img src="~/assets/img/icon/cart.png" style="width: 30px; height: auto; margin-right: 0; transition: transform 0.3s ease;" />
+                            <span class="cart-count" style="font-size: 1rem; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="canvas__open" style="display: none; font-size: 1.3rem; color: #000000; cursor: pointer; transition: color 0.3s ease;"><i class="fa fa-bars"></i></div>
+        </div>
+    </header>
+    <!-- Header Section End -->
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Toggle mobile menu
+            $('.canvas__open').click(function () {
+                $('.header__menu').toggleClass('active');
+            });
+
+            // Ensure dropdown works on hover
+            $('.header__menu ul li').hover(
+                function () {
+                    $(this).find('.dropdown').css({
+                        'display': 'block',
+                        'visibility': 'visible',
+                        'opacity': '1'
+                    });
+                },
+                function () {
+                    $(this).find('.dropdown').css({
+                        'display': 'none',
+                        'visibility': 'hidden',
+                        'opacity': '0'
+                    });
+                }
+            );
+
+            // Scroll effect for header
+            let lastScroll = 0;
+            const header = $('.header-container');
+            let ticking = false;
+
+            $(window).scroll(function () {
+                if (!ticking) {
+                    window.requestAnimationFrame(function () {
+                        let currentScroll = $(window).scrollTop();
+
+                        if (currentScroll > lastScroll && currentScroll > 100) {
+                            header.addClass('hidden');
+                        } else {
+                            header.removeClass('hidden');
+                        }
+
+                        lastScroll = currentScroll <= 0 ? 0 : currentScroll;
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            });
+
+            // Debug Tin Tức link
+            $('a[href="/blog.html"]').on('click', function (e) {
+                console.log('Tin Tức link clicked!');
+            });
+
+            // Hàm cập nhật số lượng giỏ hàng
+            function updateCartCount(count) {
+                $('.cart-count').text(count || '0');
+            }
+
+            // Hàm lấy số lượng giỏ hàng từ API
+            function fetchCartCount() {
+                $.ajax({
+                    url: '/api/cart/count',
+                    type: 'GET',
+                    success: function (response) {
+                        if (response.success && response.count !== undefined) {
+                            updateCartCount(response.count);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Lỗi khi lấy số lượng giỏ hàng:', error);
+                        updateCartCount('0');
+                    }
+                });
+            }
+
+            // Gọi lần đầu khi tải trang
+            fetchCartCount();
+
+            // Lắng nghe sự kiện thêm/sửa/xóa giỏ hàng
+            $(document).on('click', '.add-to-cart', function () {
+                setTimeout(() => {
+                    fetchCartCount();
+                }, 500);
+            });
+
+            $(document).on('click', '.remove-from-cart', function () {
+                setTimeout(() => {
+                    fetchCartCount();
+                }, 500);
+            });
+        });
+    </script>
+</body>
+</html>

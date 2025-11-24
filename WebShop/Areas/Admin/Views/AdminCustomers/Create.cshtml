@@ -1,0 +1,437 @@
+﻿@model WebShop.ModelViews.RegisterVM
+
+@{
+    ViewData["Title"] = "Tạo khách hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap');
+
+    body {
+        background: #CBD5E0;
+        font-family: 'Montserrat', sans-serif;
+        color: #1A202C;
+        font-weight: 400;
+        overflow-x: hidden;
+    }
+
+    .container {
+        max-width: 1440px;
+        padding: 0 20px;
+        margin: 0 auto;
+    }
+
+    .page-header {
+        background: linear-gradient(135deg, #FFFFFF 0%, #CBD5E0 100%);
+        padding: 20px 30px;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        margin-bottom: 30px;
+    }
+
+    .header-title {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 1.8rem;
+        font-weight: 500;
+        color: #1A202C;
+        text-align: center;
+    }
+
+    .header-sub-title {
+        text-align: center;
+    }
+
+    .breadcrumb {
+        background: none;
+        padding: 0;
+        margin: 0;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.9rem;
+        color: #4A5568;
+    }
+
+    .breadcrumb-item {
+        color: #4A5568;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+        .breadcrumb-item:hover {
+            color: #f05a00;
+        }
+
+        .breadcrumb-item.active {
+            color: #1A202C;
+            font-weight: 500;
+        }
+
+        .breadcrumb-item + .breadcrumb-item::before {
+            content: '>';
+            margin: 0 10px;
+            color: #4A5568;
+        }
+
+    .card {
+        background: #FFFFFF;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        overflow: hidden;
+        transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+        }
+
+    .card-body {
+        padding: 30px;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 600;
+        color: #1A202C;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    .form-control {
+        border-radius: 8px;
+        padding: 0.7rem 1rem;
+        font-size: 0.9rem;
+        font-weight: 400;
+        background-color: #F9F9F9;
+        border: 1px solid #CBD5E0;
+        transition: all 0.3s ease;
+    }
+
+        .form-control:focus {
+            border-color: #f05a00;
+            background-color: #FFFFFF;
+            box-shadow: 0 0 8px rgba(240, 90, 0, 0.3);
+            outline: none;
+        }
+
+        .form-control::placeholder {
+            color: #999999;
+            font-weight: 400;
+        }
+
+        .form-control.is-invalid {
+            border-color: #dc3545;
+        }
+
+    .btn {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border-radius: 8px;
+        padding: 10px 20px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-success {
+        background: #f05a00;
+        border: none;
+        color: #FFFFFF;
+    }
+
+        .btn-success:hover {
+            background: #d94f00;
+            box-shadow: 0 6px 20px rgba(240, 90, 0, 0.5);
+        }
+
+    .btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        transition: left 0.5s ease;
+    }
+
+    .btn:hover::before {
+        left: 100%;
+    }
+
+    .text-danger {
+        font-size: 0.8rem;
+        font-weight: 400;
+        color: #dc3545;
+    }
+
+    @@media (max-width: 767.98px) {
+        .card-body {
+            padding: 20px;
+        }
+
+        .form-control {
+            font-size: 0.8rem;
+        }
+
+        .form-label {
+            font-size: 0.8rem;
+        }
+
+        .btn {
+            padding: 8px 15px;
+            font-size: 0.7rem;
+        }
+    }
+
+    @@media (max-width: 575.98px) {
+        .page-header {
+            padding: 15px 0;
+        }
+
+        .header-title {
+            font-size: 1.5rem;
+        }
+
+        .breadcrumb {
+            font-size: 0.8rem;
+        }
+
+        .card-body {
+            padding: 15px;
+        }
+
+        .form-control {
+            font-size: 0.75rem;
+        }
+
+        .form-label {
+            font-size: 0.75rem;
+        }
+
+        .btn {
+            padding: 6px 12px;
+            font-size: 0.65rem;
+        }
+    }
+</style>
+
+<div class="container">
+    <form asp-action="Create" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="page-header">
+            <h2 class="header-title">Thêm khách hàng</h2>
+            <div class="header-sub-title">
+                <nav class="breadcrumb breadcrumb-dash">
+                    <a asp-area="Admin" asp-controller="HomeAdmin" asp-action="Index" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Home</a>
+                    <a class="breadcrumb-item" asp-area="Admin" asp-controller="AdminCustomers" asp-action="Index">Danh sách khách hàng</a>
+                    <span class="breadcrumb-item active">Thêm khách hàng</span>
+                </nav>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <div class="form-group">
+                    <label class="form-label" for="FullName">Họ và tên</label>
+                    <input type="text" class="form-control" asp-for="FullName" placeholder="Nhập họ và tên">
+                    <span asp-validation-for="FullName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="Email">Email</label>
+                    <input type="email" class="form-control" asp-for="Email" placeholder="Nhập email">
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="Phone">Số điện thoại</label>
+                    <input type="tel" class="form-control" asp-for="Phone" placeholder="Nhập số điện thoại">
+                    <span asp-validation-for="Phone" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="Password">Mật khẩu</label>
+                    <input type="password" class="form-control" asp-for="Password" placeholder="Nhập mật khẩu">
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="ConfirmPassword">Xác nhận mật khẩu</label>
+                    <input type="password" class="form-control" asp-for="ConfirmPassword" placeholder="Nhập lại mật khẩu">
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="Active">Trạng thái</label>
+                    <select class="form-control" asp-for="Active">
+                        <option value="true">Hoạt động</option>
+                        <option value="false">Không hoạt động</option>
+                    </select>
+                    <span asp-validation-for="Active" class="text-danger"></span>
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-success m-r-10"><i class="far fa-save m-r-5"></i>Lưu</button>
+                    <a class="btn btn-success" asp-action="Index"><i class="fas fa-undo m-r-5"></i>Quay lại</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Debug form submit
+            $("form").on("submit", function (e) {
+                console.log("Form submitted");
+                if (!$(this).valid()) {
+                    console.log("Form validation failed");
+                    e.preventDefault();
+                }
+            });
+
+            // Khởi tạo jQuery Validation thủ công
+            $("form").validate({
+                rules: {
+                    FullName: {
+                        required: true
+                    },
+                    Email: {
+                        required: true,
+                        email: true,
+                        remote: {
+                            url: '@Url.Action("ValidateEmail", "AdminCustomers", new { area = "Admin" })',
+                            type: "GET",
+                            data: {
+                                Email: function () {
+                                    return $("#Email").val();
+                                }
+                            }
+                        }
+                    },
+                    Phone: {
+                        phoneUS: true, // Thay bằng regex nếu cần
+                        remote: {
+                            url: '@Url.Action("ValidatePhone", "AdminCustomers", new { area = "Admin" })',
+                            type: "GET",
+                            data: {
+                                Phone: function () {
+                                    return $("#Phone").val();
+                                }
+                            }
+                        }
+                    },
+                    Password: {
+                        required: true,
+                        minlength: 6
+                    },
+                    ConfirmPassword: {
+                        required: true,
+                        equalTo: "#Password"
+                    },
+                    Active: {
+                        required: true
+                    }
+                },
+                messages: {
+                    FullName: {
+                        required: "Họ và tên là bắt buộc"
+                    },
+                    Email: {
+                        required: "Email là bắt buộc",
+                        email: "Email không hợp lệ",
+                        remote: "Email đã được sử dụng"
+                    },
+                    Phone: {
+                        phoneUS: "Số điện thoại không hợp lệ",
+                        remote: "Số điện thoại đã được sử dụng"
+                    },
+                    Password: {
+                        required: "Mật khẩu là bắt buộc",
+                        minlength: "Mật khẩu phải có ít nhất 6 ký tự"
+                    },
+                    ConfirmPassword: {
+                        required: "Xác nhận mật khẩu là bắt buộc",
+                        equalTo: "Mật khẩu xác nhận không khớp"
+                    },
+                    Active: {
+                        required: "Trạng thái là bắt buộc"
+                    }
+                },
+                errorElement: "span",
+                errorClass: "text-danger",
+                highlight: function (element) {
+                    $(element).addClass("is-invalid");
+                },
+                unhighlight: function (element) {
+                    $(element).removeClass("is-invalid");
+                },
+                errorPlacement: function (error, element) {
+                    error.insertAfter(element);
+                }
+            });
+
+            // Debug AJAX email
+            $("#Email").on("blur", function () {
+                var email = $(this).val();
+                if (email) {
+                    console.log("Checking email: " + email);
+                    $.ajax({
+                        url: '@Url.Action("ValidateEmail", "AdminCustomers", new { area = "Admin" })',
+                        type: 'GET',
+                        data: { Email: email },
+                        success: function (data) {
+                            console.log("Email validation response: ", data);
+                            if (data !== true) {
+                                $("#Email").addClass("is-invalid");
+                                $("#Email").next(".text-danger").text(data);
+                            } else {
+                                $("#Email").removeClass("is-invalid");
+                                $("#Email").next(".text-danger").text("");
+                            }
+                        },
+                        error: function (xhr) {
+                            console.log("Email validation error: ", xhr.status);
+                            $("#Email").addClass("is-invalid");
+                            $("#Email").next(".text-danger").text("Lỗi khi kiểm tra email.");
+                        }
+                    });
+                }
+            });
+
+            // Debug AJAX phone
+            $("#Phone").on("blur", function () {
+                var phone = $(this).val();
+                if (phone) {
+                    console.log("Checking phone: " + phone);
+                    $.ajax({
+                        url: '@Url.Action("ValidatePhone", "AdminCustomers", new { area = "Admin" })',
+                        type: 'GET',
+                        data: { Phone: phone },
+                        success: function (data) {
+                            console.log("Phone validation response: ", data);
+                            if (data !== true) {
+                                $("#Phone").addClass("is-invalid");
+                                $("#Phone").next(".text-danger").text(data);
+                            } else {
+                                $("#Phone").removeClass("is-invalid");
+                                $("#Phone").next(".text-danger").text("");
+                            }
+                        },
+                        error: function (xhr) {
+                            console.log("Phone validation error: ", xhr.status);
+                            $("#Phone").addClass("is-invalid");
+                            $("#Phone").next(".text-danger").text("Lỗi khi kiểm tra số điện thoại.");
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}

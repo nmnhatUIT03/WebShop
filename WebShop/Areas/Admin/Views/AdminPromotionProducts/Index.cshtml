@@ -1,0 +1,399 @@
+﻿@model IEnumerable<WebShop.Models.Promotion>
+@using System.Globalization
+@{
+    ViewData["Title"] = "Danh sách chương trình khuyến mãi";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap');
+
+    body {
+        background: #CBD5E0;
+        font-family: 'Montserrat', sans-serif;
+        color: #1A202C;
+        font-weight: 400;
+        overflow-x: hidden;
+    }
+
+    .container {
+        max-width: 1440px;
+        padding: 0 20px;
+        margin: 0 auto;
+    }
+
+    .page-header {
+        background: linear-gradient(135deg, #FFFFFF 0%, #CBD5E0 100%);
+        padding: 20px 30px;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        margin-bottom: 30px;
+    }
+
+    .header-title {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 1.8rem;
+        font-weight: 500;
+        color: #1A202C;
+        text-align: center;
+    }
+
+    .header-sub-title {
+        text-align: center;
+    }
+
+    .breadcrumb {
+        background: none;
+        padding: 0;
+        margin: 0;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.9rem;
+        color: #4A5568;
+        display: flex;
+        justify-content: center;
+    }
+
+    .breadcrumb-item {
+        color: #4A5568;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+        .breadcrumb-item:hover {
+            color: #f05a00;
+        }
+
+        .breadcrumb-item.active {
+            color: #1A202C;
+            font-weight: 500;
+        }
+
+        .breadcrumb-item + .breadcrumb-item::before {
+            content: '>';
+            margin: 0 10px;
+            color: #4A5568;
+        }
+
+    .card {
+        background: #FFFFFF;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        overflow: hidden;
+        transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+        }
+
+    .card-body {
+        padding: 20px;
+    }
+
+    .card-title {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 1.5rem;
+        font-weight: 400;
+        color: #1A202C;
+        margin-bottom: 20px;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    .table {
+        font-family: 'Montserrat', sans-serif;
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+        .table th {
+            font-weight: 600;
+            color: #1A202C;
+            padding: 15px;
+            background: #F7FAFC;
+            border-bottom: 2px solid #E2E8F0;
+            font-size: 0.9rem;
+            text-align: left;
+        }
+
+        .table td {
+            padding: 15px;
+            vertical-align: middle;
+            border-bottom: 1px solid #E2E8F0;
+            color: #2D3748;
+            font-size: 0.9rem;
+        }
+
+        .table tr:hover {
+            background: #F7FAFC;
+        }
+
+    .btn {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border-radius: 8px;
+        padding: 8px 15px;
+        transition: all 0.3s ease;
+        border: none;
+        color: #FFFFFF;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-details {
+        background: #000000;
+    }
+
+        .btn-details:hover {
+            background: #333333;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+        }
+
+    .btn-edit {
+        background: linear-gradient(to right, #a8a8a8 0%, #a8a8a8 100%);
+    }
+
+        .btn-edit:hover {
+            background: linear-gradient(to right, #a8a8a8 0%, #a8a8a8 80%, #9a9a9a 100%);
+            box-shadow: 0 6px 20px rgba(168, 168, 168, 0.5);
+        }
+
+    .btn-delete {
+        background: #F56565;
+    }
+
+        .btn-delete:hover {
+            background: #E53E3E;
+            box-shadow: 0 6px 20px rgba(245, 101, 101, 0.5);
+        }
+
+    .btn-success {
+        background: #f05a00;
+    }
+
+        .btn-success:hover {
+            background: #d94f00;
+            box-shadow: 0 6px 20px rgba(240, 90, 0, 0.5);
+        }
+
+    .btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        transition: left 0.5s ease;
+    }
+
+    .btn:hover::before {
+        left: 100%;
+    }
+
+    .action-buttons {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .search-form {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .search-input {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.9rem;
+        border-radius: 8px;
+        border: 1px solid #CBD5E0;
+        padding: 10px 15px;
+        width: 100%;
+        max-width: 300px;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .search-input:focus {
+            border-color: #f05a00;
+            box-shadow: 0 0 8px rgba(240, 90, 0, 0.3);
+            outline: none;
+        }
+
+    .search-button {
+        background: #f05a00;
+        border: none;
+        color: #FFFFFF;
+        padding: 10px 15px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+        .search-button:hover {
+            background: #d94f00;
+            box-shadow: 0 6px 20px rgba(240, 90, 0, 0.5);
+        }
+
+    @@media (max-width: 767.98px) {
+        .card-body {
+            padding: 15px;
+        }
+
+        .table th, .table td {
+            padding: 10px;
+            font-size: 0.8rem;
+        }
+
+        .btn {
+            padding: 6px 12px;
+            font-size: 0.7rem;
+        }
+
+        .table .btn {
+            padding: 2px 6px;
+            height: 26px;
+            font-size: 0.7rem;
+        }
+
+        .table .btn-details, .table .btn-edit, .table .btn-delete, .table .btn-success {
+            min-width: 35px;
+        }
+
+        .action-buttons {
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .search-input {
+            font-size: 0.8rem;
+            max-width: 200px;
+        }
+    }
+
+    @@media (max-width: 575.98px) {
+        .page-header {
+            padding: 15px 0;
+        }
+
+        .header-title {
+            font-size: 1.5rem;
+        }
+
+        .breadcrumb {
+            font-size: 0.8rem;
+        }
+
+        .card-body {
+            padding: 10px;
+        }
+
+        .table th, .table td {
+            padding: 8px;
+            font-size: 0.75rem;
+        }
+
+        .table .btn {
+            padding: 1px 4px;
+            height: 24px;
+            font-size: 0.65rem;
+        }
+
+        .table .btn-details, .table .btn-edit, .table .btn-delete, .table .btn-success {
+            min-width: 30px;
+        }
+
+        .search-input {
+            font-size: 0.75rem;
+            max-width: 150px;
+        }
+    }
+</style>
+
+<div class="container">
+    <div class="page-header">
+        <h2 class="header-title">Danh sách chương trình khuyến mãi</h2>
+        <div class="header-sub-title">
+            <nav class="breadcrumb breadcrumb-dash">
+                <a asp-area="Admin" asp-controller="HomeAdmin" asp-action="Index" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Home</a>
+                <span class="breadcrumb-item active">Danh sách chương trình khuyến mãi</span>
+            </nav>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="row m-b-30">
+                <div class="col-lg-8">
+                    <h4 class="card-title">Tổng số: @Model.Count() chương trình khuyến mãi</h4>
+                    <form asp-action="Index" method="get" class="search-form">
+                        <input type="text" name="searchString" value="@ViewData["CurrentFilter"]" placeholder="Tìm kiếm chương trình khuyến mãi..." class="search-input" />
+                        <button type="submit" class="search-button"><i class="fa fa-search"></i></button>
+                    </form>
+                </div>
+                <div class="col-lg-4 text-right">
+                    <a asp-action="Create" class="btn btn-success">
+                        <i class="far fa-plus-square m-r-5"></i>
+                        <span>Thêm sản phẩm khuyến mãi</span>
+                    </a>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover e-commerce-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tên khuyến mãi</th>
+                            <th>Số lượng sản phẩm</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.PromotionId</td>
+                                    <td>@(item.PromotionName ?? "Chưa xác định")</td>
+                                    <td>@(item.PromotionProducts?.Count() ?? 0)</td>
+                                    <td>
+                                        <a asp-action="Details" asp-route-id="@item.PromotionId" class="btn btn-details btn-sm m-r-5">
+                                            <i class="far fa-eye"></i>
+                                        </a>
+                                        <a asp-action="Edit" asp-route-id="@item.PromotionId" class="btn btn-edit btn-sm m-r-5">
+                                            <i class="far fa-edit"></i>
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@item.PromotionId" class="btn btn-delete btn-sm">
+                                            <i class="far fa-trash-alt"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="4" class="text-center">Không có chương trình khuyến mãi nào.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+}

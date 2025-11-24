@@ -1,0 +1,654 @@
+﻿@using Microsoft.AspNetCore.Http
+@model WebShop.ModelViews.MuaHangVM
+@{
+    ViewData["Title"] = "Mua hàng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<WebShop.ModelViews.CartItem> Carts = ViewBag.GioHang ?? new List<WebShop.ModelViews.CartItem>();
+    var AvailableVouchers = ViewBag.AvailableVouchers as List<WebShop.ModelViews.VoucherViewModel> ?? new List<WebShop.ModelViews.VoucherViewModel>();
+    var AvailablePromotions = ViewBag.AvailablePromotions as List<WebShop.ModelViews.PromotionViewModel> ?? new List<WebShop.ModelViews.PromotionViewModel>();
+}
+
+<main class="main-content">
+    <div class="container">
+        <div class="checkout-container" id="checkoutContainer">
+            <div class="checkout-content">
+                <!-- Thông tin cá nhân -->
+                <div class="info-section">
+                    <h2 class="section-title">Thông tin cá nhân</h2>
+                    <form asp-controller="Checkout" asp-action="Index" method="post" id="checkoutForm">
+                        @Html.AntiForgeryToken()
+                        <input hidden asp-for="CustomerId" />
+                        <input hidden asp-for="SelectedProductDetailIds" value="@ViewBag.SelectedProductDetailIds" id="selectedProductDetailIds" />
+                        <input hidden asp-for="VoucherId" id="selectedVoucherId" />
+                        <input hidden asp-for="PromotionId" id="selectedPromotionId" />
+                        <div class="form-group">
+                            <label>Họ và tên <span>*</span></label>
+                            <input asp-for="FullName" placeholder="Nhập họ và tên" class="form-control" value="@Model?.FullName" required />
+                            <span asp-validation-for="FullName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label>Số điện thoại <span>*</span></label>
+                            <input asp-for="Phone" placeholder="Nhập số điện thoại" class="form-control" value="@Model?.Phone" required pattern="[0-9]{10}" />
+                            <span asp-validation-for="Phone" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label>Địa chỉ nhận hàng <span>*</span></label>
+                            <input asp-for="Address" placeholder="Nhập địa chỉ" class="form-control" value="@Model?.Address" required />
+                            <span asp-validation-for="Address" class="text-danger"></span>
+                        </div>
+                        <div class="form-group address-grid">
+                            <div class="address-field">
+                                <label>Tỉnh/Thành <span>*</span></label>
+                                <select asp-for="TinhThanh" class="form-control" asp-items="ViewBag.lsTinhThanh" required>
+                                    <option value="0" disabled selected>Chọn Tỉnh/Thành</option>
+                                </select>
+                                <span asp-validation-for="TinhThanh" class="text-danger"></span>
+                            </div>
+                            <div class="address-field">
+                                <label>Quận/Huyện <span>*</span></label>
+                                <input asp-for="QuanHuyen" placeholder="Nhập Quận/Huyện" class="form-control" value="@Model?.QuanHuyen" required />
+                                <span asp-validation-for="QuanHuyen" class="text-danger"></span>
+                            </div>
+                            <div class="address-field">
+                                <label>Phường/Xã <span>*</span></label>
+                                <input asp-for="PhuongXa" placeholder="Nhập Phường/Xã" class="form-control" value="@Model?.PhuongXa" required />
+                                <span asp-validation-for="PhuongXa" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <!-- Thông tin đơn hàng và thanh toán -->
+                <div class="order-payment-section">
+                    <div class="order-section">
+                        <h2 class="section-title">Thông tin đơn hàng</h2>
+                        <div class="order-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th><input type="checkbox" id="selectAllCheckout" checked></th>
+                                        <th>Hình</th>
+                                        <th>Sản phẩm</th>
+                                        <th>Size</th>
+                                        <th>Màu</th>
+                                        <th>Thành tiền</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Carts != null && Carts.Any())
+                                    {
+                                        foreach (var item in Carts)
+                                        {
+                                            <tr class="cart_item">
+                                                <td><input type="checkbox" class="selectCheckoutItem" value="@item.productDetail.ProductDetailId" checked></td>
+                                                <td><img src="@Url.Content(item.product.Thumb)" alt="@item.product.ProductName" class="product-img" onerror="this.src='/products/default.jpg';"></td>
+                                                <td>@item.product.ProductName <span>× @item.amount</span></td>
+                                                <td>@(item.SizeName ?? "N/A")</td>
+                                                <td>@(item.ColorName ?? "N/A")</td>
+                                                <td class="cart-product-total">
+                                                    <span class="amount">
+                                                        @((item.product.Price.HasValue ? (item.product.Price.Value * item.amount).ToString("N0", System.Globalization.CultureInfo.CreateSpecificCulture("vi-VN")) : "0")) VNĐ
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="5">Tổng đơn</td>
+                                        <td><strong class="order-total-amount">@Carts.Sum(x => (decimal)x.product.Price * x.amount).ToString("N0", System.Globalization.CultureInfo.CreateSpecificCulture("vi-VN")) VNĐ</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="5">Giảm giá</td>
+                                        <td><strong class="order-discount-amount">0 VNĐ</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="5">Tổng thanh toán</td>
+                                        <td><strong class="final-total-amount">@Carts.Sum(x => (decimal)x.product.Price * x.amount).ToString("N0", System.Globalization.CultureInfo.CreateSpecificCulture("vi-VN")) VNĐ</strong></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- Voucher Section -->
+                    <div class="voucher-section">
+                        <h2 class="section-title">Mã khuyến mãi/Voucher</h2>
+                        @if (AvailableVouchers.Any())
+                        {
+                            <div class="voucher-list">
+                                @foreach (var voucher in AvailableVouchers)
+                                {
+                                    if (voucher.EndDate >= DateTime.Now && voucher.UsedCount < voucher.MaxUsage && voucher.UsedCountByUser < voucher.DefaultUserMaxUsage)
+                                    {
+                                        <div class="voucher-item">
+                                            <input type="radio" name="VoucherId" value="@voucher.VoucherId" id="voucher_@voucher.VoucherId" @(Model.VoucherId == voucher.VoucherId ? "checked" : "")>
+                                            <label for="voucher_@voucher.VoucherId">
+                                                <span class="voucher-code">@voucher.VoucherCode</span>
+                                                <span class="voucher-discount">
+                                                    @(voucher.DiscountType == "Percentage" ? $"{voucher.DiscountValue}% giảm" : $"{voucher.DiscountValue.ToString("N0", System.Globalization.CultureInfo.CreateSpecificCulture("vi-VN"))} VNĐ giảm")
+                                                </span>
+                                                <span class="voucher-info">
+                                                    Đơn tối thiểu: @(voucher.MinOrderValue?.ToString("N0", System.Globalization.CultureInfo.CreateSpecificCulture("vi-VN")) ?? "Không yêu cầu") VNĐ |
+                                                    Còn @(voucher.MaxUsage - voucher.UsedCount) lượt |
+                                                    Bạn đã dùng @voucher.UsedCountByUser/@voucher.DefaultUserMaxUsage lượt |
+                                                    Hạn: @((voucher.EndDate.HasValue ? voucher.EndDate.Value.ToString("dd/MM/yyyy") : "Chưa xác định"))
+                                                </span>
+                                            </label>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <p>Không có voucher nào khả dụng.</p>
+                        }
+                    </div>
+                    <!-- Promotion Section -->
+                    <div class="promotion-section">
+                        <h2 class="section-title">Chương trình khuyến mãi</h2>
+                        @if (AvailablePromotions.Any())
+                        {
+                            <div class="promotion-list">
+                                @foreach (var promotion in AvailablePromotions)
+                                {
+                                    if (promotion.EndDate >= DateTime.Now && promotion.IsActive && promotion.UsedCountByUser < promotion.DefaultUserMaxUsage)
+                                    {
+                                        <div class="promotion-item">
+                                            <input type="radio" name="PromotionId" value="@promotion.PromotionId" id="promotion_@promotion.PromotionId" @(Model.PromotionId == promotion.PromotionId ? "checked" : "")>
+                                            <label for="promotion_@promotion.PromotionId">
+                                                <span class="promotion-name">@promotion.PromotionName</span>
+                                                <span class="promotion-discount">
+                                                    @($"{promotion.Discount}% giảm")
+                                                </span>
+                                                <span class="promotion-info">
+                                                    Bắt đầu: @promotion.StartDate.ToString("dd/MM/yyyy") |
+                                                    Kết thúc: @promotion.EndDate.ToString("dd/MM/yyyy") |
+                                                    Bạn đã dùng @promotion.UsedCountByUser/@promotion.DefaultUserMaxUsage lượt
+                                                </span>
+                                            </label>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <p>Không có chương trình khuyến mãi nào khả dụng.</p>
+                        }
+                    </div>
+                    <div class="payment-section">
+                        <h2 class="section-title">Hình thức thanh toán</h2>
+                        <div class="payment-options">
+                            <label><input type="radio" asp-for="PaymentID" value="1" checked> Thanh toán COD (Thanh toán khi nhận hàng)</label>
+                            <label><input type="radio" asp-for="PaymentID" value="2"> Thanh toán online (Chuyển khoản/Thẻ tín dụng)</label>
+                        </div>
+                        <button type="submit" form="checkoutForm" class="submit-btn" id="submitButton"><i class="fas fa-check-circle m-r-5"></i> Đặt hàng</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            if (typeof $.fn.niceSelect !== 'undefined') {
+                $('select').niceSelect();
+            } else {
+                console.warn('niceSelect không được tải, bỏ qua tùy chỉnh dropdown.');
+            }
+
+            let isSubmitting = false;
+            let isUpdatingTotal = false;
+            let lastVoucherId = null;
+            let lastPromotionId = null;
+            let lastTotal = null;
+            const notyf = new Notyf();
+
+            function updateSelectedProductDetailIds() {
+                const selectedIds = $('.selectCheckoutItem:checked').map(function () {
+                    return parseInt($(this).val());
+                }).get();
+                $('#selectedProductDetailIds').val(JSON.stringify(selectedIds));
+                console.log("Cập nhật SelectedProductDetailIds:", selectedIds);
+                updateTotal();
+            }
+
+            function updateTotal() {
+                if (isUpdatingTotal) return;
+                isUpdatingTotal = true;
+
+                const total = $('.cart_item').get().reduce((sum, row) => {
+                    const $row = $(row);
+                    if ($row.find('.selectCheckoutItem').is(':checked')) {
+                        const amountText = $row.find('.cart-product-total .amount').text().replace(/[^\d]/g, '');
+                        return sum + (parseFloat(amountText) || 0);
+                    }
+                    return sum;
+                }, 0);
+
+                if (total === lastTotal &&
+                    $('input[name="VoucherId"]:checked').val() === lastVoucherId &&
+                    $('input[name="PromotionId"]:checked').val() === lastPromotionId) {
+                    isUpdatingTotal = false;
+                    return;
+                }
+                lastTotal = total;
+                lastVoucherId = $('input[name="VoucherId"]:checked').val();
+                lastPromotionId = $('input[name="PromotionId"]:checked').val();
+
+                console.log("Tổng tiền tính được:", total);
+
+                const voucherId = lastVoucherId;
+                const promotionId = lastPromotionId;
+
+                $.ajax({
+                    url: '/checkout/calculate-discount',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        TotalAmount: total,
+                        VoucherId: voucherId ? parseInt(voucherId) : null,
+                        PromotionId: promotionId ? parseInt(promotionId) : null
+                    }),
+                    success: function (response) {
+                        console.log("Phản hồi từ calculate-discount:", response);
+                        if (response.success && response.totalDiscount !== undefined) {
+                            const totalDiscount = parseFloat(response.totalDiscount) || 0;
+                            $('.order-total-amount').text(total.toLocaleString('vi-VN') + ' VNĐ');
+                            $('.order-discount-amount').text(totalDiscount > 0 ? '-' + Math.round(totalDiscount).toLocaleString('vi-VN') + ' VNĐ' : '0 VNĐ');
+                            $('.final-total-amount').text((total - Math.round(totalDiscount)).toLocaleString('vi-VN') + ' VNĐ');
+                            $('#selectedVoucherId').val(voucherId || '');
+                            $('#selectedPromotionId').val(promotionId || '');
+                        } else {
+                            console.error("Lỗi từ calculate-discount:", response.error || "Không có dữ liệu giảm giá");
+                            notyf.error(response.error || "Lỗi khi tính giảm giá. Vui lòng thử lại!");
+                            $('.order-discount-amount').text('0 VNĐ');
+                            $('.final-total-amount').text(total.toLocaleString('vi-VN') + ' VNĐ');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Lỗi AJAX calculate-discount:", status, error, xhr.responseText);
+                        notyf.error("Lỗi khi tính giảm giá: " + (xhr.responseText || "Vui lòng thử lại!"));
+                        $('.order-discount-amount').text('0 VNĐ');
+                        $('.final-total-amount').text(total.toLocaleString('vi-VN') + ' VNĐ');
+                    },
+                    complete: function () {
+                        isUpdatingTotal = false;
+                    }
+                });
+            }
+
+            function debounce(func, wait) {
+                let timeout;
+                return function (...args) {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => func.apply(this, args), wait);
+                };
+            }
+
+            $('#selectAllCheckout').on('change', function () {
+                const isChecked = $(this).is(':checked');
+                $('.selectCheckoutItem').prop('checked', isChecked);
+                updateSelectedProductDetailIds();
+            });
+
+            $('.selectCheckoutItem').on('change', function () {
+                const allChecked = $('.selectCheckoutItem').length === $('.selectCheckoutItem:checked').length;
+                $('#selectAllCheckout').prop('checked', allChecked);
+                updateSelectedProductDetailIds();
+            });
+
+            const handleDiscountChange = debounce(function () {
+                updateTotal();
+            }, 300);
+
+            $('input[name="VoucherId"], input[name="PromotionId"]').on('change', function () {
+                handleDiscountChange();
+            });
+
+            let validateTimeout;
+            $("#Address, #FullName, #Phone, #TinhThanh, #QuanHuyen, #PhuongXa").on("input change", function () {
+                clearTimeout(validateTimeout);
+                validateTimeout = setTimeout(validateForm, 500);
+            });
+
+            function validateForm() {
+                const isValid = $("#checkoutForm").valid();
+                const paymentSelected = $('input[name="PaymentID"]:checked').length > 0;
+                console.log("PaymentID checked value:", $('input[name="PaymentID"]:checked').val());
+                $("#submitButton").prop('disabled', !isValid || !paymentSelected);
+                console.log("Form hợp lệ:", isValid, "Payment selected:", paymentSelected);
+                if (!isValid) {
+                    notyf.error("Vui lòng điền đầy đủ thông tin hợp lệ.");
+                } else if (!paymentSelected) {
+                    notyf.error("Vui lòng chọn phương thức thanh toán!");
+                }
+                return isValid && paymentSelected;
+            }
+
+            $("#checkoutForm").on("submit", function (e) {
+                e.preventDefault();
+                if (isSubmitting) {
+                    console.log("Đang gửi form, ngăn chặn gửi lại");
+                    return;
+                }
+
+                if (!validateForm()) {
+                    console.log("Form không hợp lệ, ngăn chặn submit");
+                    return;
+                }
+
+                isSubmitting = true;
+                $("#submitButton").prop('disabled', true).text('Đang xử lý...');
+
+                console.log("PaymentID trước khi gửi:", $('input[name="PaymentID"]:checked').val());
+                let formData = $(this).serialize();
+                // Thêm PaymentID thủ công
+                const paymentId = $('input[name="PaymentID"]:checked').val();
+                if (paymentId) {
+                    formData += (formData ? "&" : "") + "PaymentID=" + paymentId;
+                }
+                console.log("Form data sau khi thêm PaymentID:", formData);
+
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: $(this).attr('method'),
+                    data: formData,
+                    headers: { "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() },
+                    success: function (res) {
+                        console.log("Phản hồi từ server:", JSON.stringify(res, null, 2));
+                        if (typeof res.success === "undefined") {
+                            notyf.error("Lỗi không xác định từ server, có thể sản phẩm đã hết hàng hoặc thông tin chưa hợp lệ.");
+                            return;
+                        }
+
+                        if (res.success && res.redirectUrl) {
+                            console.log("Redirecting to:", res.redirectUrl);
+                            window.location.href = res.redirectUrl;
+                        } else {
+                            notyf.error(res.message || "Không thể đặt hàng. Vui lòng kiểm tra lại thông tin.");
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Lỗi AJAX khi submit form:", { status, error, responseText: xhr.responseText });
+                        notyf.error("Lỗi khi xử lý thanh toán: " + (xhr.responseText || "Vui lòng thử lại!"));
+                    },
+                    complete: function () {
+                        isSubmitting = false;
+                        $("#submitButton").prop('disabled', false).text('Đặt hàng');
+                    }
+                });
+            });
+
+            // Xử lý sự kiện rời trang
+            let isLeaving = false;
+            window.addEventListener('beforeunload', function (e) {
+                if (isSubmitting || isLeaving) {
+                    return;
+                }
+
+                isLeaving = true;
+           const isBuyNow = '@Context.Session.GetString("BuyNow")' === 'true';
+                if (isBuyNow) {
+                    $.ajax({
+                        url: '/checkout/restore-buy-now-to-cart',
+                        type: 'POST',
+                        async: false, // Đảm bảo yêu cầu đồng bộ để hoàn tất trước khi rời trang
+                        headers: { "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() },
+                        success: function (response) {
+                            if (response.success) {
+                                console.log("Đã chuyển sản phẩm từ BuyNowCart về Cart.");
+                            } else {
+                                console.error("Lỗi khi chuyển sản phẩm:", response.message);
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Lỗi AJAX khi rời trang:", status, error, xhr.responseText);
+                        }
+                    });
+                }
+            });
+
+            // Đảm bảo không gửi yêu cầu khi form được submit
+            $("#checkoutForm").on("submit", function () {
+                isLeaving = false; // Ngăn chặn beforeunload khi submit form
+            });
+
+            updateSelectedProductDetailIds();
+            updateTotal();
+            validateForm();
+        });
+    </script>
+}
+
+<style>
+    .main-content {
+        background: #f8f9fa;
+        padding: 30px 0;
+    }
+
+    .checkout-container {
+        max-width: 1100px;
+        margin: 0 auto;
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .checkout-content {
+        display: flex;
+        padding: 20px;
+        gap: 20px;
+    }
+
+    .info-section, .order-payment-section {
+        flex: 1;
+        padding: 15px;
+    }
+
+    .section-title {
+        font-size: 20px;
+        color: #1a1a1a;
+        margin-bottom: 15px;
+        font-weight: 700;
+        border-bottom: 1px solid #e0e0e0;
+        padding-bottom: 5px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-control {
+        width: 100%;
+        max-width: 500px;
+        padding: 8px 12px;
+        border: 1px solid #ced4da;
+        border-radius: 6px;
+        font-size: 14px;
+        background: #ffffff;
+        transition: border-color 0.3s, box-shadow 0.3s;
+        height: 40px;
+        box-sizing: border-box;
+        text-align: left;
+        line-height: 22px;
+        display: block;
+    }
+
+        .form-control:focus {
+            border-color: #1a1a1a;
+            box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
+            outline: none;
+        }
+
+    .is-invalid {
+        border-color: #dc3545;
+    }
+
+    .text-danger, .field-error {
+        color: #dc3545;
+        font-size: 12px;
+        display: block;
+        margin-top: 5px;
+    }
+
+    .address-grid {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .address-field {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .order-table table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #ffffff;
+    }
+
+    .order-table th, .order-table td {
+        padding: 8px;
+        text-align: center;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    .order-table th {
+        background: #1a1a1a;
+        color: #ffffff;
+        font-weight: 600;
+    }
+
+    .order-table td {
+        color: #495057;
+    }
+
+    .product-img {
+        max-width: 40px;
+        border-radius: 4px;
+        border: 1px solid #ced4da;
+    }
+
+    .payment-options {
+        margin-bottom: 15px;
+    }
+
+        .payment-options label {
+            display: block;
+            margin-bottom: 10px;
+            color: #495057;
+            font-weight: 500;
+        }
+
+        .payment-options input {
+            margin-right: 8px;
+        }
+
+    .voucher-section, .promotion-section {
+        margin-bottom: 20px;
+    }
+
+    .voucher-list, .promotion-list {
+        max-height: 150px;
+        overflow-y: auto;
+    }
+
+    .voucher-item, .promotion-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+        padding: 10px;
+        background: #f1f1f1;
+        border-radius: 5px;
+    }
+
+        .voucher-item input, .promotion-item input {
+            margin-right: 10px;
+        }
+
+    .voucher-code {
+        font-weight: bold;
+        color: #ff6200;
+    }
+
+    .voucher-discount, .promotion-discount {
+        color: #28a745;
+        margin-left: 10px;
+    }
+
+    .voucher-info, .promotion-info {
+        font-size: 12px;
+        color: #6c757d;
+        margin-left: 10px;
+    }
+
+    .promotion-name {
+        font-weight: bold;
+        color: #1a1a1a;
+    }
+
+    .submit-btn {
+        background: #FF6200;
+        color: #000000;
+        border: none;
+        padding: 10px 25px;
+        border-radius: 6px;
+        width: 100%;
+        font-size: 16px;
+        font-weight: 600;
+        transition: background 0.3s, transform 0.2s;
+        box-shadow: 0 3px 8px rgba(255, 98, 0, 0.3);
+    }
+
+        .submit-btn:hover {
+            background: #cc5000;
+            transform: translateY(-2px);
+        }
+
+    .nice-select .list {
+        max-height: 200px;
+        overflow-y: auto;
+        width: 100%;
+    }
+
+    input[type="checkbox"] {
+        accent-color: #000000;
+    }
+
+    @@media (max-width: 768px) {
+        .checkout-content {
+            flex-direction: column;
+        }
+
+        .info-section, .order-payment-section {
+            margin-bottom: 15px;
+        }
+
+        .address-grid {
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .address-field {
+            width: 100%;
+        }
+
+        .form-control {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .order-table th, .order-table td {
+            padding: 6px;
+        }
+    }
+</style>

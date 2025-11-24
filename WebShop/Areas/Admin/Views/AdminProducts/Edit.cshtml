@@ -1,0 +1,857 @@
+﻿
+@using System.Web
+@model WebShop.Models.Product
+
+@{
+    ViewData["Title"] = "Chỉnh sửa sản phẩm: " + Model.ProductName;
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<!-- CSS tùy chỉnh -->
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap');
+
+    body {
+        background: #CBD5E0; /* Nền xám đậm hơn */
+        font-family: 'Montserrat', sans-serif;
+        color: #1A202C;
+        overflow-x: hidden;
+    }
+
+    .container {
+        max-width: 1440px;
+        padding: 0 20px;
+        margin: 0 auto;
+    }
+
+    /* Tiêu đề trang */
+    .page-header {
+        background: linear-gradient(135deg, #FFFFFF 0%, #CBD5E0 100%);
+        padding: 30px 20px; /* Thêm padding trái phải 20px */
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        margin-bottom: 30px;
+    }
+
+    .header-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #1A202C;
+        text-align: center;
+    }
+
+    .breadcrumb {
+        background: none;
+        padding: 0;
+        margin: 10px 0 0;
+        font-size: 0.9rem;
+        color: #4A5568;
+    }
+
+    .breadcrumb-item {
+        color: #4A5568;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+        .breadcrumb-item:hover {
+            color: #f05a00;
+        }
+
+        .breadcrumb-item.active {
+            color: #1A202C;
+            font-weight: 500;
+        }
+
+        .breadcrumb-item + .breadcrumb-item::before {
+            content: '>';
+            margin: 0 10px;
+            color: #4A5568;
+        }
+
+    /* Card */
+    .card {
+        background: #FFFFFF;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        overflow: hidden;
+        transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+        }
+
+    .card-body {
+        padding: 30px;
+    }
+
+    /* Form */
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-control, .custom-select {
+        background: #EDF2F7;
+        border: 1px solid rgba(240, 90, 0, 0.4);
+        border-radius: 8px;
+        padding: 10px 15px;
+        font-size: 0.9rem;
+        color: #1A202C;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .form-control:focus, .custom-select:focus {
+            border-color: #f05a00;
+            box-shadow: 0 0 8px rgba(240, 90, 0, 0.5);
+            outline: none;
+        }
+
+    .form-control-file {
+        padding: 10px;
+    }
+
+    .text-danger {
+        font-size: 0.85rem;
+        margin-top: 5px;
+    }
+
+    /* Checkbox */
+    .form-check-input {
+        margin-top: 0.3rem;
+    }
+
+    .form-check-label {
+        font-size: 0.9rem;
+        color: #1A202C;
+    }
+
+    /* Tabs */
+    .nav-tabs {
+        border-bottom: 2px solid rgba(240, 90, 0, 0.4);
+    }
+
+        .nav-tabs .nav-link {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            color: #4A5568;
+            padding: 10px 20px;
+            border: none;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+            .nav-tabs .nav-link:hover {
+                color: #f05a00;
+                border-bottom: 3px solid #f05a00;
+            }
+
+            .nav-tabs .nav-link.active {
+                color: #1A202C;
+                font-weight: 500;
+                border-bottom: 3px solid #f05a00;
+            }
+
+    /* Nút */
+    .btn {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border-radius: 8px;
+        padding: 10px 20px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-primary {
+        background: #f05a00; /* Màu cam */
+        border: none;
+        color: #FFFFFF;
+    }
+
+        .btn-primary:hover {
+            background: #d04e00; /* Màu cam đậm hơn khi hover */
+            box-shadow: 0 6px 20px rgba(240, 90, 0, 0.5);
+        }
+
+    .btn-secondary {
+        background: #f05a00; /* Màu cam */
+        border: none;
+        color: #FFFFFF;
+    }
+
+        .btn-secondary:hover {
+            background: #d04e00; /* Màu cam đậm hơn khi hover */
+            box-shadow: 0 6px 20px rgba(240, 90, 0, 0.5);
+        }
+
+    .btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        transition: left 0.5s ease;
+    }
+
+    .btn:hover::before {
+        left: 100%;
+    }
+
+    /* Bảng biến thể */
+    .table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 10px;
+        font-family: 'Montserrat', sans-serif;
+    }
+
+        .table thead th {
+            background: #EDF2F7;
+            color: #1A202C;
+            font-size: 1rem;
+            padding: 15px;
+            border: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .table tbody tr {
+            background: #FFFFFF;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+            .table tbody tr:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            }
+
+        .table tbody td {
+            padding: 15px;
+            vertical-align: middle;
+            border: none;
+            font-size: 0.9rem;
+            color: #1A202C;
+        }
+
+    /* Select2 */
+    .select2-container--default .select2-selection--multiple {
+        background: #EDF2F7;
+        border: 1px solid rgba(240, 90, 0, 0.4);
+        border-radius: 8px;
+        padding: 5px;
+    }
+
+        .select2-container--default .select2-selection--multiple .select2-selection__choice {
+            background: #000000; /* Màu đen cho biến thể */
+            color: #FFFFFF; /* Text màu trắng để tăng tương phản */
+            border: none;
+            border-radius: 4px;
+        }
+
+        .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+            color: #FFFFFF; /* Nút x màu trắng */
+        }
+
+    /* Responsive */
+    @@media (max-width: 767.98px) {
+        .card-body {
+            padding: 20px;
+        }
+
+        .table thead th {
+            font-size: 0.9rem;
+            padding: 10px;
+        }
+
+        .table tbody td {
+            font-size: 0.8rem;
+            padding: 10px;
+        }
+
+        .btn {
+            padding: 8px 15px;
+            font-size: 0.7rem;
+        }
+
+        .form-control, .custom-select {
+            font-size: 0.8rem;
+            padding: 8px 12px;
+        }
+
+        .header-title {
+            font-size: 1.5rem;
+        }
+
+        .row {
+            flex-direction: column;
+        }
+
+        .col-md-6 {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+    }
+
+    @@media (max-width: 575.98px) {
+        .page-header {
+            padding: 20px 15px; /* Giảm padding cho màn hình nhỏ */
+        }
+
+        .breadcrumb {
+            font-size: 0.8rem;
+        }
+
+        .card-body {
+            padding: 15px;
+        }
+
+        .table thead th {
+            font-size: 0.8rem;
+            padding: 8px;
+        }
+
+        .table tbody td {
+            font-size: 0.75rem;
+            padding: 8px;
+        }
+
+        .btn {
+            padding: 6px 12px;
+            font-size: 0.65rem;
+        }
+
+        .form-control, .custom-select {
+            font-size: 0.75rem;
+            padding: 6px 10px;
+        }
+    }
+</style>
+
+<form asp-controller="AdminProducts" asp-action="Edit" asp-route-id="@Model.ProductId" method="post" enctype="multipart/form-data" id="productForm">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="ProductId" />
+    <input type="hidden" asp-for="DateCreated" />
+
+    <div class="page-header">
+        <div class="d-md-flex m-b-15 align-items-center justify-content-between">
+            <div>
+                <h2 class="header-title">Sửa sản phẩm</h2>
+                <nav class="breadcrumb breadcrumb-dash">
+                    <a asp-area="Admin" asp-controller="AdminProducts" asp-action="Index" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Home</a>
+                    <a class="breadcrumb-item" asp-area="Admin" asp-controller="AdminProducts" asp-action="Index">Danh sách sản phẩm</a>
+                    <span class="breadcrumb-item active">Sửa sản phẩm</span>
+                </nav>
+            </div>
+            <div class="m-b-15">
+                <button type="submit" class="btn btn-primary">
+                    <i class="far fa-save m-r-5"></i>
+                    <span>Cập nhật</span>
+                </button>
+            </div>
+        </div>
+        <ul class="nav nav-tabs">
+            <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#product-edit-basic">Thông tin cơ bản</a></li>
+            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#product-edit-option">Thông tin SEO</a></li>
+            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#product-edit-description">Mô tả</a></li>
+            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#product-edit-variants">Biến thể</a></li>
+        </ul>
+    </div>
+
+    <div class="tab-content m-t-15">
+        <div class="tab-pane fade show active" id="product-edit-basic">
+            <div class="card">
+                <div class="card-body">
+                    <div class="form-group">
+                        <label class="font-weight-semibold" for="ProductName">Tên sản phẩm *</label>
+                        <input type="text" class="form-control" asp-for="ProductName" required>
+                        <span asp-validation-for="ProductName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="font-weight-semibold" for="ShortDesc">Mô tả ngắn *</label>
+                        <input type="text" class="form-control" asp-for="ShortDesc" required>
+                        <span asp-validation-for="ShortDesc" class="text-danger"></span>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label class="font-weight-semibold" for="Price">Giá bán *</label>
+                            <input type="number" class="form-control" asp-for="Price" required min="0" step="1">
+                            <span asp-validation-for="Price" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="font-weight-semibold" for="Discount">Giá giảm (%)</label>
+                            <input type="number" class="form-control" asp-for="Discount" min="0" max="100" step="1">
+                            <span asp-validation-for="Discount" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label class="font-weight-semibold" for="CatId">Danh mục sản phẩm *</label>
+                            <select class="custom-select" asp-for="CatId" required asp-items="ViewBag.DanhMuc">
+                                <option value="" disabled>Chọn danh mục</option>
+                            </select>
+                            <span asp-validation-for="CatId" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="font-weight-semibold" for="SupplierId">Nhà cung cấp *</label>
+                            @if (ViewBag.Supplier != null && ((IEnumerable<SelectListItem>)ViewBag.Supplier).Any())
+                            {
+                                <select class="custom-select" asp-for="SupplierId" required asp-items="ViewBag.Supplier">
+                                    <option value="" disabled>Chọn nhà cung cấp</option>
+                                </select>
+                            }
+                            else
+                            {
+                                <p class="text-danger">Không có nhà cung cấp nào. Vui lòng thêm nhà cung cấp trước.</p>
+                                <select class="custom-select" asp-for="SupplierId" disabled>
+                                    <option value="" disabled>Không có nhà cung cấp</option>
+                                </select>
+                            }
+                            <span asp-validation-for="SupplierId" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label class="font-weight-semibold" for="UnitsInStock">Tổng hàng tồn</label>
+                            <input type="number" class="form-control" asp-for="UnitsInStock" readonly>
+                            <span asp-validation-for="UnitsInStock" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="font-weight-semibold" for="fThumb">Ảnh đại diện</label>
+                            <input name="fThumb" type="file" class="form-control-file" accept="image/*" id="fThumb" onchange="previewImage(event)">
+                            @if (!string.IsNullOrEmpty(Model.Thumb))
+                            {
+                                <img src="@Url.Content(Model.Thumb)" alt="@(Model.Title ?? Model.ProductName)" style="max-width: 133.34px; max-height: 133.34px; object-fit: contain; margin-top: 10px;" id="currentImage" onerror="this.src='/products/default.jpg'; this.onerror=null;" />
+                            }
+                            <img id="imagePreview" style="max-width: 133.34px; max-height: 133.34px; object-fit: contain; margin-top: 10px; display: none;" alt="Ảnh preview" />
+                            <span id="imageError" class="text-danger" style="display: none;">Vui lòng chọn file ảnh hợp lệ.</span>
+                            <span asp-validation-for="Thumb" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label class="font-weight-semibold" for="Chatlieu">Chất liệu</label>
+                            <input type="text" class="form-control" asp-for="Chatlieu">
+                            <span asp-validation-for="Chatlieu" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="font-weight-semibold" for="Songan">Số gân</label>
+                            <input type="text" class="form-control" asp-for="Songan">
+                            <span asp-validation-for="Songan" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="font-weight-semibold" for="BestSellers">Sản phẩm bán chạy</label>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" asp-for="BestSellers" id="BestSellers">
+                            <label class="form-check-label" for="BestSellers">Đặt làm sản phẩm bán chạy</label>
+                        </div>
+                        <span asp-validation-for="BestSellers" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="font-weight-semibold" for="Active">Kích hoạt sản phẩm</label>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" asp-for="Active" id="Active" asp-checked="@Model.Active">
+                            <label class="form-check-label" for="Active">Kích hoạt</label>
+                        </div>
+                        <span asp-validation-for="Active" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="product-edit-option">
+            <div class="card">
+                <div class="card-body">
+                    <div class="form-group">
+                        <label class="font-weight-semibold" for="Title">Tiêu đề</label>
+                        <input type="text" class="form-control" asp-for="Title">
+                        <span asp-validation-for="Title" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="font-weight-semibold" for="MetaDesc">Meta Description</label>
+                        <input type="text" class="form-control" asp-for="MetaDesc">
+                        <span asp-validation-for="MetaDesc" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="font-weight-semibold" for="MetaKey">Meta Keywords</label>
+                        <input type="text" class="form-control" asp-for="MetaKey">
+                        <span asp-validation-for="MetaKey" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="font-weight-semibold" for="Tags">Tags</label>
+                        <input type="text" class="form-control" asp-for="Tags">
+                        <span asp-validation-for="Tags" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="product-edit-description">
+            <div class="card">
+                <div class="card-body">
+                    <label class="font-weight-semibold" for="Description">Mô tả sản phẩm</label>
+                    <textarea class="form-control" asp-for="Description" rows="5"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="product-edit-variants">
+            <div class="card">
+                <div class="card-body">
+                    <form id="variantForm" method="post" asp-controller="AdminProducts" asp-action="AddVariants" asp-route-productId="@Model.ProductId">
+                        <div class="form-group">
+                            <label class="font-weight-semibold">Kích thước</label>
+                            <select multiple class="form-control select2" name="SizeIds[]" id="SizeIds" required asp-items="ViewBag.Sizes">
+                                <option value="" disabled>Chọn kích cỡ</option>
+                            </select>
+                            <span class="text-danger" id="sizeIdsError"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="font-weight-semibold">Màu sắc</label>
+                            <select multiple class="form-control select2" name="ColorIds[]" id="ColorIds" required asp-items="ViewBag.Colors">
+                                <option value="" disabled>Chọn màu sắc</option>
+                            </select>
+                            <span class="text-danger" id="colorIdsError"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="font-weight-semibold">Số lượng tồn cho mỗi biến thể mới</label>
+                            <input type="number" class="form-control" name="DefaultStock" id="DefaultStock" min="0" value="0" required>
+                            <span class="text-danger" id="defaultStockError"></span>
+                        </div>
+                    </form>
+                    <div class="form-group mt-4">
+                        <label class="font-weight-semibold">Biến thể sản phẩm</label>
+                        <table class="table table-hover e-commerce-table">
+                            <thead>
+                                <tr>
+                                    <th>Màu sắc</th>
+                                    <th>Kích thước</th>
+                                    <th>Số lượng tồn</th>
+                                    <th>Trạng thái</th>
+                                    <th>Hành động</th>
+                                </tr>
+                            </thead>
+                            <tbody id="variantRows">
+                                @if (Model.ProductDetails != null && Model.ProductDetails.Any())
+                                {
+                                    @for (int i = 0; i < Model.ProductDetails.Count; i++)
+                                    {
+                                        var detail = Model.ProductDetails.ElementAt(i);
+                                        <tr>
+                                            <td>@(detail.Color?.ColorName ?? "Không xác định")<input type="hidden" name="ProductDetails[@i].ColorId" value="@detail.ColorId" /><input type="hidden" name="ProductDetails[@i].ProductDetailId" value="@detail.ProductDetailId" /></td>
+                                            <td>@(detail.Size?.SizeName ?? "Không xác định")<input type="hidden" name="ProductDetails[@i].SizeId" value="@detail.SizeId" /></td>
+                                            <td><input type="number" name="ProductDetails[@i].Stock" class="form-control stock-input" min="0" value="@detail.Stock" /></td>
+                                            <td><input type="checkbox" name="ProductDetails[@i].Active" @(detail.Active ? "checked" : "") /></td>
+                                            <td>
+                                                <button type="button" class="btn btn-primary btn-sm update-variant" data-product-detail-id="@detail.ProductDetailId" data-product-id="@Model.ProductId">Cập nhật tổng</button>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr><td colspan="5">Không có biến thể nào.</td></tr>
+                                }
+                            </tbody>
+                        </table>
+                        <button type="button" class="btn btn-secondary mt-2" onclick="generateVariants()">Tạo biến thể (Preview)</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="text-left mt-3">
+    <a class="btn btn-primary" asp-action="Index"><i class="fas fa-undo m-r-5 fa-lg"></i>Quay lại</a>
+</div>
+
+@section Scripts {
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/js/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#SizeIds, #ColorIds').select2({
+                placeholder: "Chọn tùy chọn",
+                allowClear: true,
+                dropdownParent: $('#product-edit-variants')
+            });
+
+            try {
+                var colorOptions = @Html.Raw(ViewBag.ColorOptionsJson ?? "[]");
+                var sizeOptions = @Html.Raw(ViewBag.SizeOptionsJson ?? "[]");
+                console.log("Color Options:", colorOptions);
+                console.log("Size Options:", sizeOptions);
+                var selectedSizeId = $('#SizeIds').val();
+                var selectedColorId = $('#ColorIds').val();
+                console.log("Selected Size ID:", selectedSizeId);
+                console.log("Selected Color ID:", selectedColorId);
+                console.log("Size M found:", sizeOptions.find(s => s.name === 'M' || s.id.toString() === selectedSizeId));
+                console.log("Color Be found:", colorOptions.find(c => c.name === 'Be' || c.id.toString() === selectedColorId));
+            } catch (e) {
+                console.error("Lỗi khi parse JSON:", e);
+                alert("Lỗi khi tải dữ liệu kích thước/màu sắc. Vui lòng kiểm tra database.");
+            }
+
+            window.previewImage = function (event) {
+                var input = event.target;
+                var preview = document.getElementById('imagePreview');
+                var current = document.getElementById('currentImage');
+                var error = document.getElementById('imageError');
+
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        preview.src = e.target.result;
+                        preview.style.display = 'block';
+                        if (current) current.style.display = 'none';
+                        error.style.display = 'none';
+                    };
+                    if (input.files[0].type.startsWith('image/')) {
+                        reader.readAsDataURL(input.files[0]);
+                    } else {
+                        error.style.display = 'block';
+                        preview.style.display = 'none';
+                        if (current) current.style.display = 'block';
+                    }
+                } else {
+                    preview.style.display = 'none';
+                    if (current) current.style.display = 'block';
+                    error.style.display = 'none';
+                }
+            };
+
+            window.generateVariants = function () {
+                try {
+                    $('#sizeIdsError').text('');
+                    $('#colorIdsError').text('');
+                    $('#defaultStockError').text('');
+
+                    var selectedSizes = $('#SizeIds').val() || [];
+                    var selectedColors = $('#ColorIds').val() || [];
+                    var defaultStock = parseInt($('#DefaultStock').val()) || 0;
+
+                    console.log('GenerateVariants data:', {
+                        productId: @Model.ProductId,
+                        SizeIds: selectedSizes,
+                        ColorIds: selectedColors,
+                        DefaultStock: defaultStock
+                    });
+
+                    if (selectedSizes.length === 0) {
+                        $('#sizeIdsError').text('Vui lòng chọn ít nhất một kích thước.');
+                        console.log('Validation error: No sizes selected');
+                        return;
+                    }
+                    if (selectedColors.length === 0) {
+                        $('#colorIdsError').text('Vui lòng chọn ít nhất một màu sắc.');
+                        console.log('Validation error: No colors selected');
+                        return;
+                    }
+                    if (defaultStock < 0) {
+                        $('#defaultStockError').text('Số lượng tồn kho không được nhỏ hơn 0.');
+                        console.log('Validation error: Invalid stock');
+                        return;
+                    }
+
+                    var variantRows = $('#variantRows');
+                    var existingVariants = [];
+                    variantRows.find('tr').each(function () {
+                        var colorId = $(this).find('input[name*="ColorId"]').val();
+                        var sizeId = $(this).find('input[name*="SizeId"]').val();
+                        var stockInput = $(this).find('.stock-input');
+                        var stock = parseInt(stockInput.val()) || 0;
+                        if (colorId && sizeId) {
+                            existingVariants.push({ colorId: colorId, sizeId: sizeId, stock: stock, row: $(this) });
+                        }
+                    });
+
+                    var newIndex = variantRows.find('tr').length;
+                    var updatedVariants = [];
+                    var newRows = '';
+
+                    selectedSizes.forEach(function (sizeId) {
+                        selectedColors.forEach(function (colorId) {
+                            var size = sizeOptions.find(s => s.id.toString() === sizeId.toString());
+                            var color = colorOptions.find(c => c.id.toString() === colorId.toString());
+                            var variantKey = `${colorId}-${sizeId}`;
+
+                            var existingVariant = existingVariants.find(v => v.colorId === colorId && v.sizeId === sizeId);
+                            if (existingVariant) {
+                                var newStock = existingVariant.stock + defaultStock;
+                                existingVariant.row.find('.stock-input').val(newStock).trigger('change');
+                                updatedVariants.push({ productDetailId: existingVariant.row.find('input[name*="ProductDetailId"]').val() || 0, stock: newStock });
+                            } else {
+                                newRows += `
+                                    <tr>
+                                        <td>${color ? color.name : "Không xác định"}<input type="hidden" name="ProductDetails[${newIndex}].ColorId" value="${color ? color.id : colorId}" /><input type="hidden" name="ProductDetails[${newIndex}].ProductDetailId" value="0" /></td>
+                                        <td>${size ? size.name : "Không xác định"}<input type="hidden" name="ProductDetails[${newIndex}].SizeId" value="${size ? size.id : sizeId}" /></td>
+                                        <td><input type="number" name="ProductDetails[${newIndex}].Stock" class="form-control stock-input" min="0" value="${defaultStock}" /></td>
+                                        <td><input type="checkbox" name="ProductDetails[${newIndex}].Active" ${defaultStock > 0 ? 'checked' : ''} /></td>
+                                        <td><button type="button" class="btn btn-primary btn-sm update-variant" data-product-detail-id="0" data-product-id="@Model.ProductId">Cập nhật tổng</button></td>
+                                    </tr>`;
+                                newIndex++;
+                            }
+                        });
+                    });
+
+                    if (newRows || updatedVariants.length > 0) {
+                        if (variantRows.find('tr td[colspan="5"]').length > 0) {
+                            variantRows.empty();
+                        }
+                        if (newRows) {
+                            variantRows.append(newRows);
+                        }
+                        updateTotalStock();
+                    } else {
+                        alert('Không có biến thể mới để thêm hoặc các biến thể đã tồn tại.');
+                        return;
+                    }
+
+                    var formData = new FormData();
+                    formData.append('productId', @Model.ProductId);
+                    selectedSizes.forEach(function (sizeId) {
+                        formData.append('SizeIds[]', sizeId);
+                    });
+                    selectedColors.forEach(function (colorId) {
+                        formData.append('ColorIds[]', colorId);
+                    });
+                    formData.append('DefaultStock', defaultStock);
+                    updatedVariants.forEach(function (v, index) {
+                        formData.append(`UpdatedVariants[${index}].ProductDetailId`, v.productDetailId);
+                        formData.append(`UpdatedVariants[${index}].Stock`, v.stock);
+                    });
+                    formData.append('__RequestVerificationToken', $('input[name="__RequestVerificationToken"]').val());
+
+                    console.log('FormData:', Array.from(formData.entries()));
+
+                    $.ajax({
+                        url: '@Url.Action("AddVariants", "AdminProducts", new { area = "Admin" })',
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        timeout: 10000,
+                        beforeSend: function () {
+                            console.log('Sending AJAX request to AddVariants...');
+                        },
+                        success: function (response) {
+                            console.log('AddVariants response:', response);
+                            if (response.success) {
+                                $('#variantRows').html(response.variantRows);
+                                $('#SizeIds').val(null).trigger('change');
+                                $('#ColorIds').val(null).trigger('change');
+                                $('#DefaultStock').val(0);
+                                $('#UnitsInStock').val(response.totalStock);
+                                if (response.newVariantsCount > 0) {
+                                    alert('Thêm ' + response.newVariantsCount + ' biến thể mới thành công.');
+                                } else if (response.updatedVariantsCount > 0) {
+                                    alert('Cập nhật số lượng cho ' + response.updatedVariantsCount + ' biến thể hiện có.');
+                                } else {
+                                    alert('Không có thay đổi nào.');
+                                }
+                            } else {
+                                alert('Lỗi: ' + response.message);
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.log('AddVariants AJAX error:', {
+                                status: status,
+                                error: error,
+                                responseText: xhr.responseText
+                            });
+                            if (status === 'timeout') {
+                                alert('Yêu cầu thêm biến thể mất quá nhiều thời gian. Vui lòng thử lại.');
+                            } else {
+                                alert('Lỗi khi thêm biến thể: ' + (xhr.responseJSON?.message || error));
+                            }
+                        }
+                    });
+                } catch (e) {
+                    console.error("Lỗi khi tạo biến thể:", e);
+                    alert("Lỗi khi tạo biến thể: " + e.message);
+                }
+            };
+
+            window.clearVariants = function () {
+                $('#variantRows').html('<tr><td colspan="5">Không có biến thể nào.</td></tr>');
+                $('#SizeIds').val(null).trigger('change');
+                $('#ColorIds').val(null).trigger('change');
+                $('#DefaultStock').val(0);
+                updateTotalStock();
+            };
+
+            function updateTotalStock() {
+                var totalStock = 0;
+                $('#variantRows .stock-input').each(function () {
+                    var stock = parseInt($(this).val()) || 0;
+                    var isActive = $(this).closest('tr').find('input[type="checkbox"]').is(':checked');
+                    if (isActive && stock > 0) {
+                        totalStock += stock;
+                    }
+                });
+                $('#UnitsInStock').val(totalStock);
+            }
+
+            $(document).on('click', '.update-variant', function () {
+                var productDetailId = $(this).data('product-detail-id');
+                var productId = $(this).data('product-id');
+                var stockInput = $(this).closest('tr').find('.stock-input');
+                var stock = parseInt(stockInput.val()) || 0;
+
+                console.log('UpdateStock data:', { productDetailId: productDetailId, stock: stock });
+
+                if (stock < 0) {
+                    alert('Số lượng tồn kho không được nhỏ hơn 0.');
+                    return;
+                }
+
+                if (productDetailId !== 0) {
+                    $.ajax({
+                        url: '@Url.Action("UpdateStock", "AdminProducts", new { area = "Admin" })',
+                        type: 'POST',
+                        data: {
+                            productDetailId: productDetailId,
+                            stock: stock,
+                            '__RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                        },
+                        success: function (response) {
+                            console.log('UpdateStock response:', response);
+                            if (response.success) {
+                                stockInput.val(response.newStock);
+                                $('#UnitsInStock').val(response.totalStock);
+                                stockInput.closest('tr').find('input[type="checkbox"]').prop('checked', response.newStock > 0);
+                                alert('Cập nhật số lượng tồn kho thành công.');
+                            } else {
+                                alert('Lỗi: ' + response.message);
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.log('UpdateStock AJAX error:', xhr.responseText);
+                            alert('Lỗi khi cập nhật số lượng: ' + error);
+                        }
+                    });
+                } else {
+                    updateTotalStock();
+                }
+            });
+
+            $(document).on('change', '.stock-input, input[type="checkbox"]', updateTotalStock);
+
+            $('#productForm').on('submit', function (e) {
+                console.log('ProductForm submit triggered');
+                $('#SizeIds, #ColorIds, #DefaultStock').removeAttr('required');
+            });
+        });
+    </script>
+}

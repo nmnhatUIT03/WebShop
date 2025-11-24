@@ -1,0 +1,675 @@
+﻿@model WebShop.Models.TinTuc
+
+@{
+    ViewData["Title"] = "Thêm tin tức";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap');
+    @@import url('https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css');
+
+    body {
+        background: #CBD5E0;
+        font-family: 'Montserrat', sans-serif;
+        color: #1A202C;
+        font-weight: 400;
+        overflow-x: hidden;
+    }
+
+    .container {
+        max-width: 1440px;
+        padding: 0 20px;
+        margin: 0 auto;
+    }
+
+    .page-header {
+        background: linear-gradient(135deg, #FFFFFF 0%, #CBD5E0 100%);
+        padding: 20px 30px;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        margin-bottom: 30px;
+    }
+
+    .header-title {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 1.8rem;
+        font-weight: 500;
+        color: #1A202C;
+        text-align: center;
+    }
+
+    .header-sub-title {
+        text-align: center;
+    }
+
+    .breadcrumb {
+        background: none;
+        padding: 0;
+        margin: 0;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.9rem;
+        color: #4A5568;
+    }
+
+    .breadcrumb-item {
+        color: #4A5568;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+        .breadcrumb-item:hover {
+            color: #f05a00;
+        }
+
+        .breadcrumb-item.active {
+            color: #1A202C;
+            font-weight: 500;
+        }
+
+        .breadcrumb-item + .breadcrumb-item::before {
+            content: '>';
+            margin: 0 10px;
+            color: #4A5568;
+        }
+
+    .card {
+        background: #FFFFFF;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        overflow: hidden;
+        transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+        }
+
+    .card-body {
+        padding: 30px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+        position: relative;
+    }
+
+    .control-label {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: #1A202C;
+        margin-bottom: 8px;
+    }
+
+    .form-control, .form-control-file {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.9rem;
+        border-radius: 8px;
+        border: 1px solid #CBD5E0;
+        padding: 10px 15px;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .form-control:focus, .form-control-file:focus {
+            border-color: #f05a00;
+            box-shadow: 0 0 8px rgba(240, 90, 0, 0.3);
+            outline: none;
+        }
+
+        .form-control:disabled, .form-control[readonly], .form-control-file:disabled {
+            background-color: #E2E8F0;
+            cursor: not-allowed;
+        }
+
+        .form-control.is-updating, .form-control-file.is-updating {
+            border-color: #f05a00;
+            box-shadow: 0 0 8px rgba(240, 90, 0, 0.3);
+        }
+
+    .select2-container--default .select2-selection--single {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.9rem;
+        border-radius: 8px;
+        border: 1px solid #CBD5E0;
+        height: 38px;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: 38px;
+            padding-left: 15px;
+            color: #1A202C;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 38px;
+            right: 10px;
+        }
+
+        .select2-container--default .select2-selection--single:focus {
+            border-color: #f05a00;
+            box-shadow: 0 0 8px rgba(240, 90, 0, 0.3);
+            outline: none;
+        }
+
+        .select2-container--default .select2-selection--single.is-updating {
+            border-color: #f05a00;
+            box-shadow: 0 0 8px rgba(240, 90, 0, 0.3);
+        }
+
+        .select2-container--default .select2-selection--single.is-invalid {
+            border-color: #F56565;
+        }
+
+    .text-danger {
+        font-size: 0.8rem;
+        color: #F56565;
+    }
+
+    .form-control.is-invalid, .form-control-file.is-invalid {
+        border-color: #F56565;
+    }
+
+    .btn {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border-radius: 8px;
+        padding: 8px 15px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .btn i {
+            margin-right: 5px;
+            font-size: 1.1rem;
+            line-height: 1;
+        }
+
+    .btn-create {
+        background: #f05a00;
+        border: none;
+        color: #FFFFFF;
+    }
+
+        .btn-create:hover {
+            background: #d94f00;
+            box-shadow: 0 6px 20px rgba(240, 90, 0, 0.5);
+        }
+
+    .btn-back {
+        background: #000000;
+        border: none;
+        color: #FFFFFF;
+    }
+
+        .btn-back:hover {
+            background: #a8a8a8;
+            box-shadow: 0 6px 20px rgba(245, 101, 101, 0.5);
+        }
+
+    .btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        transition: left 0.5s ease;
+    }
+
+    .btn:hover::before {
+        left: 100%;
+    }
+
+    .nav-tabs {
+        border-bottom: 1px solid #CBD5E0;
+        margin-bottom: 20px;
+    }
+
+    .nav-link {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: #4A5568;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px 8px 0 0;
+        transition: all 0.3s ease;
+    }
+
+        .nav-link:hover {
+            color: #f05a00;
+            background: #F7FAFC;
+        }
+
+        .nav-link.active {
+            color: #1A202C;
+            background: #FFFFFF;
+            border-bottom: 2px solid #f05a00;
+        }
+
+    .tab-content {
+        background: #FFFFFF;
+        border-radius: 0 0 16px 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        padding: 20px;
+    }
+
+    textarea.form-control {
+        min-height: 150px;
+        resize: vertical;
+    }
+
+    .update-status {
+        font-size: 0.8rem;
+        margin-top: 10px;
+        text-align: center;
+        display: none;
+    }
+
+        .update-status.success {
+            color: #28a745;
+        }
+
+        .update-status.error {
+            color: #F56565;
+        }
+
+    @@media (max-width: 767.98px) {
+        .card-body {
+            padding: 20px;
+        }
+
+        .form-control, .form-control-file {
+            font-size: 0.8rem;
+            padding: 8px 12px;
+        }
+
+        .select2-container--default .select2-selection--single {
+            font-size: 0.8rem;
+            height: 34px;
+        }
+
+            .select2-container--default .select2-selection--single .select2-selection__rendered {
+                line-height: 34px;
+                padding-left: 12px;
+            }
+
+            .select2-container--default .select2-selection--single .select2-selection__arrow {
+                height: 34px;
+            }
+
+        .btn {
+            padding: 6px 12px;
+            font-size: 0.7rem;
+        }
+
+            .btn i {
+                font-size: 1rem;
+            }
+
+        .nav-link {
+            font-size: 0.8rem;
+            padding: 8px 15px;
+        }
+    }
+
+    @@media (max-width: 575.98px) {
+        .page-header {
+            padding: 15px 0;
+        }
+
+        .header-title {
+            font-size: 1.5rem;
+        }
+
+        .breadcrumb {
+            font-size: 0.8rem;
+        }
+
+        .card-body {
+            padding: 15px;
+        }
+
+        .form-control, .form-control-file {
+            font-size: 0.75rem;
+            padding: 6px 10px;
+        }
+
+        .select2-container--default .select2-selection--single {
+            font-size: 0.75rem;
+            height: 30px;
+        }
+
+            .select2-container--default .select2-selection--single .select2-selection__rendered {
+                line-height: 30px;
+                padding-left: 10px;
+            }
+
+            .select2-container--default .select2-selection--single .select2-selection__arrow {
+                height: 30px;
+            }
+
+        .btn {
+            padding: 6px 10px;
+            font-size: 0.65rem;
+        }
+
+            .btn i {
+                font-size: 0.9rem;
+            }
+
+        .nav-link {
+            font-size: 0.75rem;
+            padding: 6px 10px;
+        }
+    }
+</style>
+
+<div class="container">
+    <div class="page-header">
+        <h2 class="header-title">Thêm tin tức</h2>
+        <div class="header-sub-title">
+            <nav class="breadcrumb breadcrumb-dash">
+                <a asp-area="Admin" asp-controller="HomeAdmin" asp-action="Index" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Home</a>
+                <a class="breadcrumb-item" asp-area="Admin" asp-controller="AdminTinTucs" asp-action="Index">Danh sách tin tức</a>
+                <span class="breadcrumb-item active">Thêm tin tức</span>
+            </nav>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <form id="newsForm" asp-controller="AdminTinTucs" asp-action="Create" method="post" enctype="multipart/form-data">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <ul class="nav nav-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-toggle="tab" href="#news-edit-basic">Thông tin cơ bản</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#news-edit-option">Thông tin thêm</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#news-edit-description">Mô tả</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content m-t-15">
+                            <div class="tab-pane fade show active" id="news-edit-basic">
+                                <div class="form-group">
+                                    <label asp-for="Title" class="control-label">Tiêu đề</label>
+                                    <input type="text" class="form-control" asp-for="Title" placeholder="Nhập tiêu đề" />
+                                    <span asp-validation-for="Title" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Scontents" class="control-label">Mô tả ngắn</label>
+                                    <input type="text" class="form-control" asp-for="Scontents" placeholder="Nhập mô tả ngắn" />
+                                    <span asp-validation-for="Scontents" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Published" class="control-label">Trạng thái</label>
+                                    <select class="form-control select2" asp-for="Published">
+                                        <option value="true">Đã phát hành</option>
+                                        <option value="false" selected>Chưa phát hành</option>
+                                    </select>
+                                    <span asp-validation-for="Published" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label" for="fThumb">Ảnh đại diện</label>
+                                    <input name="fThumb" type="file" class="form-control-file" accept="image/*" />
+                                    <span asp-validation-for="Thumb" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="news-edit-option">
+                                <div class="form-group">
+                                    <label asp-for="MetaDesc" class="control-label">MetaDesc</label>
+                                    <input type="text" class="form-control" asp-for="MetaDesc" placeholder="Nhập Meta Description" />
+                                    <span asp-validation-for="MetaDesc" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="MetaKey" class="control-label">MetaKey</label>
+                                    <input type="text" class="form-control" asp-for="MetaKey" placeholder="Nhập Meta Keywords" />
+                                    <span asp-validation-for="MetaKey" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="news-edit-description">
+                                <div class="form-group">
+                                    <label asp-for="Contents" class="control-label">Nội dung</label>
+                                    <textarea class="form-control" asp-for="Contents" placeholder="Nhập nội dung"></textarea>
+                                    <span asp-validation-for="Contents" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group text-center">
+                            <button type="submit" class="btn btn-create btn-tone m-r-5"><i class="far fa-save fa-lg m-r-5"></i>Lưu</button>
+                            <a class="btn btn-back btn-tone m-r-5" asp-action="Index"><i class="fas fa-undo fa-lg m-r-5"></i>Quay lại</a>
+                            <div class="update-status" id="NewsFormStatus"></div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/perfect-scrollbar/1.5.5/perfect-scrollbar.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="~/Adminassets/vendors/quill/quill.min.js"></script>
+    <script src="~/Adminassets/js/pages/e-commerce-product-edit.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function () {
+            // Initialize toastr options
+            toastr.options = {
+                "closeButton": true,
+                "debug": false,
+                "newestOnTop": true,
+                "progressBar": true,
+                "positionClass": "toast-top-right",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            };
+
+            // Initialize perfectScrollbar
+            try {
+                if (typeof $.fn.perfectScrollbar === 'function') {
+                    $('.card-body').perfectScrollbar();
+                } else {
+                    console.warn('perfectScrollbar not loaded.');
+                }
+            } catch (e) {
+                console.error('Error initializing perfectScrollbar:', e);
+            }
+
+            // Initialize Select2 for Published field
+            $('.select2').select2({
+                minimumResultsForSearch: Infinity,
+                placeholder: "Chọn trạng thái",
+                allowClear: true
+            });
+
+            // Initialize Quill editor
+            var quill = new Quill('#Contents', {
+                theme: 'snow',
+                modules: {
+                    toolbar: [
+                        [{ 'header': [1, 2, 3, false] }],
+                        ['bold', 'italic', 'underline'],
+                        ['image', 'link'],
+                        [{ 'list': 'ordered' }, { 'list': 'bullet' }]
+                    ]
+                }
+            });
+
+            // Sync Quill content with textarea
+            quill.on('text-change', function () {
+                $('#Contents').val(quill.root.innerHTML);
+            });
+
+            // Form validation
+            $('#newsForm').validate({
+                rules: {
+                    Title: {
+                        required: true,
+                        minlength: 2
+                    },
+                    Scontents: {
+                        required: true,
+                        minlength: 2
+                    },
+                    Published: {
+                        required: true
+                    },
+                    MetaDesc: {
+                        required: true,
+                        minlength: 2
+                    },
+                    MetaKey: {
+                        required: true,
+                        minlength: 2
+                    },
+                    Contents: {
+                        required: true,
+                        minlength: 10
+                    },
+                    fThumb: {
+                        required: true
+                    }
+                },
+                messages: {
+                    Title: {
+                        required: "Vui lòng nhập tiêu đề.",
+                        minlength: "Tiêu đề phải có ít nhất 2 ký tự."
+                    },
+                    Scontents: {
+                        required: "Vui lòng nhập mô tả ngắn.",
+                        minlength: "Mô tả ngắn phải có ít nhất 2 ký tự."
+                    },
+                    Published: {
+                        required: "Vui lòng chọn trạng thái."
+                    },
+                    MetaDesc: {
+                        required: "Vui lòng nhập Meta Description.",
+                        minlength: "Meta Description phải có ít nhất 2 ký tự."
+                    },
+                    MetaKey: {
+                        required: "Vui lòng nhập Meta Keywords.",
+                        minlength: "Meta Keywords phải có ít nhất 2 ký tự."
+                    },
+                    Contents: {
+                        required: "Vui lòng nhập nội dung.",
+                        minlength: "Nội dung phải có ít nhất 10 ký tự."
+                    },
+                    fThumb: {
+                        required: "Vui lòng chọn ảnh đại diện."
+                    }
+                },
+                errorElement: 'span',
+                errorPlacement: function (error, element) {
+                    error.addClass('text-danger');
+                    if (element.hasClass('select2-hidden-accessible')) {
+                        error.insertAfter(element.next('.select2-container'));
+                    } else {
+                        error.insertAfter(element);
+                    }
+                },
+                highlight: function (element) {
+                    if ($(element).hasClass('select2-hidden-accessible')) {
+                        $(element).next('.select2-container').find('.select2-selection').addClass('is-invalid');
+                    } else {
+                        $(element).addClass('is-invalid');
+                    }
+                },
+                unhighlight: function (element) {
+                    if ($(element).hasClass('select2-hidden-accessible')) {
+                        $(element).next('.select2-container').find('.select2-selection').removeClass('is-invalid');
+                    } else {
+                        $(element).removeClass('is-invalid');
+                    }
+                },
+                submitHandler: function (form) {
+                    // Handle AJAX form submission
+                    var formData = new FormData(form);
+
+                    $('#newsForm .form-control, #newsForm .select2, #newsForm .form-control-file').addClass('is-updating');
+                    $('#NewsFormStatus').hide().removeClass('success error').text('');
+
+                    $.ajax({
+                        url: '@Url.Action("Create", "AdminTinTucs", new { area = "Admin" })',
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        headers: {
+                            RequestVerificationToken: $('#newsForm input[name="__RequestVerificationToken"]').val()
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                console.log('Thêm tin tức thành công!', {
+                                    title: $('#Title').val(),
+                                    timestamp: new Date().toLocaleString('vi-VN')
+                                });
+                                $('#NewsFormStatus').addClass('success').text('Thêm tin tức thành công!').show();
+                                toastr.success('Thêm tin tức thành công!');
+                                $('#newsForm .form-control, #newsForm .select2, #newsForm .form-control-file').removeClass('is-invalid').val('').next('.text-danger').text('');
+                                $('.select2').val(null).trigger('change');
+                                setTimeout(function () {
+                                    window.location.href = '@Url.Action("Index", "AdminTinTucs", new { area = "Admin" })';
+                                }, 2000);
+                            } else {
+                                console.error('Thêm tin tức thất bại!', {
+                                    message: response.message,
+                                    field: response.field || 'N/A',
+                                    timestamp: new Date().toLocaleString('vi-VN')
+                                });
+                                $('#NewsFormStatus').addClass('error').text(response.message).show();
+                                toastr.error(response.message);
+                                if (response.field) {
+                                    $('#newsForm #' + response.field).addClass('is-invalid');
+                                    $('#newsForm #' + response.field).next('.text-danger').text(response.message);
+                                }
+                            }
+                        },
+                        error: function (xhr) {
+                            var message = xhr.responseJSON?.message || 'Lỗi hệ thống khi thêm tin tức.';
+                            console.error('Thêm tin tức thất bại!', {
+                                message: message,
+                                status: xhr.status,
+                                statusText: xhr.statusText,
+                                timestamp: new Date().toLocaleString('vi-VN')
+                            });
+                            $('#NewsFormStatus').addClass('error').text(message).show();
+                            toastr.error(message);
+                        },
+                        complete: function () {
+                            $('#newsForm .form-control, #newsForm .select2, #newsForm .form-control-file').removeClass('is-updating');
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}

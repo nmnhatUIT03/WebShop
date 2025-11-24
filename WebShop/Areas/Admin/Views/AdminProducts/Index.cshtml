@@ -1,0 +1,604 @@
+﻿@using PagedList.Core.Mvc
+@model PagedList.Core.IPagedList<WebShop.Models.Product>
+@{
+    int index = 1; // Biến đếm thứ tự sản phẩm
+    int CurrentPage = ViewBag.CurrentPage; // Trang hiện tại
+    ViewData["Title"] = "Danh sách sản phẩm - Trang " + CurrentPage; // Tiêu đề trang
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml"; // Sử dụng layout quản trị
+}
+
+<!-- CSS tùy chỉnh với phông Montserrat và màu sắc tương phản cao -->
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap');
+
+    body {
+        background: #CBD5E0;
+        font-family: 'Montserrat', sans-serif;
+        color: #1A202C;
+        overflow-x: hidden;
+    }
+
+    .container {
+        max-width: 1440px;
+        padding: 0 20px;
+        margin: 0 auto;
+    }
+
+    .page-header {
+        background: linear-gradient(135deg, #FFFFFF 0%, #CBD5E0 100%);
+        padding: 30px 0;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        margin-bottom: 30px;
+    }
+
+    .header-sub-title {
+        text-align: center;
+    }
+
+    .breadcrumb {
+        background: none;
+        padding: 0;
+        margin: 0;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.9rem;
+        color: #4A5568;
+    }
+
+    .breadcrumb-item {
+        color: #4A5568;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+        .breadcrumb-item:hover {
+            color: #f05a00;
+        }
+
+        .breadcrumb-item.active {
+            color: #1A202C;
+            font-weight: 500;
+        }
+
+        .breadcrumb-item + .breadcrumb-item::before {
+            content: '>';
+            margin: 0 10px;
+            color: #4A5568;
+        }
+
+    .card {
+        background: #FFFFFF;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        overflow: hidden;
+        transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+        }
+
+    .card-body {
+        padding: 30px;
+    }
+
+    .input-affix {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .custom-select, .form-control {
+        background: #EDF2F7;
+        border: 1px solid rgba(240, 90, 0, 0.4);
+        border-radius: 8px;
+        padding: 10px 15px;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.9rem;
+        color: #1A202C;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .custom-select:focus, .form-control:focus {
+            border-color: #f05a00;
+            box-shadow: 0 0 8px rgba(240, 90, 0, 0.5);
+            outline: none;
+        }
+
+    .prefix-icon {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #4A5568;
+    }
+
+    .form-control {
+        padding-left: 40px;
+    }
+
+    .btn {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border-radius: 8px;
+        padding: 8px 12px; /* Điều chỉnh padding để vừa với biểu tượng */
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        border: none;
+        color: #FFFFFF;
+        display: inline-flex; /* Đảm bảo nút chứa biểu tượng căn giữa */
+        align-items: center;
+        justify-content: center;
+    }
+
+    .btn-success {
+        background: #f05a00;
+        border: none;
+        color: #FFFFFF;
+    }
+
+        .btn-success:hover {
+            background: #d94f00;
+        }
+
+    .btn-primary {
+        background: #1A202C;
+        border: none;
+        color: #FFFFFF;
+    }
+
+        .btn-primary:hover {
+            background: #2D3748;
+        }
+
+    .btn-secondary {
+        background: #4A5568;
+        border: none;
+        color: #FFFFFF;
+    }
+
+        .btn-secondary:hover {
+            background: #2D3748;
+        }
+
+    .btn-danger {
+        background: #F56565;
+        border: none;
+        color: #FFFFFF;
+    }
+
+        .btn-danger:hover {
+            background: #E53E3E;
+        }
+
+    .btn-edit {
+        background: linear-gradient(to right, #a8a8a8 0%, #a8a8a8 100%);
+        border: none;
+        color: #FFFFFF;
+    }
+
+        .btn-edit:hover {
+            background: linear-gradient(to right, #a8a8a8 0%, #a8a8a8 80%, #9a9a9a 100%);
+        }
+
+    .btn-custom-delete {
+        background: #f05a00;
+        border: none;
+        color: #FFFFFF;
+    }
+
+        .btn-custom-delete:hover {
+            background: #d94f00;
+        }
+
+    .btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        transition: left 0.5s ease;
+    }
+
+    .btn:hover::before {
+        left: 100%;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 10px;
+        font-family: 'Montserrat', sans-serif;
+    }
+
+        .table thead th {
+            background: #EDF2F7;
+            color: #1A202C;
+            font-size: 0.9rem;
+            padding: 12px;
+            border: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            white-space: nowrap;
+            text-align: center;
+            vertical-align: middle;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+
+        .table tbody tr {
+            background: #FFFFFF;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+            .table tbody tr:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            }
+
+        .table tbody td {
+            padding: 15px;
+            border: none;
+            font-size: 0.9rem;
+            color: #1A202C;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+    .action-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 5px; /* Khoảng cách giữa các nút */
+    }
+
+    .badge {
+        display: inline-flex;
+        align-items: center;
+        font-size: 0.8rem;
+        padding: 5px 10px;
+        border-radius: 4px;
+    }
+
+    .badge-success {
+        background: #f05a00;
+        color: #FFFFFF;
+    }
+
+    .badge-danger {
+        background: #F56565;
+        color: #FFFFFF;
+    }
+
+    .badge-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-right: 8px;
+    }
+
+    .pagination {
+        justify-content: center;
+        margin-top: 30px;
+    }
+
+        .pagination .page-item .page-link {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            color: #1A202C;
+            background: #EDF2F7;
+            border: 1px solid rgba(240, 90, 0, 0.4);
+            border-radius: 8px;
+            margin: 0 5px;
+            padding: 8px 15px;
+            transition: all 0.3s ease;
+        }
+
+        .pagination .page-item.active .page-link {
+            background: #f05a00;
+            border-color: #f05a00;
+            color: #FFFFFF;
+        }
+
+        .pagination .page-item .page-link:hover {
+            background: #f05a00;
+            border-color: #f05a00;
+            color: #FFFFFF;
+            box-shadow: 0 4px 12px rgba(240, 90, 0, 0.5);
+        }
+
+    @@media (max-width: 767.98px) {
+        .card-body {
+            padding: 20px;
+        }
+
+        .table thead th {
+            font-size: 0.8rem;
+            padding: 8px;
+        }
+
+        .table tbody td {
+            font-size: 0.8rem;
+            padding: 10px;
+        }
+
+        .btn {
+            padding: 6px 10px; /* Điều chỉnh padding cho phù hợp với màn hình nhỏ */
+            font-size: 0.7rem;
+        }
+
+        .custom-select, .form-control {
+            font-size: 0.8rem;
+            padding: 8px 12px;
+        }
+
+        .prefix-icon {
+            left: 10px;
+        }
+
+        .form-control {
+            padding-left: 35px;
+        }
+
+        .row.m-b-30 {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .col-md-8, .col-lg-4 {
+            width: 100%;
+            max-width: 100%;
+            margin-bottom: 20px;
+        }
+
+            .col-lg-4.text-right {
+                text-align: center !important;
+            }
+
+        .action-buttons {
+            gap: 3px; /* Giảm khoảng cách trên màn hình nhỏ */
+        }
+    }
+
+    @@media (max-width: 575.98px) {
+        .page-header {
+            padding: 20px 0;
+        }
+
+        .breadcrumb {
+            font-size: 0.8rem;
+        }
+
+        .card-body {
+            padding: 15px;
+        }
+
+        .table thead th {
+            font-size: 0.7rem;
+            padding: 6px;
+        }
+
+        .table tbody td {
+            font-size: 0.75rem;
+            padding: 8px;
+        }
+
+        .btn {
+            padding: 5px 8px; /* Điều chỉnh padding cho màn hình rất nhỏ */
+            font-size: 0.65rem;
+        }
+
+        .custom-select, .form-control {
+            font-size: 0.75rem;
+            padding: 6px 10px;
+        }
+
+        .prefix-icon {
+            left: 8px;
+        }
+
+        .form-control {
+            padding-left: 30px;
+        }
+
+        .pagination .page-item .page-link {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+
+        .action-buttons {
+            gap: 2px; /* Giảm khoảng cách thêm trên màn hình rất nhỏ */
+        }
+    }
+</style>
+
+<!-- Tiêu đề trang -->
+<div class="page-header" style="padding: 30px 20px;">
+    <div class="header-sub-title">
+        <nav class="breadcrumb breadcrumb-dash">
+            <a asp-area="Admin" asp-controller="HomeAdmin" asp-action="Index" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Home</a>
+            <span class="breadcrumb-item active">Danh sách sản phẩm: Trang @CurrentPage</span>
+        </nav>
+    </div>
+</div>
+<!-- Thẻ chứa bảng và bộ lọc -->
+<div class="card">
+    <div class="card-body">
+        <div class="row m-b-30" style="padding: 15px 0;">
+            <div class="col-md-8">
+                <div class="row">
+                    <!-- Bộ lọc danh mục -->
+                    <div class="col-md-6">
+                        <div class="input-affix m-v-10">
+                            <select class="custom-select" id="txtcatID" name="txtcatID" style="min-width: 200px;" asp-items="ViewBag.DanhMuc">
+                                <option value="" selected>Chọn danh mục</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- Tìm kiếm -->
+                    <div class="col-md-6">
+                        <div class="input-affix m-v-10">
+                            <i class="prefix-icon anticon anticon-search opacity-04"></i>
+                            <input id="keyword" name="keyword" type="text" class="form-control" placeholder="Tìm kiếm...">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Nút thêm sản phẩm -->
+            <div class="col-lg-4 text-right">
+                <a class="btn btn-success" asp-controller="AdminProducts" asp-action="Create"><i class="far fa-plus-square m-r-5 fa-lg"></i><span>Thêm Sản Phẩm</span></a>
+            </div>
+        </div>
+        <!-- Bảng sản phẩm -->
+        <div class="table-responsive">
+            <table class="table table-hover e-commerce-table">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th class="col-lg-2">Tên sản phẩm</th>
+                        <th>Danh mục</th>
+                        <th>Giá tiền</th>
+                        <th>Biến thể</th>
+                        <th>Tổng tồn kho</th>
+                        <th>Trạng thái</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="records_table">
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@index</td>
+                                <td>@item.ProductName</td>
+                                <td>@item.Cat?.CatName</td>
+                                <td>@item.Price?.ToString("#,##0") VND</td>
+                                <td>
+                                    @if (item.ProductDetails != null && item.ProductDetails.Any())
+                                    {
+                                        <span>Tổng: @item.ProductDetails.Count() biến thể</span>
+                                      
+                                    }
+                                    else
+                                    {
+                                        <span>Chưa có biến thể</span>
+                                    }
+                                </td>
+                                <td>
+                                    @(item.ProductDetails?.Sum(pd => pd.Stock ?? 0) ?? 0)
+                                </td>
+                                <td>
+                                    @if (item.Active ?? false)
+                                    {
+                                        <div class="d-flex align-items-center">
+                                            <div class="badge badge-success badge-dot m-r-10"></div>
+                                            <div>Đang Hoạt Động</div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="d-flex align-items-center">
+                                            <div class="badge badge-danger badge-dot m-r-10"></div>
+                                            <div>Không Hoạt Động</div>
+                                        </div>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <a class="btn btn-secondary btn-sm ml-2" asp-area="Admin" asp-controller="AdminProducts" asp-action="Details" asp-route-id="@item.ProductId"><i class="far fa-eye"></i></a>
+                                        <a class="btn btn-edit btn-tone m-r-5" asp-area="Admin" asp-controller="AdminProducts" asp-action="Edit" asp-route-id="@item.ProductId"><i class="far fa-edit"></i></a>
+                                        <a class="btn btn-custom-delete btn-tone m-r-5" asp-area="Admin" asp-controller="AdminProducts" asp-action="Delete" asp-route-id="@item.ProductId"><i class="far fa-trash-alt"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                            index++;
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="8" style="text-align: center; color: #4A5568;">Không có sản phẩm nào.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <!-- Phân trang -->
+            <div aria-label="Page navigation example">
+                <ul class="pagination">
+                    <pager class="page-container" list="@Model" options="@PagedListRenderOptions.Bootstrap4PageNumbersOnly" asp-area="Admin" asp-controller="AdminProducts" asp-route-CatID="@ViewBag.CurrentCateID" asp-action="Index" />
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Lọc theo danh mục
+            $("#txtcatID").change(function () {
+                var catID = $(this).val();
+                catID = parseFloat(catID);
+                $('#txtcatID option').removeAttr('selected');
+                $("#txtcatID > [value=" + catID + "]").attr("selected", "true");
+                $.ajax({
+                    url: '/Admin/AdminProducts/Filtter',
+                    dataType: "json",
+                    type: "GET",
+                    data: { CatID: catID },
+                    async: true,
+                    success: function (results) {
+                        if (results.status == "success") {
+                            window.location.href = results.redirectUrl; // Chuyển hướng khi lọc thành công
+                        }
+                    },
+                    error: function (xhr) {
+                        console.log('Error:', xhr);
+                    }
+                });
+            });
+
+            // Tìm kiếm sản phẩm
+            $("#keyword").keyup(function () {
+                var strkeyword = $('#keyword').val();
+                if (strkeyword.length === 0) {
+                    $('#records_table').load('/Admin/AdminProducts/Index #records_table');
+                } else {
+                    $.ajax({
+                        url: '/Admin/AdminProducts/FindProduct',
+                        dataType: "json",
+                        type: "POST",
+                        data: { keyword: strkeyword },
+                        success: function (response) {
+                            if (response.success) {
+                                $('#records_table').html(response.html);
+                            } else {
+                                $('#records_table').html('<tr><td colspan="8" style="text-align: center; color: #4A5568;">' + response.message + '</td></tr>');
+                            }
+                        },
+                        error: function (xhr) {
+                            console.log('Error:', xhr);
+                            $('#records_table').html('<tr><td colspan="8" style="text-align: center; color: #4A5568;">Đã xảy ra lỗi khi tìm kiếm.</td></tr>');
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}

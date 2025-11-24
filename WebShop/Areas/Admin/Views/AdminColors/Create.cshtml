@@ -1,0 +1,270 @@
+﻿@model WebShop.Models.Color
+
+@{
+    ViewData["Title"] = "Thêm màu sắc";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap');
+
+    body {
+        background: #CBD5E0;
+        font-family: 'Montserrat', sans-serif;
+        color: #1A202C;
+        overflow-x: hidden;
+    }
+
+    .container {
+        max-width: 1440px;
+        padding: 0 20px;
+        margin: 0 auto;
+    }
+
+    .page-header {
+        background: linear-gradient(135deg, #FFFFFF 0%, #CBD5E0 100%);
+        padding: 30px 20px;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        margin-bottom: 30px;
+    }
+
+    .header-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #1A202C;
+        margin-bottom: 10px;
+        text-align: center;
+    }
+
+    .header-sub-title {
+        text-align: center;
+    }
+
+    .breadcrumb {
+        background: none;
+        padding: 0;
+        margin: 0;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.9rem;
+        color: #4A5568;
+        display: flex;
+        justify-content: center;
+    }
+
+    .breadcrumb-item {
+        color: #4A5568;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+        .breadcrumb-item:hover {
+            color: #f05a00;
+        }
+
+        .breadcrumb-item.active {
+            color: #1A202C;
+            font-weight: 500;
+        }
+
+        .breadcrumb-item + .breadcrumb-item::before {
+            content: '>';
+            margin: 0 10px;
+            color: #4A5568;
+        }
+
+    .card {
+        background: #FFFFFF;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        overflow: hidden;
+        transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+        }
+
+    .card-body {
+        padding: 30px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-control {
+        background: #EDF2F7;
+        border: 1px solid rgba(240, 90, 0, 0.4);
+        border-radius: 8px;
+        padding: 10px 15px;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.9rem;
+        color: #1A202C;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        width: 100%;
+    }
+
+        .form-control:focus {
+            border-color: #f05a00;
+            box-shadow: 0 0 8px rgba(240, 90, 0, 0.5);
+            outline: none;
+        }
+
+    .font-weight-semibold {
+        font-weight: 500;
+        color: #1A202C;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    .text-danger {
+        color: #F56565;
+        font-size: 0.8rem;
+        margin-top: 5px;
+    }
+
+    .btn {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border-radius: 8px;
+        padding: 8px 12px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        border: none;
+        color: #FFFFFF;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .btn-primary {
+        background: #f05a00;
+        border: none;
+        color: #FFFFFF;
+    }
+
+        .btn-primary:hover {
+            background: #d94f00;
+        }
+
+    .btn-secondary {
+        background: #4A5568;
+        border: none;
+        color: #FFFFFF;
+    }
+
+        .btn-secondary:hover {
+            background: #2D3748;
+        }
+
+    .btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        transition: left 0.5s ease;
+    }
+
+    .btn:hover::before {
+        left: 100%;
+    }
+
+    .action-buttons {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    @@media (max-width: 767.98px) {
+        .card-body {
+            padding: 20px;
+        }
+
+        .form-control {
+            font-size: 0.8rem;
+            padding: 8px 12px;
+        }
+
+        .btn {
+            padding: 6px 10px;
+            font-size: 0.7rem;
+        }
+
+        .action-buttons {
+            justify-content: center;
+            gap: 5px;
+        }
+    }
+
+    @@media (max-width: 575.98px) {
+        .page-header {
+            padding: 20px 0;
+        }
+
+        .header-title {
+            font-size: 1.5rem;
+        }
+
+        .breadcrumb {
+            font-size: 0.8rem;
+        }
+
+        .card-body {
+            padding: 15px;
+        }
+
+        .form-control {
+            font-size: 0.75rem;
+            padding: 6px 10px;
+        }
+
+        .btn {
+            padding: 5px 8px;
+            font-size: 0.65rem;
+        }
+    }
+</style>
+
+<div class="container">
+    <div class="page-header">
+        <h2 class="header-title">Thêm màu sắc</h2>
+        <div class="header-sub-title">
+            <nav class="breadcrumb breadcrumb-dash">
+                <a asp-area="Admin" asp-controller="HomeAdmin" asp-action="Index" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Home</a>
+                <a asp-area="Admin" asp-controller="AdminColors" asp-action="Index" class="breadcrumb-item">Danh sách màu sắc</a>
+                <span class="breadcrumb-item active">Thêm màu sắc</span>
+            </nav>
+        </div>
+    </div>
+
+    <form asp-controller="AdminColors" asp-action="Create" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="card">
+            <div class="card-body">
+                <div class="form-group">
+                    <label class="font-weight-semibold" for="ColorName">Tên màu sắc</label>
+                    <input type="text" class="form-control" asp-for="ColorName" placeholder="Nhập tên màu sắc">
+                </div>
+                <div class="action-buttons">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="anticon anticon-save m-r-5 fa-lg"></i>
+                        <span>Lưu</span>
+                    </button>
+                    <a class="btn btn-secondary" asp-action="Index">
+                        <i class="fas fa-undo m-r-5 fa-lg"></i>
+                        <span>Quay lại</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

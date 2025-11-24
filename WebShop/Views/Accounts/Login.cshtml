@@ -1,0 +1,322 @@
+﻿@model WebShop.ModelViews.LoginViewModel
+@{
+    ViewData["Title"] = "Login";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Đăng nhập</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #e6e9f0 0%, #eef1f5 100%);
+            font-family: 'Roboto', sans-serif;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card {
+            border-radius: 16px;
+            border: none;
+            background: #ffffff;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+            .card:hover {
+                transform: translateY(-5px);
+            }
+
+        .card-body {
+            padding: 3rem;
+        }
+
+        .header-section {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+            .header-section .h1 {
+                font-size: 2rem;
+                font-weight: 700;
+                color: #000000;
+                margin-bottom: 0.75rem;
+                letter-spacing: 1px;
+            }
+
+            .header-section .sub-title {
+                font-size: 1.1rem;
+                font-weight: 600;
+                color: #555;
+                margin-top: 1rem;
+                line-height: 1.4;
+            }
+
+        .logo-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            min-height: 500px;
+            background: linear-gradient(135deg, #f8f8f8 0%, #ffffff 100%);
+        }
+
+            .logo-container img {
+                max-width: 85%;
+                height: auto;
+                border-radius: 10px;
+                box-shadow: 0 6px 15px rgba(0, 0, 0, 0.05);
+                transition: transform 0.3s ease;
+            }
+
+                .logo-container img:hover {
+                    transform: scale(1.02);
+                }
+
+        .form-outline {
+            margin-bottom: 1.75rem;
+        }
+
+        .form-control {
+            border-radius: 8px;
+            padding: 0.9rem 1rem;
+            font-size: 0.95rem;
+            background-color: #f9f9f9;
+            border: 1px solid #d5d5d5;
+        }
+
+            .form-control::placeholder {
+                color: #999999;
+                font-weight: 300;
+            }
+
+            .form-control:focus {
+                border-color: #000000;
+                background-color: #ffffff;
+                box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+            }
+
+        .form-check {
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .form-check-input {
+            width: 1.2rem;
+            height: 1.2rem;
+            border: 2px solid #333333;
+            border-radius: 4px;
+            background-color: #ffffff;
+            appearance: none;
+            transition: all 0.2s ease;
+        }
+
+            .form-check-input:checked {
+                background-color: #000000;
+                border-color: #000000;
+                background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10l3 3l6-6'/%3e%3c/svg%3e");
+            }
+
+        .form-check-label {
+            margin-left: 0.75rem;
+            font-size: 0.9rem;
+        }
+
+        .small-text-muted {
+            font-size: 0.9rem;
+            color: #666666;
+            text-decoration: none;
+            margin-bottom: 0;
+        }
+
+            .small-text-muted:hover {
+                color: #000000;
+                text-decoration: underline;
+            }
+
+        .btn-dark {
+            background-color: #000000;
+            border: none;
+            border-radius: 8px;
+            padding: 0.9rem;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+            .btn-dark:hover {
+                background-color: #1a1a1a;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            }
+
+            .btn-dark:disabled {
+                opacity: 0.7;
+                cursor: not-allowed;
+            }
+
+        .pb-lg-2 {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #333333;
+        }
+
+            .pb-lg-2 a {
+                color: #000000;
+                font-weight: 500;
+                text-decoration: none;
+            }
+
+                .pb-lg-2 a:hover {
+                    text-decoration: underline;
+                }
+
+        .text-danger {
+            font-size: 0.85rem;
+            font-weight: 400;
+        }
+
+        .loading-spinner {
+            display: none;
+            border: 3px solid #ffffff;
+            border-top: 3px solid #000000;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            position: absolute;
+            top: 50%;
+            right: 15px;
+            transform: translateY(-50%);
+        }
+
+        @@keyframes spin {
+            0% {
+                transform: translateY(-50%) rotate(0deg);
+            }
+
+            100% {
+                transform: translateY(-50%) rotate(360deg);
+            }
+        }
+
+        @@media (max-width: 767.98px) {
+            .logo-container {
+                min-height: 200px;
+                padding: 1.5rem;
+            }
+
+            .card-body {
+                padding: 2rem;
+            }
+
+            .header-section .h1 {
+                font-size: 1.75rem;
+            }
+
+            .header-section .sub-title {
+                font-size: 0.9rem;
+            }
+
+            .form-check {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+                .form-check a {
+                    margin-top: 0.5rem;
+                }
+        }
+
+        section {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding-bottom: 100px;
+        }
+    </style>
+</head>
+<body>
+    <section>
+        <div class="container py-5">
+            <div class="row d-flex justify-content-center align-items-center">
+                <div class="col col-xl-10">
+                    <div class="card">
+                        <div class="row g-0">
+                            <div class="col-md-7 col-lg-6 d-none d-md-block">
+                                <div class="logo-container">
+                                    <img src="~/assets/images/logo/logonew.png" alt="login form" class="img-fluid" />
+                                </div>
+                            </div>
+                            <div class="col-md-5 col-lg-6 d-flex align-items-center">
+                                <div class="card-body text-black">
+                                    <form asp-action="Login" method="post" asp-route-returnUrl="@ViewBag.ReturnUrl" id="loginForm">
+                                        <div class="header-section">
+                                            <span class="h1">ĐĂNG NHẬP</span>
+                                            <h5 class="sub-title">Khám phá thế giới của LEVITATE<br /> ngay bây giờ!</h5>
+                                        </div>
+
+                                        <div class="form-outline">
+                                            <input type="email" asp-for="UserName" placeholder="Nhập Email" class="form-control" />
+                                            <span asp-validation-for="UserName" class="text-danger"></span>
+                                        </div>
+
+                                        <div class="form-outline">
+                                            <input type="password" asp-for="Password" placeholder="Nhập mật khẩu" class="form-control" />
+                                            <span asp-validation-for="Password" class="text-danger"></span>
+                                        </div>
+
+                                        <div class="form-check">
+                                            <div class="d-flex align-items-center">
+                                                <input class="form-check-input" type="checkbox" id="flexCheckDefault" />
+                                                <label class="form-check-label ml-2" for="flexCheckDefault">Nhớ mật khẩu</label>
+                                            </div>
+                                            <a class="small-text-muted" href="/quen-mat-khau.html">Quên mật khẩu?</a>
+                                        </div>
+
+                                        <div class="pt-1">
+                                            <button class="btn btn-dark btn-lg btn-block" type="submit" id="loginButton">
+                                                Đăng nhập
+                                                <span class="loading-spinner"></span>
+                                            </button>
+                                        </div>
+
+                                        <p class="pb-lg-2">
+                                            Bạn chưa có tài khoản? <a href="/dang-ky.html">Đăng ký ở đây</a>
+                                        </p>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#loginForm').on('submit', function () {
+                var $button = $('#loginButton');
+                $button.prop('disabled', true);
+                $button.find('.loading-spinner').show();
+            });
+        });
+    </script>
+</body>
+</html>

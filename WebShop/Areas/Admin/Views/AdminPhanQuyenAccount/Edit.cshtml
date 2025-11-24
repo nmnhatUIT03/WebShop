@@ -1,0 +1,398 @@
+﻿@model WebShop.Models.Account
+
+@{
+    ViewData["Title"] = "Cấp quyền tài khoản: " + Model.FullName;
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap');
+
+    body {
+        background: #CBD5E0;
+        font-family: 'Montserrat', sans-serif;
+        color: #1A202C;
+        font-weight: 400;
+        overflow-x: hidden;
+    }
+
+    .container {
+        max-width: 1440px;
+        padding: 0 20px;
+        margin: 0 auto;
+    }
+
+    .page-header {
+        background: linear-gradient(135deg, #FFFFFF 0%, #CBD5E0 100%);
+        padding: 20px 30px;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        margin-bottom: 30px;
+    }
+
+    .header-title {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 1.8rem;
+        font-weight: 500;
+        color: #1A202C;
+        text-align: center;
+    }
+
+    .header-sub-title {
+        text-align: center;
+    }
+
+    .breadcrumb {
+        background: none;
+        padding: 0;
+        margin: 0;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.9rem;
+        color: #4A5568;
+    }
+
+    .breadcrumb-item {
+        color: #4A5568;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+        .breadcrumb-item:hover {
+            color: #f05a00;
+        }
+
+        .breadcrumb-item.active {
+            color: #1A202C;
+            font-weight: 500;
+        }
+
+        .breadcrumb-item + .breadcrumb-item::before {
+            content: '>';
+            margin: 0 10px;
+            color: #4A5568;
+        }
+
+    .card {
+        background: #FFFFFF;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        overflow: hidden;
+        transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+        }
+
+    .card-body {
+        padding: 30px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+        position: relative;
+    }
+
+    .control-label {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: #1A202C;
+        margin-bottom: 8px;
+    }
+
+    .form-control {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.9rem;
+        border-radius: 8px;
+        border: 1px solid #CBD5E0;
+        padding: 10px 15px;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .form-control:focus {
+            border-color: #f05a00;
+            box-shadow: 0 0 8px rgba(240, 90, 0, 0.3);
+            outline: none;
+        }
+
+        .form-control:disabled, .form-control[readonly] {
+            background-color: #E2E8F0;
+            cursor: not-allowed;
+        }
+
+        .form-control.is-updating {
+            border-color: #f05a00;
+            box-shadow: 0 0 8px rgba(240, 90, 0, 0.3);
+        }
+
+    .text-danger {
+        font-size: 0.8rem;
+        color: #F56565;
+    }
+
+    .form-control.is-invalid {
+        border-color: #F56565;
+    }
+
+    .btn {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border-radius: 8px;
+        padding: 8px 15px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-update {
+        background: #f05a00;
+        border: none;
+        color: #FFFFFF;
+    }
+
+        .btn-update:hover {
+            background: #d94f00;
+            box-shadow: 0 6px 20px rgba(240, 90, 0, 0.5);
+        }
+
+    .btn-back {
+        background: #4A5568;
+        border: none;
+        color: #FFFFFF;
+    }
+
+        .btn-back:hover {
+            background: #2D3748;
+            box-shadow: 0 6px 20px rgba(74, 85, 104, 0.5);
+        }
+
+    .btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        transition: left 0.5s ease;
+    }
+
+    .btn:hover::before {
+        left: 100%;
+    }
+
+    .update-status {
+        font-size: 0.8rem;
+        margin-top: 10px;
+        text-align: center;
+        display: none;
+    }
+
+        .update-status.success {
+            color: #28a745;
+        }
+
+        .update-status.error {
+            color: #F56565;
+        }
+
+    @@media (max-width: 767.98px) {
+        .card-body {
+            padding: 20px;
+        }
+
+        .form-control {
+            font-size: 0.8rem;
+            padding: 8px 12px;
+        }
+
+        .btn {
+            padding: 6px 12px;
+            font-size: 0.7rem;
+        }
+    }
+
+    @@media (max-width: 575.98px) {
+        .page-header {
+            padding: 15px 0;
+        }
+
+        .header-title {
+            font-size: 1.5rem;
+        }
+
+        .breadcrumb {
+            font-size: 0.8rem;
+        }
+
+        .card-body {
+            padding: 15px;
+        }
+
+        .form-control {
+            font-size: 0.75rem;
+            padding: 6px 10px;
+        }
+
+        .btn {
+            padding: 6px 10px;
+            font-size: 0.65rem;
+        }
+    }
+</style>
+
+<div class="container">
+    <div class="page-header">
+        <h2 class="header-title">Cấp quyền tài khoản: @Model.FullName</h2>
+        <div class="header-sub-title">
+            <nav class="breadcrumb breadcrumb-dash">
+                <a asp-area="Admin" asp-controller="HomeAdmin" asp-action="Index" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Home</a>
+                <a class="breadcrumb-item" asp-area="Admin" asp-controller="AdminPhanQuyenAccount" asp-action="Index">Danh sách tài khoản</a>
+                <span class="breadcrumb-item active">Cấp quyền tài khoản: @Model.FullName</span>
+            </nav>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <form id="accountForm" asp-controller="AdminPhanQuyenAccount" asp-action="Edit" asp-route-id="@Model.AccountId" method="post" enctype="multipart/form-data">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="AccountId" />
+                        <input type="hidden" asp-for="FullName" />
+                        <input type="hidden" asp-for="Email" />
+                        <input type="hidden" asp-for="Phone" />
+                        <input type="hidden" asp-for="LastLogin" />
+                        <input type="hidden" id="OriginalFullName" value="@Model.FullName" />
+                        <input type="hidden" id="OriginalEmail" value="@Model.Email" />
+                        <input type="hidden" id="OriginalPhone" value="@Model.Phone" />
+                        <input type="hidden" id="OriginalRoleId" value="@Model.RoleId" />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="FullName" class="control-label">Họ và Tên</label>
+                                    <input asp-for="FullName" class="form-control" value="@Model.FullName" disabled="disabled" />
+                                    <span asp-validation-for="FullName" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="RoleId" class="control-label">Phân quyền người dùng</label>
+                                    <select asp-for="RoleId" class="form-control" asp-items="@ViewData["DanhMuc"] as SelectList">
+                                        <option value="" disabled>Chọn quyền</option>
+                                    </select>
+                                    <span asp-validation-for="RoleId" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="LastLogin" class="control-label">Đăng nhập lần cuối</label>
+                                    <input asp-for="LastLogin" class="form-control" value="@(Model.LastLogin?.ToString("dd/MM/yyyy HH:mm:ss") ?? "Chưa đăng nhập")" disabled="disabled" />
+                                    <span asp-validation-for="LastLogin" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Email" class="control-label">Email</label>
+                                    <input asp-for="Email" class="form-control" value="@Model.Email" disabled="disabled" />
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Password" class="control-label">Mật khẩu</label>
+                                    <input asp-for="Password" class="form-control" type="password" value="********" disabled="disabled" />
+                                    <span asp-validation-for="Password" class="text-danger"></span>
+                                </div>
+                                <div class="form-group" style="display:none">
+                                    <label asp-for="Phone" class="control-label">Số điện thoại</label>
+                                    <input asp-for="Phone" class="form-control" value="@Model.Phone" disabled="disabled" />
+                                    <span asp-validation-for="Phone" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group text-center">
+                            <button type="submit" class="btn btn-update btn-tone m-r-5">
+                                <i class="far fa-save m-r-5 fa-lg"></i>Lưu thay đổi
+                            </button>
+                            <a class="btn btn-back btn-tone m-r-5" asp-action="Index">
+                                <i class="fas fa-undo m-r-5 fa-lg"></i>Quay lại
+                            </a>
+                            <div class="update-status" id="AccountFormStatus"></div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function () {
+            // Xử lý gửi form qua AJAX
+            $('#accountForm').on('submit', function (e) {
+                e.preventDefault();
+                var data = {
+                    AccountId: $('#AccountId').val(),
+                    FullName: $('#FullName').val(),
+                    Email: $('#Email').val(),
+                    Phone: $('#Phone').val(),
+                    LastLogin: $('#LastLogin').val(),
+                    RoleId: $('#RoleId').val()
+                    // Password không gửi vì disabled
+                };
+
+                var originalValues = {
+                    FullName: $('#OriginalFullName').val(),
+                    Email: $('#OriginalEmail').val(),
+                    Phone: $('#OriginalPhone').val(),
+                    RoleId: $('#OriginalRoleId').val()
+                };
+
+                var hasChanges = (data.RoleId !== originalValues.RoleId);
+
+                if (!hasChanges) {
+                    $('#AccountFormStatus').addClass('error').text('Không có thay đổi nào để cập nhật.').show();
+                    toastr.error('Không có thay đổi nào để cập nhật.');
+                    return;
+                }
+
+                $('#accountForm .form-control').addClass('is-updating');
+                $('#AccountFormStatus').hide().removeClass('success error').text('');
+
+                $.ajax({
+                    url: '@Url.Action("Edit", "AdminPhanQuyenAccount", new { area = "Admin" })',
+                    type: 'POST',
+                    data: data,
+                    headers: {
+                        RequestVerificationToken: $('#accountForm input[name="__RequestVerificationToken"]').val()
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            $('#AccountFormStatus').addClass('success').text('Cập nhật quyền thành công!').show();
+                            toastr.success('Cập nhật quyền thành công!');
+                            $('#OriginalRoleId').val(data.RoleId);
+                        } else {
+                            $('#AccountFormStatus').addClass('error').text(response.message).show();
+                            toastr.error(response.message);
+                        }
+                    },
+                    error: function (xhr) {
+                        var message = xhr.responseJSON?.message || 'Lỗi hệ thống khi cập nhật quyền.';
+                        $('#AccountFormStatus').addClass('error').text(message).show();
+                        toastr.error(message);
+                    },
+                    complete: function () {
+                        $('#accountForm .form-control').removeClass('is-updating');
+                    }
+                });
+            });
+        });
+    </script>
+}

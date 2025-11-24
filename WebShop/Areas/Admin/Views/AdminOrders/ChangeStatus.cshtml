@@ -1,0 +1,95 @@
+﻿@model WebShop.Models.Order
+
+@{
+    ViewData["Title"] = "Cập nhật trạng thái đơn hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    List<OrderDetail> orderDetails = ViewBag.ChiTiet;
+}
+
+<div class="page-header">
+    <h2 class="header-title">Cập nhật trạng thái đơn hàng</h2>
+    <div class="header-sub-title">
+        <nav class="breadcrumb breadcrumb-dash">
+            <a asp-area="Admin" asp-controller="Home" asp-action="Index" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Home</a>
+            <a class="breadcrumb-item" asp-area="Admin" asp-controller="AdminOrders" asp-action="Index">Danh sách đơn hàng</a>
+            <span class="breadcrumb-item active">Cập nhật trạng thái</span>
+        </nav>
+    </div>
+</div>
+<div class="modal-body">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Thông tin đơn hàng</h4>
+            <div class="table-responsive">
+                <table class="product-info-table m-t-20">
+                    <tbody>
+                        <tr>
+                            <td>Mã hóa đơn:</td>
+                            <td class="text-dark font-weight-semibold">@Model.OrderId</td>
+                        </tr>
+                        <tr>
+                            <td>Tài khoản:</td>
+                            <td class="text-dark font-weight-semibold">@(Model.CustomerId?.ToString() ?? "N/A")</td>
+                        </tr>
+                        <tr>
+                            <td>Tên người nhận:</td>
+                            <td class="text-dark font-weight-semibold">@(Model.ReceiverName ?? "N/A")</td>
+                        </tr>
+                        <tr>
+                            <td>Số điện thoại:</td>
+                            <td class="text-dark font-weight-semibold">@(Model.Customer?.Phone ?? "N/A")</td>
+                        </tr>
+                        <tr>
+                            <td>Địa chỉ:</td>
+                            <td class="text-dark font-weight-semibold">@(Model.Address ?? "N/A")</td>
+                        </tr>
+                        <tr>
+                            <td>Tổng tiền:</td>
+                            <td class="text-dark font-weight-semibold">@((Model.TotalMoney ?? 0).ToString("#,##0")) VNĐ</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body" style="background-color: #e1e1e1">
+            <form asp-area="Admin" asp-controller="AdminOrders" asp-action="ChangeStatus" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="OrderId" />
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Chọn trạng thái đơn hàng</label>
+                            <select class="form-control" asp-for="TransactStatusId" asp-items="ViewBag.TrangThai"></select>
+                            <span asp-validation-for="TransactStatusId" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Đã thanh toán</label>
+                            <select class="form-control" asp-for="Paid" style="background-color: #ffff;">
+                                <option value="true" selected="@(Model.Paid ? "selected" : "")">Đã thanh toán</option>
+                                <option value="false" selected="@(!Model.Paid ? "selected" : "")">Chưa thanh toán</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Đơn hàng bị hủy</label>
+                    <select class="form-control" asp-for="Deleted" style="background-color: #ffff;">
+                        <option value="true" selected="@(Model.Deleted ? "selected" : "")">Đã hủy</option>
+                        <option value="false" selected="@(!Model.Deleted ? "selected" : "")">Chưa hủy</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-info" style="background-color: #F05A00; border: none; color: #FFF;"><i class="far fa-save m-r-5 fa-lg"></i>Lưu thay đổi</button>
+                <a class="btn btn-warning" style="background-color: #000000; border: none; color: #FFF;" asp-action="Index"><i class="fas fa-undo m-r-5 fa-lg"></i>Quay lại</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

@@ -1,0 +1,154 @@
+﻿@model WebShop.Models.Order
+@inject WebShop.Models.webshopContext _context
+@using System.Globalization
+
+@{
+    ViewData["Title"] = "Chi tiết đơn hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml"; 
+    List<OrderDetail> orderDetails = ViewBag.ChiTiet;
+}
+
+<!-- Content Wrapper START -->
+<div class="main-content">
+    <div class="page-header">
+        <h2 class="header-title">Chi tiết đơn hàng</h2>
+        <div class="header-sub-title">
+            <nav class="breadcrumb breadcrumb-dash">
+                <a asp-controller="DonHang" asp-action="Index" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Đơn hàng</a>
+                <span class="breadcrumb-item active">Chi tiết đơn hàng</span>
+            </nav>
+        </div>
+    </div>
+    <div class="container">
+        <div class="card">
+            <div class="card-body">
+                <div id="invoice" class="p-h-30">
+                    <div class="m-t-15 lh-2">
+                        <div class="inline-block">
+                            <img class="img-fluid" src="assets/images/logo/logo.png" alt="">
+                            <address class="p-l-10">
+                                <span class="font-weight-semibold text-dark">SHOP LEVITATE</span><br>
+                                <span>Địa chỉ: Hóc Môn</span><br>
+                                <abbr class="text-dark" title="Phone">Phone:</abbr>
+                                <span>0948919952</span>
+                            </address>
+                        </div>
+                        <div class="float-right">
+                            <h2>CHI TIẾT ĐƠN HÀNG</h2>
+                        </div>
+                    </div>
+                    <div class="row m-t-20 lh-2">
+                        <div class="col-sm-9">
+                            <h3 class="p-l-10 m-t-10">Người nhận:</h3>
+                            <address class="p-l-10 m-t-10">
+                                <span class="font-weight-semibold text-dark">@(Model.ReceiverName ?? "N/A")</span><br>
+                                <span>Địa chỉ: @(Model.Address ?? "N/A")</span><br>
+                                <span>Phone: @(Model.Customer?.Phone ?? "N/A")</span>
+                            </address>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="m-t-80">
+                                <div class="text-dark text-uppercase d-inline-block">
+                                    <span class="font-weight-semibold text-dark">Mã đơn hàng :</span>
+                                </div>
+                                <div class="float-right">@Model.OrderId</div>
+                            </div>
+                            <div class="text-dark text-uppercase d-inline-block">
+                                <span class="font-weight-semibold text-dark">Tài khoản :</span>
+                            </div>
+                            <div class="float-right">@(Model.CustomerId?.ToString() ?? "N/A")</div>
+                            <div class="text-dark text-uppercase d-inline-block">
+                                <span class="font-weight-semibold text-dark">Ngày mua :</span>
+                            </div>
+                            <div class="float-right">@(Model.OrderDate?.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture) ?? "Chưa có ngày")</div>
+                            <div class="text-dark text-uppercase d-inline-block">
+                                <span class="font-weight-semibold text-dark">Khuyến mãi :</span>
+                            </div>
+                            <div class="float-right">@(Model.Promotion?.PromotionName ?? "Không có")</div>
+                            <div class="text-dark text-uppercase d-inline-block">
+                                <span class="font-weight-semibold text-dark">Mã giảm giá :</span>
+                            </div>
+                            <div class="float-right">@(Model.Voucher?.VoucherCode ?? "Không có")</div>
+                        </div>
+                    </div>
+                    <div class="m-t-20">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>STT</th>
+                                        <th>Tên sản phẩm</th>
+                                        <th>Kích thước</th>
+                                        <th>Màu sắc</th>
+                                        <th>Số lượng</th>
+                                        <th>Đơn giá</th>
+                                        <th>Tổng tiền</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (orderDetails != null && orderDetails.Any())
+                                    {
+                                        int i = 1;
+                                        foreach (var item in orderDetails)
+                                        {
+                                            <tr>
+                                                <th>@i</th>
+                                                <td><a href="#">@(item.ProductDetail?.Product?.ProductName ?? "N/A")</a></td>
+                                                <td>@(item.ProductDetail?.Size?.SizeName ?? "N/A")</td>
+                                                <td>@(item.ProductDetail?.Color?.ColorName ?? "N/A")</td>
+                                                <td>@(item.Amount ?? 0)</td>
+                                                <td>@((item.Price ?? 0).ToString("#,##0", CultureInfo.InvariantCulture)) VNĐ</td>
+                                                <td>@(((item.Amount ?? 0) * (item.Price ?? 0)).ToString("#,##0", CultureInfo.InvariantCulture)) VNĐ</td>
+                                            </tr>
+                                            i++;
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row m-t-30 lh-1-8">
+                            <div class="col-sm-12">
+                                <div class="float-right text-right">
+                                    <h3><span class="font-weight-semibold text-dark">Tổng tiền :</span> @((Model.TotalMoney ?? 0).ToString("#,##0", CultureInfo.InvariantCulture)) VNĐ</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row m-t-30 lh-2">
+                            <div class="col-sm-12">
+                                <div class="border-bottom p-v-20">
+                                    <p class="text-opacity">
+                                        <small>
+                                            Shop LEVITATE cảm ơn quý khách đã ủng hộ sản phẩm của cửa hàng.
+                                        </small>
+                                    </p>
+                                    <p class="text-opacity">
+                                        <small>
+                                            Qúy khách khi nhận được hàng hãy quay clip quá trình mở hàng, để phục vụ trong quá trình sản phẩm có
+                                            có sự cố để được hỗ trợ. Shop chỉ hỗ trợ đổi trả hàng khi quý khách cung cấp đủ clip mở hàng.
+                                            Nếu sản phẩm lỗi, không đúng sản phẩm shop sẵn sàng đổi trả cho khách hàng. Xin hãy liên hệ với cửa hàng trước khi đánh giá về sản phẩm.
+                                            Mọi thông tin liên lạc xin quý khác liên hệ phía bên dưới.
+                                        </small>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row m-v-20">
+                            <div class="col-sm-6">
+                                <img class="img-fluid text-opacity m-t-5" width="100" src="~/assets/images/logo/logoadmin.jpg" alt="" />
+                            </div>
+                            <div class="col-sm-6 text-right">
+                                <small><span class="font-weight-semibold text-dark">Phone:</span> 0948919952</small>
+                                <br>
+                                <small>LEVITATE@gmail.com</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-right">
+            <a class="btn btn-primary" asp-controller="DonHang" asp-action="Index"><i class="fas fa-undo m-r-5 fa-lg"></i>Quay lại</a>
+        </div>
+    </div>
+</div>
+<!-- Content Wrapper END -->

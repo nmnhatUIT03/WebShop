@@ -1,0 +1,367 @@
+﻿@model PagedList.Core.PagedList<WebShop.Models.Product>
+
+@{
+    ViewData["Title"] = "Shop - Page " + Model.PageNumber;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Begin Main Content Area -->
+<main class="main-content">
+    <!-- Shop Section Begin -->
+    <section class="shop spad featured-products" style="background: #FFFFFF; padding: 40px 0;">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="shop__sidebar">
+                        <div class="shop__sidebar__search">
+                            <form asp-action="Index" method="get" id="filterForm">
+                                <input type="text" name="searchString" value="@ViewData["CurrentFilter"]" placeholder="Tìm kiếm sản phẩm..." style="font-family: 'Lora', serif; padding: 8px; border-radius: 8px; border: 1px solid #A0A0A0;" />
+                                <button type="submit" style="background: #e64500; color: #FFFFFF; border: none; padding: 8px; border-radius: 8px;"><i class="fa fa-search"></i></button>
+                            </form>
+                        </div>
+                        <div class="shop__sidebar__accordion">
+                            <div class="accordion" id="accordionExample">
+                                <!-- Danh mục -->
+                                <div class="card">
+                                    <div class="card-heading">
+                                        <a data-toggle="collapse" data-target="#collapseOne">Danh mục</a>
+                                    </div>
+                                    <div id="collapseOne" class="collapse show" data-parent="#accordionExample">
+                                        <div class="card-body">
+                                            <div class="shop__sidebar__brand">
+                                                <ul>
+                                                    @foreach (var category in ViewBag.Categories as List<WebShop.Models.Category> ?? new List<WebShop.Models.Category>())
+                                                    {
+                                                        var categoryName = category.CatName ?? "Unknown Category";
+                                                        <li><a href="?categoryId=@category.CatId" onclick="setFilter('categoryId', @category.CatId)">@categoryName</a></li>
+                                                    }
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Nhà cung cấp -->
+                                <div class="card">
+                                    <div class="card-heading">
+                                        <a data-toggle="collapse" data-target="#collapseTwo">Nhà cung cấp</a>
+                                    </div>
+                                    <div id="collapseTwo" class="collapse show" data-parent="#accordionExample">
+                                        <div class="card-body">
+                                            <div class="shop__sidebar__brand">
+                                                <ul>
+                                                    @foreach (var supplier in ViewBag.Suppliers as List<WebShop.Models.Supplier> ?? new List<WebShop.Models.Supplier>())
+                                                    {
+                                                        var supplierName = supplier.Name ?? "Unknown Supplier";
+                                                        <li><a href="?supplierId=@supplier.SupplierId" onclick="setFilter('supplierId', @supplier.SupplierId)">@supplierName</a></li>
+                                                    }
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Giá -->
+                                <div class="card">
+                                    <div class="card-heading">
+                                        <a data-toggle="collapse" data-target="#collapseThree">Giá</a>
+                                    </div>
+                                    <div id="collapseThree" class="collapse show" data-parent="#accordionExample">
+                                        <div class="card-body">
+                                            <div class="shop__sidebar__price">
+                                                <ul>
+                                                    <li><a href="?priceRange=0-500000" onclick="setFilter('priceRange', '0-500000')">0 - 500,000 VNĐ</a></li>
+                                                    <li><a href="?priceRange=500000-1000000" onclick="setFilter('priceRange', '500000-1000000')">500,000 - 1,000,000 VNĐ</a></li>
+                                                    <li><a href="?priceRange=1000000-2000000" onclick="setFilter('priceRange', '1000000-2000000')">1,000,000 - 2,000,000 VNĐ</a></li>
+                                                    <li><a href="?priceRange=2000000-999999999" onclick="setFilter('priceRange', '2000000-999999999')">Trên 2,000,000 VNĐ</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Khác -->
+                                <div class="card">
+                                    <div class="card-heading">
+                                        <a data-toggle="collapse" data-target="#collapseFour">Khác</a>
+                                    </div>
+                                    <div id="collapseFour" class="collapse show" data-parent="#accordionExample">
+                                        <div class="card-body">
+                                            <div class="shop__sidebar__other">
+                                                <ul>
+                                                    <li><a href="?isDiscounted=true" onclick="setFilter('isDiscounted', 'true')">Sản phẩm giảm giá</a></li>
+                                                    <li><a href="?isBestSeller=true" onclick="setFilter('isBestSeller', 'true')">Sản phẩm nổi bật</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-9">
+                    <div class="shop__product__option">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <div class="shop__product__option__left">
+                                    <p>Showing @(Model.PageNumber * 12 - 11)–@(Math.Min(Model.PageNumber * 12, Model.TotalItemCount)) of @Model.TotalItemCount results</p>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <div class="shop__product__option__right">
+                                    <p>Sort by:</p>
+                                    <form asp-action="Index" method="get">
+                                        <input type="hidden" name="currentFilter" value="@ViewData["CurrentFilter"]" />
+                                        <input type="hidden" name="categoryId" value="@ViewData["CategoryId"]" />
+                                        <input type="hidden" name="supplierId" value="@ViewData["SupplierId"]" />
+                                        <input type="hidden" name="priceRange" value="@ViewData["PriceRange"]" />
+                                        <input type="hidden" name="isDiscounted" value="@ViewData["IsDiscounted"]" />
+                                        <input type="hidden" name="isBestSeller" value="@ViewData["IsBestSeller"]" />
+                                        @{
+                                            var currentSort = ViewData["CurrentSort"]?.ToString() ?? string.Empty;
+                                            var sortOptions = new List<SelectListItem>
+                                                                                {
+                                                                                new SelectListItem { Value = "", Text = "Best Sellers", Selected = string.IsNullOrEmpty(currentSort) },
+                                                                                new SelectListItem { Value = "low-to-high", Text = "Low To High", Selected = currentSort == "low-to-high" },
+                                                                                new SelectListItem { Value = "high-to-low", Text = "High To Low", Selected = currentSort == "high-to-low" }
+                                                                                };
+                                        }
+                                        <select name="sortOrder" onchange="this.form.submit()" id="sortOrderSelect" asp-items="sortOptions"></select>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        @if (Model != null && Model.Any())
+                        {
+                            foreach (var item in Model)
+                            {
+                                string url = $"/{item.Alias}-{item.ProductId}.html";
+                                decimal? finalPrice = item.Discount.HasValue ? item.Price.Value * (1 - (item.Discount.Value / 100m)) : item.Price;
+                                <div class="col-lg-4 col-md-6 col-sm-6 mb-5">
+                                    <div class="product-item" style="display: flex; flex-direction: column; height: 450px; background: #FFFFFF; border-radius: 16px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); overflow: hidden; transition: transform 0.4s ease, box-shadow 0.4s ease;">
+                                        <div class="product-img" style="flex: 0 0 300px; position: relative; overflow: hidden;">
+                                            <a href="@url">
+                                                @{
+                                                    var thumbPath = !string.IsNullOrEmpty(item.Thumb) 
+                                                        ? (item.Thumb.StartsWith("/") || item.Thumb.StartsWith("~") 
+                                                            ? item.Thumb 
+                                                            : "/images/products/" + item.Thumb)
+                                                        : "/images/products/default.jpg";
+                                                }
+                                                <img src="@Url.Content(thumbPath)"
+                                                     alt="@item.ProductName"
+                                                     loading="lazy"
+                                                     style="width: 100%; height: 100%; object-fit: cover; border-radius: 16px 16px 0 0; transition: transform 0.5s ease;"
+                                                     onerror="this.src='/images/products/default.jpg';" />
+                                            </a>
+                                        </div>
+                                        <div class="product-text" style="flex: 1; display: flex; flex-direction: column; justify-content: space-between; padding: 20px; text-align: center;">
+                                            <h3 style="font-family: 'Playfair Display', serif; font-size: 1.2rem; color: #0A0A0A; margin-bottom: 10px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">@item.ProductName</h3>
+                                            <p style="font-family: 'Lora', serif; font-size: 0.9rem; color: #A0A0A0; margin-bottom: 10px; flex-grow: 1;">
+                                                @if (item.Discount.HasValue && item.Discount.Value > 0)
+                                                {
+                                                    <span style="text-decoration: line-through;">@item.Price.Value.ToString("#,##0") VNĐ</span>
+                                                    <span style="color: #FF0000; margin-left: 10px;">@finalPrice.Value.ToString("#,##0") VNĐ</span>
+                                                }
+                                                else
+                                                {
+                                                    <span>@item.Price.Value.ToString("#,##0") VNĐ</span>
+                                                }
+                                            </p>
+                                            @if (item.UnitsInStock > 0)
+                                            {
+                                                <div class="button-group" style="display: flex; justify-content: center; gap: 5px; flex-wrap: nowrap;">
+                                                    <button class="btn btn-custom-dark rounded-0 open-variant-modal buy-now" data-product-id="@item.ProductId" data-action="buy-now" style="background: #000000; color: #FFFFFF; padding: 8px 12px; font-size: 0.7rem; min-width: 120px; text-align: center; white-space: nowrap;">MUA NGAY</button>
+                                                    <button class="btn btn-custom-dark rounded-0 open-variant-modal add-to-cart" data-product-id="@item.ProductId" data-action="add-to-cart" style="background: #e64500; color: #FFFFFF; padding: 8px 12px; font-size: 0.7rem; min-width: 140px; text-align: center; white-space: nowrap;">THÊM GIỎ HÀNG</button>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="button-group" style="display: flex; justify-content: center; gap: 5px; flex-wrap: nowrap;">
+                                                    <button class="btn btn-secondary rounded-0" disabled style="padding: 8px 12px; font-size: 0.7rem; min-width: 120px; text-align: center; white-space: nowrap;">HẾT HÀNG</button>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <p style="text-align: center; font-family: 'Lora', serif; color: #A0A0A0;">Không tìm thấy sản phẩm nào.</p>
+                        }
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 text-center">
+                            @{
+                                var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+                                var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+                            }
+                            <a asp-action="Index"
+                               asp-route-sortOrder="@ViewData["CurrentSort"]"
+                               asp-route-pageNumber="@(Model.PageNumber - 1)"
+                               asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                               asp-route-categoryId="@ViewData["CategoryId"]"
+                               asp-route-supplierId="@ViewData["SupplierId"]"
+                               asp-route-priceRange="@ViewData["PriceRange"]"
+                               asp-route-isDiscounted="@ViewData["IsDiscounted"]"
+                               asp-route-isBestSeller="@ViewData["IsBestSeller"]"
+                               class="btn btn-custom-dark @prevDisabled" style="margin-right: 10px;">Previous</a>
+                            <a asp-action="Index"
+                               asp-route-sortOrder="@ViewData["CurrentSort"]"
+                               asp-route-pageNumber="@(Model.PageNumber + 1)"
+                               asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                               asp-route-categoryId="@ViewData["CategoryId"]"
+                               asp-route-supplierId="@ViewData["SupplierId"]"
+                               asp-route-priceRange="@ViewData["PriceRange"]"
+                               asp-route-isDiscounted="@ViewData["IsDiscounted"]"
+                               asp-route-isBestSeller="@ViewData["IsBestSeller"]"
+                               class="btn btn-custom-dark @nextDisabled">Next</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Shop Section End -->
+</main>
+
+<style>
+    .shop__sidebar__brand ul li a,
+    .shop__sidebar__price ul li a,
+    .shop__sidebar__other ul li a {
+        color: #A0A0A0 !important;
+        text-decoration: none;
+        font-family: 'Lora', serif;
+        font-size: 1.1rem; /* Increased font size */
+        padding: 2px 0; /* Reduced padding for closer spacing */
+        display: block;
+    }
+
+        .shop__sidebar__brand ul li a:hover,
+        .shop__sidebar__price ul li a:hover,
+        .shop__sidebar__other ul li a:hover {
+            color: #e64500 !important;
+        }
+
+    /* Custom arrow icons for accordion */
+    .card-heading a {
+        position: relative;
+        padding-right: 30px;
+        font-family: 'Lora', serif;
+        font-size: 1rem;
+        color: #0A0A0A;
+        text-decoration: none;
+        display: block;
+    }
+
+        .card-heading a::after {
+            content: '\f107'; /* FontAwesome down arrow */
+            font-family: 'FontAwesome';
+            position: absolute;
+            right: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .card-heading a.collapsed::after {
+            transform: rotate(0deg);
+        }
+
+        .card-heading a:not(.collapsed)::after {
+            transform: rotate(180deg);
+        }
+</style>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/scrollreveal@4.0.9/dist/scrollreveal.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            ScrollReveal().reveal('.product-item', {
+                delay: 100,
+                distance: '20px',
+                origin: 'bottom',
+                duration: 800,
+                easing: 'cubic-bezier(0.5, 0, 0, 1)',
+                interval: 150
+            });
+
+            window.setFilter = function (name, value) {
+                var form = $('#filterForm');
+                $('<input>').attr({
+                    type: 'hidden',
+                    name: name,
+                    value: value
+                }).appendTo(form);
+                form.submit();
+            }
+
+            function updateCartCount(count) {
+                $('.cart-count').text(count || '0');
+            }
+
+            function fetchCartCount() {
+                $.ajax({
+                    url: '/api/cart/count',
+                    type: 'GET',
+                    success: function (response) {
+                        if (response.success && response.count !== undefined) {
+                            updateCartCount(response.count);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error fetching cart count:', error);
+                    }
+                });
+            }
+
+            $('.open-variant-modal').on('click', function (e) {
+                e.preventDefault();
+                var $button = $(this);
+                var productId = $button.data('product-id');
+                var actionType = $button.data('action');
+
+                $.ajax({
+                    url: '/Home/GetVariantPopup',
+                    type: 'GET',
+                    data: { productId: productId },
+                    success: function (response) {
+                        if (typeof response === 'object' && !response.success) {
+                            alert(response.message);
+                            return;
+                        }
+                        $('body').append(response);
+                        $('#variantModal').modal('show');
+                        $('#actionType').val(actionType);
+
+                        $('#variantModal').on('hidden.bs.modal', function () {
+                            $(this).remove();
+                        });
+                    },
+                    error: function () {
+                        alert('Lỗi khi tải thông tin sản phẩm.');
+                    }
+                });
+            });
+
+            // Cập nhật dropdown sau khi form submit
+            function updateSortDropdown() {
+                var currentSort = "@ViewData["CurrentSort"]";
+                $("#sortOrderSelect").val(currentSort);
+            }
+
+            // Gọi hàm khi trang load
+            updateSortDropdown();
+
+            // Xử lý submit form
+            $("#sortOrderSelect").on("change", function () {
+                this.form.submit();
+            });
+
+            fetchCartCount();
+        });
+    </script>
+}

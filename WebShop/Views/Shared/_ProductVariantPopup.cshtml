@@ -1,0 +1,323 @@
+﻿@using Newtonsoft.Json
+@model WebShop.Models.Product
+@{
+    var productDetails = ViewBag.ProductDetails as List<WebShop.Models.ProductDetail> ?? new List<WebShop.Models.ProductDetail>();
+    // Lọc các biến thể có Active = true để ẩn các biến thể Active = false
+    var sizes = productDetails
+        .Where(pd => pd.Active && pd.Size != null && pd.Size.SizeId != null)
+        .GroupBy(pd => pd.Size.SizeId)
+        .Select(g => new { SizeId = g.Key, SizeName = g.First().Size.SizeName, Stock = g.Sum(pd => pd.Stock ?? 0) })
+        .ToList();
+    var colors = productDetails
+        .Where(pd => pd.Active && pd.Color != null && pd.Color.ColorId != null)
+        .GroupBy(pd => pd.Color.ColorId)
+        .Select(g => new { ColorId = g.Key, ColorName = g.First().Color.ColorName, Stock = g.Sum(pd => pd.Stock ?? 0) })
+        .ToList();
+    var productDetailsJson = JsonConvert.SerializeObject(productDetails
+        .Where(pd => pd.Active) // Chỉ lấy biến thể có Active = true để ẩn Active = false
+        .Select(pd => new
+        {
+            ProductDetailId = pd.ProductDetailId,
+            ProductId = pd.ProductId,
+            SizeId = pd.SizeId,
+            ColorId = pd.ColorId,
+            Stock = pd.Stock
+        }));
+}
+
+<div class="modal fade" id="variantModal" tabindex="-1" aria-labelledby="variantModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="variantModalLabel">Chọn Biến Thể Sản Phẩm</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h6>@Model.ProductName</h6>
+                <input type="hidden" id="actionType" value="" />
+                <div class="mb-3">
+                    <label for="sizeSelect" class="form-label">Kích thước:</label>
+                    <select class="form-select" id="sizeSelect">
+                        <option value="">Chọn kích thước</option>
+                        @foreach (var size in sizes)
+                        {
+                            if (size.Stock <= 0)
+                            {
+                                <option value="@size.SizeId" disabled>@size.SizeName (Hết hàng)</option>
+                            }
+                            else
+                            {
+                                <option value="@size.SizeId">@size.SizeName</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="colorSelect" class="form-label">Màu sắc:</label>
+                    <select class="form-select" id="colorSelect">
+                        <option value="">Chọn màu sắc</option>
+                        @foreach (var color in colors)
+                        {
+                            if (color.Stock <= 0)
+                            {
+                                <option value="@color.ColorId" disabled>@color.ColorName (Hết hàng)</option>
+                            }
+                            else
+                            {
+                                <option value="@color.ColorId">@color.ColorName</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="quantityInput" class="form-label">Số lượng:</label>
+                    <input type="number" class="form-control" id="quantityInput" value="1" min="1" />
+                    <small id="stockInfo" class="form-text text-muted"></small>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary" id="confirmVariant">Xác Nhận</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        var productDetails = @Html.Raw(productDetailsJson);
+        console.log('Product Details:', productDetails);
+        var selectedSizeId = null;
+        var selectedColorId = null;
+        var selectedProductDetailId = null;
+        let currentCartToken = localStorage.getItem('currentCartToken') || null;
+
+        function showToast(message, type = 'success') {
+            toastr.options = {
+                "closeButton": true,
+                "progressBar": true,
+                "positionClass": "toast-top-right",
+                "timeOut": "3000"
+            };
+            if (type === 'success') {
+                toastr.success(message);
+            } else {
+                toastr.error(message);
+            }
+        }
+
+        function updateStockInfo() {
+            selectedSizeId = $('#sizeSelect').val();
+            selectedColorId = $('#colorSelect').val();
+            selectedProductDetailId = null;
+            $('#confirmVariant').prop('disabled', true);
+            $('#stockInfo').text('');
+
+            if (!selectedSizeId || !selectedColorId) {
+                $('#stockInfo').text('Vui lòng chọn kích thước và màu sắc.');
+                return;
+            }
+
+            var productDetail = productDetails.find(function (pd) {
+                return pd.SizeId == selectedSizeId && pd.ColorId == selectedColorId;
+            });
+
+            if (productDetail) {
+                selectedProductDetailId = productDetail.ProductDetailId;
+                var stock = productDetail.Stock || 0;
+                $('#stockInfo').text(stock > 0 ? 'Còn ' + stock + ' sản phẩm' : 'Hết hàng');
+                $('#quantityInput').attr('max', stock > 0 ? stock : 1);
+                if (stock > 0) {
+                    $('#confirmVariant').prop('disabled', false);
+                }
+            } else {
+                $('#stockInfo').text('Biến thể này đã hết, vui lòng chọn biến thể khác.');
+                console.error('Không tìm thấy biến thể với SizeId:', selectedSizeId, 'và ColorId:', selectedColorId);
+            }
+        }
+
+        function saveCartToLocalStorage(cartToken, cartItems) {
+            try {
+                if (!cartToken) {
+                    cartToken = 'cart_' + new Date().getTime();
+                }
+                const cartData = {
+                    cartToken: cartToken,
+                    items: cartItems.map(item => ({
+                        ProductDetailId: item.ProductDetailId,
+                        Amount: item.Amount
+                    })),
+                    timestamp: new Date().toISOString()
+                };
+                localStorage.setItem('cart_' + cartToken, JSON.stringify(cartData));
+                localStorage.setItem('currentCartToken', cartToken);
+                console.log('Đã lưu giỏ hàng vào localStorage:', cartData);
+                return cartToken;
+            } catch (e) {
+                console.error('Lỗi khi lưu giỏ hàng vào localStorage:', e);
+                return null;
+            }
+        }
+
+        function syncLocalCart() {
+            if (!currentCartToken) {
+                console.log('Không tìm thấy cartToken, tạo mới.');
+                currentCartToken = 'cart_' + new Date().getTime();
+            }
+
+            const localCart = loadCartFromLocalStorage(currentCartToken);
+            if (!localCart || !localCart.items) {
+                console.log('Không có giỏ hàng trong localStorage, đồng bộ từ server.');
+                return;
+            }
+
+            $.ajax({
+                url: '/api/cart/sync-local',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    CartToken: localCart.cartToken,
+                    CustomerId: parseInt($('body').data('customer-id') || '0'),
+                    Items: localCart.items
+                }),
+                success: function (response) {
+                    if (response.success) {
+                        showToast(response.message || 'Đồng bộ giỏ hàng thành công!');
+                        currentCartToken = response.cartToken || currentCartToken;
+                        saveCartToLocalStorage(currentCartToken, response.items || localCart.items);
+                        updateCartCount();
+                    } else {
+                        showToast(response.message || 'Đồng bộ giỏ hàng thất bại!', 'error');
+                    }
+                },
+                error: function () {
+                    showToast('Lỗi khi đồng bộ giỏ hàng!', 'error');
+                }
+            });
+        }
+
+        function loadCartFromLocalStorage(cartToken) {
+            try {
+                const cartData = localStorage.getItem('cart_' + cartToken);
+                if (cartData) {
+                    return JSON.parse(cartData);
+                }
+                return null;
+            } catch (e) {
+                console.error('Lỗi khi tải giỏ hàng từ localStorage:', e);
+                return null;
+            }
+        }
+
+        $('#sizeSelect, #colorSelect').on('change', updateStockInfo);
+
+        $('#confirmVariant').on('click', function () {
+            var quantity = parseInt($('#quantityInput').val());
+            var actionType = $('#actionType').val();
+            var maxQuantity = parseInt($('#quantityInput').attr('max')) || 1;
+
+            console.log('Request Data:', {
+                ProductDetailId: selectedProductDetailId,
+                Amount: quantity,
+                ActionType: actionType
+            });
+
+            if (!selectedProductDetailId || quantity <= 0 || quantity > maxQuantity) {
+                showToast('Vui lòng chọn biến thể và số lượng hợp lệ.', 'error');
+                return;
+            }
+
+            var url = actionType === 'buy-now' ? '/api/cart/buy-now' : '/api/cart/add';
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    ProductDetailId: parseInt(selectedProductDetailId),
+                    Amount: quantity
+                }),
+                success: function (response) {
+                    console.log('API Response:', response);
+                    if (response.success) {
+                        currentCartToken = saveCartToLocalStorage(response.cartToken || currentCartToken, [{ ProductDetailId: selectedProductDetailId, Amount: quantity }]);
+                        if (actionType === 'buy-now') {
+                            window.location.href = response.redirectUrl || '/checkout.html';
+                        } else {
+                            $('#variantModal').modal('hide');
+                            showToast('Thêm vào giỏ hàng thành công!');
+                            updateCartCount();
+                        }
+                    } else {
+                        showToast(response.message || 'Có lỗi xảy ra. Vui lòng thử lại.', 'error');
+                    }
+                },
+                error: function (xhr) {
+                    console.error('API Error:', xhr.responseText);
+                    showToast('Có lỗi xảy ra: ' + (xhr.responseText || 'Vui lòng thử lại.'), 'error');
+                }
+            });
+        });
+
+        function updateCartCount() {
+            $.ajax({
+                url: '/api/cart/count',
+                type: 'GET',
+                success: function (response) {
+                    if (response.success) {
+                        $('.cart-count').text(response.count || '0');
+                    }
+                },
+                error: function () {
+                    console.error('Lỗi khi lấy số lượng giỏ hàng.');
+                }
+            });
+        }
+
+        function checkLoginAndSyncCart() {
+            $.ajax({
+                url: '/api/account/check-login',
+                type: 'GET',
+                success: function (response) {
+                    if (response.success && response.isLoggedIn) {
+                        var customerId = parseInt($('body').data('customer-id') || '0');
+                        if (customerId > 0) {
+                            // Đồng bộ giỏ hàng từ localStorage trước
+                            syncLocalCart();
+                            // Sau đó đồng bộ với server
+                            $.ajax({
+                                url: '/api/cart/sync',
+                                type: 'POST',
+                                contentType: 'application/json',
+                                data: JSON.stringify({ customerId: customerId }),
+                                success: function (syncResponse) {
+                                    if (syncResponse.success) {
+                                        currentCartToken = saveCartToLocalStorage(syncResponse.cartToken || currentCartToken, syncResponse.items || []);
+                                        console.log('Đồng bộ giỏ hàng thành công:', syncResponse);
+                                        updateCartCount();
+                                        showToast(syncResponse.message || 'Đồng bộ giỏ hàng thành công!');
+                                    } else {
+                                        showToast(syncResponse.message || 'Đồng bộ giỏ hàng thất bại!', 'error');
+                                    }
+                                },
+                                error: function () {
+                                    showToast('Lỗi khi đồng bộ giỏ hàng!', 'error');
+                                }
+                            });
+                        }
+                    } else {
+                        // Nếu chưa đăng nhập, vẫn đồng bộ giỏ hàng từ localStorage
+                        syncLocalCart();
+                    }
+                },
+                error: function () {
+                    console.error('Lỗi khi kiểm tra trạng thái đăng nhập.');
+                    syncLocalCart();
+                }
+            });
+        }
+
+        // Gọi initial functions
+        checkLoginAndSyncCart();
+        updateStockInfo();
+    });
+</script>

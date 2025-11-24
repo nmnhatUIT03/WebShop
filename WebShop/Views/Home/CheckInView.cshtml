@@ -1,0 +1,289 @@
+﻿@model WebShop.Models.Customer
+
+@{
+    ViewData["Title"] = "Điểm danh nhận Xu";
+    Layout = "~/Views/Shared/_Layout.cshtml"; //
+    bool isCycleComplete = Model.CheckInCount >= 7;
+    int maxHistoryItems = 5; // Giới hạn số lịch sử hiển thị
+}
+
+<div class="container mt-5">
+    <!-- Check-in Progress Card -->
+    <div class="card shopee-xu-card shadow-sm rounded-lg">
+        <div class="card-body text-center p-4 bg-shopee-orange">
+            <h4 class="text-white mb-3 font-weight-bold">Ưu đãi Levitate Xu</h4>
+            <div class="xu-progress mb-3">
+                <div class="xu-amount text-white font-weight-bold mb-2">Xu <span class="xu-value">@Model.Points</span></div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar">
+                        @for (int i = 0; i < 7; i++)
+                        {
+                            var dayPoints = 5; // 5 Xu mỗi ngày
+                            var isActive = i < Math.Min(Model.CheckInCount, 7); // Giới hạn ở 7 ngày
+                                                                                <div class="progress-step @(isActive ? "active" : "")" data-day="@($"Ngày {i + 1}")" data-points="@dayPoints">
+                                                                                    <span class="step-points">@dayPoints</span>
+                                                                                </div>
+                        }
+                    </div>
+                    <div class="progress-labels d-flex justify-content-between text-white-50 small">
+                        <span>Ngày 1</span>
+                        <span>Ngày 2</span>
+                        <span>Ngày 3</span>
+                        <span>Ngày 4</span>
+                        <span>Ngày 5</span>
+                        <span>Ngày 6</span>
+                        <span>Ngày 7</span>
+                    </div>
+                </div>
+            </div>
+            @if (isCycleComplete)
+            {
+                <div class="alert alert-success text-white mb-3">Chúc mừng! Bạn đã hoàn thành 7 ngày điểm danh và nhận thêm 35 Xu!</div>
+                <form asp-action="ResetCycle" method="post">
+                    <button type="submit" class="btn btn-shopee-white btn-lg shopee-checkin-btn rounded-pill">
+                        Bắt đầu chu kỳ mới
+                    </button>
+                </form>
+            }
+            else
+            {
+                <form asp-action="CheckIn" method="post">
+                    <button type="submit" class="btn btn-shopee-white btn-lg shopee-checkin-btn rounded-pill">
+                        Nhận thưởng ngày 5 Xu
+                    </button>
+                </form>
+            }
+            @if (TempData["Message"] != null)
+            {
+                <div class="alert alert-success mt-3 text-center rounded-pill">@TempData["Message"]</div>
+            }
+        </div>
+    </div>
+
+    <!-- Check-in History -->
+    <div class="checkin-history mt-4">
+        <h5 class="mb-3 font-weight-bold">Lịch sử điểm danh <small class="text-muted">(Hiển thị gần nhất @maxHistoryItems lần)</small></h5>
+        @if (Model.CheckInHistory != null && Model.CheckInHistory.Any())
+        {
+            var recentHistory = Model.CheckInHistory.OrderByDescending(c => c.CheckInDate).Take(maxHistoryItems);
+            <ul class="list-group list-group-flush">
+                @foreach (var checkIn in recentHistory)
+                {
+                    <li class="list-group-item d-flex justify-content-between align-items-center py-2">
+                        <span class="text-muted">@checkIn.CheckInDate.ToString("dd/MM/yyyy HH:mm")</span>
+                        <span class="badge badge-shopee-orange badge-pill">@checkIn.PointsEarned Xu</span>
+                    </li>
+                }
+            </ul>
+            @if (Model.CheckInHistory.Count() > maxHistoryItems)
+            {
+                <p class="text-muted mt-2 small">Có thêm @(Model.CheckInHistory.Count() - maxHistoryItems) lần điểm danh trước đó.</p>
+            }
+        }
+        else
+        {
+            <p class="text-center text-muted">Chưa có lịch sử điểm danh.</p>
+        }
+    </div>
+
+    <!-- Redeem Rewards Section -->
+    <div class="redeem-rewards mt-4">
+        <h5 class="mb-3 font-weight-bold">Đổi quà bằng Xu</h5>
+        <div class="card p-3 bg-light">
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <h6>Móc khóa</h6>
+                            <p class="text-muted">Tặng kèm khi mua hàng tại shop (50 Xu)</p>
+                            @if (Model.Points >= 50)
+                            {
+                                <form asp-action="RedeemReward" method="post">
+                                    <input type="hidden" name="rewardCost" value="50" />
+                                    <button type="submit" class="btn btn-shopee-orange btn-sm mt-2">Đổi quà</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <button class="btn btn-secondary btn-sm mt-2" disabled>Cần 50 Xu</button>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <h6>Áo thun</h6>
+                            <p class="text-muted">Tặng kèm khi mua hàng tại shop (100 Xu)</p>
+                            @if (Model.Points >= 100)
+                            {
+                                <form asp-action="RedeemReward" method="post">
+                                    <input type="hidden" name="rewardCost" value="100" />
+                                    <button type="submit" class="btn btn-shopee-orange btn-sm mt-2">Đổi quà</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <button class="btn btn-secondary btn-sm mt-2" disabled>Cần 100 Xu</button>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <h6>Gói quà đặc biệt</h6>
+                            <p class="text-muted">Tặng kèm khi mua hàng tại shop (200 Xu)</p>
+                            @if (Model.Points >= 200)
+                            {
+                                <form asp-action="RedeemReward" method="post">
+                                    <input type="hidden" name="rewardCost" value="200" />
+                                    <button type="submit" class="btn btn-shopee-orange btn-sm mt-2">Đổi quà</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <button class="btn btn-secondary btn-sm mt-2" disabled>Cần 200 Xu</button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p class="text-muted mt-2 small">Lưu ý: Xu sẽ không bị trừ nếu bạn không chọn đổi quà. Quà tặng kèm khi mua hàng tại shop.</p>
+        </div>
+    </div>
+</div>
+
+<style>
+    .shopee-xu-card {
+        border: none;
+        border-radius: 12px;
+        background: #ee4d2d;
+        color: #fff;
+    }
+
+    .xu-amount {
+        font-size: 1.5rem;
+    }
+
+    .xu-value {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #fff;
+    }
+
+    .progress-bar-container {
+        position: relative;
+        margin: 20px 0;
+    }
+
+    .progress-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        height: 6px;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 3px;
+    }
+
+    .progress-step {
+        width: 24px;
+        height: 24px;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.7rem;
+        transition: all 0.3s ease;
+        position: absolute;
+        transform: translateX(-50%);
+    }
+
+        .progress-step.active {
+            background: #fff;
+            color: #ee4d2d;
+            font-weight: bold;
+        }
+
+        .progress-step:nth-child(1) {
+            left: 0;
+        }
+
+        .progress-step:nth-child(2) {
+            left: 16.7%;
+        }
+
+        .progress-step:nth-child(3) {
+            left: 33.3%;
+        }
+
+        .progress-step:nth-child(4) {
+            left: 50%;
+        }
+
+        .progress-step:nth-child(5) {
+            left: 66.7%;
+        }
+
+        .progress-step:nth-child(6) {
+            left: 83.3%;
+        }
+
+        .progress-step:nth-child(7) {
+            left: 100%;
+        }
+
+    .progress-labels {
+        margin-top: 5px;
+    }
+
+    .btn-shopee-white {
+        background-color: #fff;
+        color: #ee4d2d;
+        border: none;
+        padding: 10px 25px;
+        font-size: 1rem;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+        .btn-shopee-white:hover {
+            background-color: #f5f5f5;
+            transform: scale(1.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+    .btn-shopee-orange {
+        background-color: #ee4d2d;
+        color: #fff;
+        border: none;
+        padding: 5px 15px;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+    }
+
+        .btn-shopee-orange:hover {
+            background-color: #d23f1d;
+            transform: scale(1.05);
+        }
+
+    .badge-shopee-orange {
+        background-color: #ee4d2d;
+        color: #fff;
+        font-size: 0.9rem;
+    }
+
+    .checkin-history .list-group-item {
+        border: none;
+        border-bottom: 1px solid #eee;
+        padding: 10px 0;
+    }
+
+    .redeem-rewards .card {
+        border: none;
+        border-radius: 10px;
+    }
+</style>

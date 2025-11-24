@@ -1,0 +1,143 @@
+﻿@model WebShop.Areas.Admin.Models.LoginViewModel
+
+@{
+    ViewData["Title"] = "Đăng nhập";
+    Layout = "~/Areas/Admin/Views/Shared/null.cshtml";
+}
+
+@{
+    var errorMessage = TempData["ErrorMessage"] as string;
+}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập - Quản trị viên</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/bootstrap.css">
+    <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
+    <link rel="stylesheet" href="/assets/css/app.css">
+    <link rel="stylesheet" href="/assets/css/pages/auth.css">
+</head>
+
+<body>
+    <div id="auth" style="background: linear-gradient(135deg, #FFFFFF 0%, #CBD5E0 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center;">
+        <div class="w-100">
+            <div id="auth-left" class="text-center">
+                <div class="auth-logo">
+                    <a href="index.html"><img src="~/assets/images/logo/logoadmin.jpg" alt="Logo" style="height: 100px; margin-bottom: 20px;"></a>
+                </div>
+                <div class="card" style="border-radius: 16px; overflow: hidden; transition: transform 0.4s ease, box-shadow 0.4s ease; margin: 0 auto; max-width: 400px;">
+                    <div class="card-body p-4">
+                        <h4 class="card-title mb-4" style="font-weight: 600; color: #1A202C;">Đăng nhập quản trị</h4>
+                        <form asp-area="Admin" asp-controller="AdminLogin" asp-action="AdminLogin" method="post" id="actionform">
+                            <div class="form-group position-relative has-icon-left mb-4">
+                                <input type="text" class="form-control" asp-for="Email" placeholder="Email" style="border-radius: 8px; border: 1px solid #CBD5E0; padding: 10px 15px; font-size: 0.9rem; transition: border-color 0.3s ease, box-shadow 0.3s ease;">
+                                <div class="form-control-icon" style="top: 50%; transform: translateY(-50%); right: 15px;">
+                                    <i class="bi bi-person" style="color: #4A5568;"></i>
+                                </div>
+                            </div>
+                            <div class="form-group position-relative has-icon-left mb-4">
+                                <input type="password" asp-for="Password" class="form-control" placeholder="Mật khẩu" style="border-radius: 8px; border: 1px solid #CBD5E0; padding: 10px 15px; font-size: 0.9rem; transition: border-color 0.3s ease, box-shadow 0.3s ease;">
+                                <div class="form-control-icon" style="top: 50%; transform: translateY(-50%); right: 15px;">
+                                    <i class="bi bi-shield-lock" style="color: #4A5568;"></i>
+                                </div>
+                            </div>
+                            <div class="form-check form-check-lg d-flex align-items-center mb-4">
+                                <input class="form-check-input me-2" type="checkbox" value="" id="flexCheckDefault">
+                                <label class="form-check-label text-gray-600" for="flexCheckDefault" style="font-size: 0.9rem;">Nhớ mật khẩu</label>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block btn-lg shadow-lg mt-3" style="background: #f05a00; border: none; border-radius: 8px; padding: 10px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s ease;">
+                                Đăng nhập
+                            </button>
+                        </form>
+                        @if (!string.IsNullOrEmpty(errorMessage))
+                        {
+                            <div class="alert alert-danger mt-3" style="border-radius: 8px; font-size: 0.9rem;">@errorMessage</div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-control:focus {
+            border-color: #f05a00;
+            box-shadow: 0 0 8px rgba(240, 90, 0, 0.3);
+            outline: none;
+        }
+
+        .btn-primary:hover {
+            background: #d94f00;
+            box-shadow: 0 6px 20px rgba(240, 90, 0, 0.5);
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        @@media (max-width: 767.98px) {
+            #auth-left {
+                margin-left: 0;
+                padding: 15px;
+            }
+
+            .card-body {
+                padding: 20px;
+            }
+
+            .form-control {
+                font-size: 0.8rem;
+                padding: 8px 12px;
+            }
+
+            .btn-primary {
+                font-size: 0.8rem;
+                padding: 8px;
+            }
+
+            .alert {
+                font-size: 0.8rem;
+                padding: 10px;
+            }
+        }
+
+        @@media (max-width: 575.98px) {
+            .card-body {
+                padding: 15px;
+            }
+
+            .form-control {
+                font-size: 0.75rem;
+                padding: 6px 10px;
+            }
+
+            .btn-primary {
+                font-size: 0.75rem;
+                padding: 6px;
+            }
+
+            .alert {
+                font-size: 0.75rem;
+                padding: 8px;
+            }
+        }
+    </style>
+</body>

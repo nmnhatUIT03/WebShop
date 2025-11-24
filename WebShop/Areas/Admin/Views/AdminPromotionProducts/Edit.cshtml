@@ -1,0 +1,437 @@
+﻿@model WebShop.Models.Promotion
+@{
+    ViewData["Title"] = "Sửa chương trình khuyến mãi";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;800&display=swap');
+
+    body {
+        background: #CBD5E0;
+        font-family: 'Montserrat', sans-serif;
+        color: #1A202C;
+        overflow-x: hidden;
+    }
+
+    .container {
+        max-width: 1440px;
+        padding: 0 20px;
+        margin: 0 auto;
+    }
+
+    .page-header {
+        background: linear-gradient(135deg, #FFFFFF 0%, #CBD5E0 100%);
+        padding: 20px 30px;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        margin-bottom: 30px;
+    }
+
+    .header-title {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #1A202C;
+        text-align: center;
+    }
+
+    .header-sub-title {
+        text-align: center;
+    }
+
+    .breadcrumb {
+        background: none;
+        padding: 0;
+        margin: 0;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.9rem;
+        color: #4A5568;
+    }
+
+    .breadcrumb-item {
+        color: #4A5568;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+        .breadcrumb-item:hover {
+            color: #f05a00;
+        }
+
+        .breadcrumb-item.active {
+            color: #1A202C;
+            font-weight: 500;
+        }
+
+        .breadcrumb-item + .breadcrumb-item::before {
+            content: '>';
+            margin: 0 10px;
+            color: #4A5568;
+        }
+
+    .card {
+        background: #FFFFFF;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        overflow: hidden;
+        transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+        }
+
+    .card-body {
+        padding: 30px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-label {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        color: #1A202C;
+        margin-bottom: 8px;
+        font-size: 0.9rem;
+    }
+
+    .form-control, .form-select {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.9rem;
+        border-radius: 8px;
+        border: 1px solid #CBD5E0;
+        padding: 10px 15px;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #f05a00;
+            box-shadow: 0 0 8px rgba(240, 90, 0, 0.3);
+            outline: none;
+        }
+
+    .text-danger {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.85rem;
+        color: #F56565;
+    }
+
+    .btn {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border-radius: 8px;
+        padding: 10px 20px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-success {
+        background: #f05a00;
+        border: none;
+        color: #FFFFFF;
+    }
+
+        .btn-success:hover {
+            background: #d94f00;
+            box-shadow: 0 6px 20px rgba(240, 90, 0, 0.5);
+        }
+
+    .btn-primary {
+        background: #1A202C;
+        border: none;
+        color: #FFFFFF;
+    }
+
+        .btn-primary:hover {
+            background: #2D3748;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+        }
+
+    .btn-info {
+        background: #f05a00;
+        border: none;
+        color: #FFFFFF;
+    }
+
+        .btn-info:hover {
+            background: #2D3748;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+        }
+
+    .btn-danger {
+        background: #DC3545;
+        border: none;
+        color: #FFFFFF;
+    }
+
+        .btn-danger:hover {
+            background: #C82333;
+            box-shadow: 0 6px 20px rgba(220, 53, 69, 0.5);
+        }
+
+    .btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        transition: left 0.5s ease;
+    }
+
+    .btn:hover::before {
+        left: 100%;
+    }
+
+    .table th, .table td {
+        vertical-align: middle;
+    }
+
+    .table .form-select {
+        width: 100%;
+    }
+
+    @@media (max-width: 767.98px) {
+        .card-body {
+            padding: 20px;
+        }
+
+        .form-control, .form-select {
+            font-size: 0.8rem;
+        }
+
+        .btn {
+            padding: 8px 15px;
+            font-size: 0.7rem;
+        }
+    }
+
+    @@media (max-width: 575.98px) {
+        .page-header {
+            padding: 20px 0;
+        }
+
+        .header-title {
+            font-size: 1.5rem;
+        }
+
+        .breadcrumb {
+            font-size: 0.8rem;
+        }
+
+        .card-body {
+            padding: 15px;
+        }
+
+        .form-control, .form-select {
+            font-size: 0.75rem;
+        }
+
+        .btn {
+            padding: 6px 12px;
+            font-size: 0.65rem;
+        }
+    }
+</style>
+
+<div class="page-header">
+    <h2 class="header-title">Sửa chương trình khuyến mãi</h2>
+    <div class="header-sub-title">
+        <nav class="breadcrumb breadcrumb-dash">
+            <a asp-area="Admin" asp-controller="HomeAdmin" asp-action="Index" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Trang chủ</a>
+            <a asp-area="Admin" asp-controller="AdminPromotionProducts" asp-action="Index" class="breadcrumb-item">Danh sách chương trình khuyến mãi</a>
+            <span class="breadcrumb-item active">Sửa chương trình khuyến mãi</span>
+        </nav>
+    </div>
+</div>
+
+<div class="container">
+    <div class="card">
+        <div class="card-body">
+            <form asp-action="Edit" method="post" id="promotionProductForm">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" name="promotionId" value="@Model.PromotionId" />
+                <div class="form-group">
+                    <label class="form-label">Chương trình khuyến mãi</label>
+                    <input type="text" class="form-control" value="@Model.PromotionName" readonly />
+                </div>
+                <div class="form-group">
+                    <h4>Sản phẩm khuyến mãi</h4>
+                    <table class="table table-bordered" id="promotionProductsTable">
+                        <thead>
+                            <tr>
+                                <th>Sản phẩm</th>
+                                <th>Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var product in Model.PromotionProducts)
+                            {
+                                <tr>
+                                    <td>@(product.Product?.ProductName ?? "Chưa xác định")<input type="hidden" class="product-id" name="productIds[]" value="@product.ProductId"></td>
+                                    <td><button type="button" class="btn btn-danger remove-item">Xóa</button></td>
+                                </tr>
+                            }
+                            <tr class="new-item">
+                                <td>
+                                    <select class="form-select product-select" name="newProductId[]">
+                                        <option value="">-- Chọn sản phẩm --</option>
+                                        @foreach (var product in ViewBag.Products as List<WebShop.Areas.Admin.Models.ProductViewModel>)
+                                        {
+                                            <option value="@product.ProductId">@product.ProductName</option>
+                                        }
+                                    </select>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-info add-item">Thêm</button>
+                                    <button type="button" class="btn btn-danger remove-row">Xóa</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-3 text-center">
+                    <button type="submit" class="btn btn-success mr-2"><i class="anticon anticon-save m-r-5"></i>Lưu</button>
+                    <a class="btn btn-primary" asp-action="Index"><i class="fas fa-undo m-r-5"></i>Quay lại</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.css" rel="stylesheet" />
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(document).ready(function () {
+            toastr.options = {
+                "positionClass": "toast-top-right",
+                "progressBar": true,
+                "timeOut": "3000"
+            };
+
+            function showToast(message, type = 'success') {
+                if (type === 'success') {
+                    toastr.success(message);
+                } else {
+                    toastr.error(message);
+                }
+            }
+
+            $('.add-new-row').click(function () {
+                let newRow = `<tr class="new-item">
+                    <td>
+                        <select class="form-select product-select" name="newProductId[]">
+                            <option value="">-- Chọn sản phẩm --</option>
+                            @foreach (var product in ViewBag.Products as List<WebShop.Areas.Admin.Models.ProductViewModel>)
+                            {
+                                    <option value="@product.ProductId">@product.ProductName</option>
+                            }
+                        </select>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-info add-item">Thêm</button>
+                        <button type="button" class="btn btn-danger remove-row">Xóa</button>
+                    </td>
+                </tr>`;
+                $('#promotionProductsTable tbody').append(newRow);
+                showToast('Thêm dòng sản phẩm mới thành công!', 'success');
+            });
+
+            $(document).on('click', '.remove-row', function () {
+                let rows = $('#promotionProductsTable tr.new-item');
+                if (rows.length > 1) {
+                    $(this).closest('tr').remove();
+                    showToast('Đã xóa dòng nhập liệu.', 'success');
+                } else {
+                    showToast('Phải có ít nhất một dòng nhập liệu.', 'error');
+                }
+            });
+
+            $(document).on('click', '.add-item', function () {
+                let row = $(this).closest('tr');
+                let productId = row.find('.product-select').val();
+                let productName = row.find('.product-select option:selected').text();
+
+                if (!productId) {
+                    showToast('Vui lòng chọn một sản phẩm.', 'error');
+                    return;
+                }
+
+                let existingProducts = $('#promotionProductsTable tr:not(.new-item) .product-id').map(function () {
+                    return $(this).val();
+                }).get();
+                if (existingProducts.includes(productId)) {
+                    showToast('Sản phẩm này đã được thêm.', 'error');
+                    return;
+                }
+
+                let newRow = `<tr>
+                    <td>${productName}<input type="hidden" class="product-id" name="productIds[]" value="${productId}"></td>
+                    <td><button type="button" class="btn btn-danger remove-item">Xóa</button></td>
+                </tr>`;
+                $('#promotionProductsTable tbody').prepend(newRow);
+                row.find('.product-select').val('');
+                showToast('Thêm sản phẩm thành công!', 'success');
+            });
+
+            $(document).on('click', '.remove-item', function () {
+                $(this).closest('tr').remove();
+                showToast('Đã xóa sản phẩm.', 'success');
+            });
+
+            $('#promotionProductForm').submit(function (e) {
+                e.preventDefault();
+                let promotionId = $('#promotionId').val() || '@Model.PromotionId';
+                if (!promotionId) {
+                    showToast('Vui lòng chọn chương trình khuyến mãi.', 'error');
+                    return;
+                }
+
+                let formData = new FormData(this);
+                let productIds = formData.getAll('productIds[]').filter(id => id && id !== '');
+                if (!productIds.length) {
+                    showToast('Vui lòng thêm ít nhất một sản phẩm.', 'error');
+                    return;
+                }
+
+                formData.delete('productIds[]');
+                productIds.forEach(id => formData.append('productIds[]', id));
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        if (response.success) {
+                            toastr.success(response.message);
+                            setTimeout(() => {
+                                window.location.href = response.redirectTo || '/Admin/AdminPromotionProducts/Index';
+                            }, 1000);
+                        } else {
+                            toastr.error(response.message || 'Lỗi không xác định.');
+                        }
+                    },
+                    error: function (xhr) {
+                        let errorMessage = xhr.responseJSON?.message || 'Lỗi không xác định.';
+                        toastr.error(errorMessage);
+                    }
+                });
+            });
+        });
+    </script>
+}

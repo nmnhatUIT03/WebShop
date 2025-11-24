@@ -1,0 +1,142 @@
+﻿@model List<WebShop.Models.Order>
+
+@{
+    ViewData["Title"] = "Danh sách đơn hàng";
+    var availableOrders = Model != null ? Model.Where(item => !item.Deleted).Take(5).ToList() : new List<WebShop.Models.Order>();
+}
+
+<main class="main-content">
+    <section class="shopping-cart spad">
+        <div class="container" style="margin-top: -100px">
+            <div class="row cart-row">
+                <div class="cart-list">
+                    @if (availableOrders.Any())
+                    {
+                        <div class="shopping__cart__table">
+                            <table class="table table-bordered table-hover">
+                                <thead class="thead-dark" style="background-color: #2E4057; color: #FFFFFF;">
+                                    <tr>
+                                        <th>Mã đơn</th>
+                                        <th>Ngày mua</th>
+                                        <th>Khách hàng</th>
+                                        <th>Trạng thái</th>
+                                        <th>Khuyến mãi</th>
+                                        <th>Voucher</th>
+                                        <th>Giảm giá</th>
+                                        <th>Tổng tiền</th>
+                                        <th>Chi tiết</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="order-table-body">
+                                    @foreach (var item in availableOrders)
+                                    {
+                                        <tr data-order-id="@item.OrderId">
+                                            <td><a asp-controller="DonHang" asp-action="Details" asp-route-id="@item.OrderId">@item.OrderId</a></td>
+                                            <td>@(item.OrderDate?.ToString("dd/MM/yyyy") ?? "N/A")</td>
+                                            <td>@(item.ReceiverName ?? "N/A")</td>
+                                            <td>@(item.TransactStatus?.Status ?? "N/A")</td>
+                                            <td>@(item.Promotion?.PromotionName ?? "Không có")</td>
+                                            <td>@(item.Voucher?.VoucherCode ?? "Không có")</td>
+                                            <td>@item.TotalDiscount.ToString("#,##0") VNĐ</td>
+                                            <td>@(item.TotalMoney.HasValue? item.TotalMoney.Value.ToString("#,##0") : "0") VNĐ</td>
+                                            <td><a asp-controller="DonHang" asp-action="Details" asp-route-id="@item.OrderId">Xem chi tiết</a></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info text-center" style="background-color: #2E4057; color: #FFFFFF; border-color: #2E4057; border-radius: 8px;">
+                            Chưa có đơn hàng nào!
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<style>
+    .cart-row {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 20px;
+    }
+
+    .cart-list {
+        flex: 3;
+        min-width: 0;
+    }
+
+    .shopping__cart__table {
+        border-collapse: collapse;
+        width: 100%;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        background-color: #FFFFFF;
+        border-radius: 10px;
+        table-layout: auto;
+        overflow-y: visible;
+        max-height: none;
+    }
+
+        .shopping__cart__table th, .shopping__cart__table td {
+            padding: 10px;
+            vertical-align: middle;
+            text-align: center;
+            border-bottom: 1px solid #e5e7eb;
+            word-wrap: break-word;
+            color: #2E4057;
+        }
+
+        .shopping__cart__table thead th {
+            background-color: #2E4057;
+            color: #FFFFFF;
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 13px;
+        }
+
+        .shopping__cart__table tbody tr {
+            transition: background-color 0.3s;
+        }
+
+            .shopping__cart__table tbody tr:hover {
+                background-color: #F5F7FA;
+            }
+
+        .shopping__cart__table a {
+            color: #FF6200;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+            .shopping__cart__table a:hover {
+                color: #CC4D00;
+                text-decoration: underline;
+            }
+
+    .alert-info {
+        background-color: #2E4057 !important;
+        color: #FFFFFF !important;
+        border-color: #2E4057 !important;
+        border-radius: 8px;
+    }
+
+    @@media (max-width: 991px) {
+        .cart-row {
+            flex-direction: column;
+        }
+
+        .cart-list {
+            width: 100% !important;
+            margin-bottom: 15px;
+        }
+
+        .shopping__cart__table th, .shopping__cart__table td {
+            font-size: 12px;
+            padding: 8px;
+        }
+    }
+</style>

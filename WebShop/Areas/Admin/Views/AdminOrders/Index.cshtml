@@ -1,0 +1,537 @@
+﻿@using PagedList.Core.Mvc
+@model PagedList.Core.IPagedList<WebShop.Models.Order>
+
+@{
+    int index = (ViewBag.CurrentPage - 1) * 20 + 1;
+    ViewData["Title"] = "Danh sách đơn hàng - Trang " + ViewBag.CurrentPage;
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap');
+
+    body {
+        background: #CBD5E0;
+        font-family: 'Montserrat', sans-serif;
+        color: #1A202C;
+    }
+
+    .container {
+        max-width: 1440px;
+        padding: 0 20px;
+        margin: 0 auto;
+    }
+
+    .page-header {
+        background: linear-gradient(135deg, #FFFFFF 0%, #CBD5E0 100%);
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        margin-bottom: 20px;
+    }
+
+    .breadcrumb {
+        background: none;
+        padding: 0;
+        font-size: 0.9rem;
+        color: #4A5568;
+        text-align: center;
+    }
+
+    .breadcrumb-item {
+        color: #4A5568;
+        text-decoration: none;
+    }
+
+        .breadcrumb-item:hover {
+            color: #f05a00;
+        }
+
+        .breadcrumb-item.active {
+            color: #1A202C;
+            font-weight: 500;
+        }
+
+        .breadcrumb-item + .breadcrumb-item::before {
+            content: '>';
+            margin: 0 8px;
+        }
+
+    .card {
+        background: #FFFFFF;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        transition: transform 0.3s;
+    }
+
+        .card:hover {
+            transform: translateY(-3px);
+        }
+
+    .card-body {
+        padding: 20px;
+    }
+
+    h2.text-center {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #1A202C;
+        margin-bottom: 20px;
+    }
+
+    .input-affix {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        margin-right: 10px;
+    }
+
+    .form-control, .custom-select {
+        background: #EDF2F7;
+        border: 1px solid rgba(240,90,0,0.4);
+        border-radius: 8px;
+        padding: 8px 12px;
+        font-size: 0.9rem;
+        color: #1A202C;
+        height: 38px;
+        min-width: 150px;
+    }
+
+        .form-control:focus, .custom-select:focus {
+            border-color: #f05a00;
+            box-shadow: 0 0 6px rgba(240,90,0,0.5);
+        }
+
+    .prefix-icon {
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #4A5568;
+    }
+
+    .form-control {
+        padding-left: 35px;
+    }
+
+    .btn {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        border-radius: 8px;
+        padding: 8px 16px;
+        transition: all 0.3s;
+    }
+
+    .btn-success {
+        background: #f05a00;
+        border: none;
+        color: #FFFFFF;
+    }
+
+        .btn-success:hover {
+            background: #d94f00;
+        }
+
+    .form-inline .btn-primary { /* Chỉ áp dụng cho nút "Tìm kiếm" trong form */
+        background: #1A202C;
+        color: #FFFFFF;
+        min-width: 120px;
+        padding: 8px 25px;
+    }
+
+        .form-inline .btn-primary:hover {
+            background: #2D3748;
+        }
+
+    .btn-secondary {
+        background: #4A5568;
+        color: #FFFFFF;
+    }
+
+        .btn-secondary:hover {
+            background: #2D3748;
+        }
+
+    .btn-danger {
+        background: #F56565;
+        color: #FFFFFF;
+    }
+
+        .btn-danger:hover {
+            background: #E53E3E;
+        }
+
+    .btn-edit {
+        background: linear-gradient(to right, #a8a8a8 0%, #a8a8a8 100%);
+        border: none;
+        color: #FFFFFF;
+    }
+
+        .btn-edit:hover {
+            background: linear-gradient(to right, #a8a8a8 0%, #a8a8a8 80%, #9a9a9a 100%);
+        }
+
+    .table {
+        border-collapse: separate;
+        border-spacing: 0 8px;
+    }
+
+        .table thead th {
+            background: #EDF2F7;
+            color: #1A202C;
+            font-size: 0.9rem;
+            padding: 10px;
+            text-align: center;
+            border: none;
+        }
+
+        .table tbody tr {
+            background: #FFFFFF;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+            .table tbody tr:hover {
+                transform: translateY(-2px);
+            }
+
+        .table tbody td {
+            padding: 12px;
+            font-size: 0.9rem;
+            text-align: center;
+            border: none;
+        }
+
+        /* Thay đổi màu nút "Details" thành đen */
+        .table .btn-primary {
+            background: #000000;
+            color: #FFFFFF;
+        }
+
+            .table .btn-primary:hover {
+                background: #333333; /* Màu xám đậm khi hover */
+            }
+
+    .badge {
+        font-size: 0.8rem;
+        padding: 4px 8px;
+        border-radius: 4px;
+    }
+
+    .badge-primary {
+        background: #3182CE;
+        color: #FFFFFF;
+    }
+
+    .badge-info {
+        background: #00B5AD;
+        color: #FFFFFF;
+    }
+
+    .badge-success {
+        background: #f05a00;
+        color: #FFFFFF;
+    }
+
+    .badge-danger {
+        background: #F56565;
+        color: #FFFFFF;
+    }
+
+    .badge-secondary {
+        background: #4A5568;
+        color: #FFFFFF;
+    }
+
+    .pagination .page-item .page-link {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.9rem;
+        color: #1A202C;
+        background: #EDF2F7;
+        border: 1px solid rgba(240, 90, 0, 0.4);
+        border-radius: 8px;
+        margin: 0 5px;
+        padding: 8px 15px;
+        transition: all 0.3s ease;
+    }
+
+    .pagination .page-item.active .page-link {
+        background: #f05a00;
+        border-color: #f05a00;
+        color: #FFFFFF;
+    }
+
+    .pagination .page-item .page-link:hover {
+        background: #f05a00;
+        border-color: #f05a00;
+        color: #FFFFFF;
+        box-shadow: 0 4px 12px rgba(240, 90, 0, 0.5);
+    }
+
+    /* Căn chỉnh ngang hàng cho form-row */
+    .form-row {
+        display: flex;
+        align-items: center;
+        flex-wrap: nowrap;
+        gap: 10px;
+        width: 100%;
+    }
+
+        .form-row .col-lg-8,
+        .form-row .col-lg-4 {
+            display: flex;
+            align-items: center;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .form-row .col-lg-4 {
+            justify-content: flex-end;
+        }
+
+    .form-inline {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: nowrap;
+    }
+
+    @@media (max-width: 767px) {
+        .card-body {
+            padding: 15px;
+        }
+
+        .table thead th, .table tbody td {
+            font-size: 0.8rem;
+            padding: 8px;
+        }
+
+        .btn {
+            padding: 6px 12px;
+            font-size: 0.7rem;
+        }
+
+        .form-control, .custom-select {
+            font-size: 0.8rem;
+            padding: 6px 10px;
+            height: 34px;
+            min-width: 120px;
+        }
+
+        .prefix-icon {
+            left: 8px;
+        }
+
+        .form-control {
+            padding-left: 30px;
+        }
+        /* Ghi đè để giữ ngang hàng */
+        .form-row {
+            flex-wrap: nowrap;
+            gap: 5px;
+        }
+
+            .form-row .col-lg-8,
+            .form-row .col-lg-4 {
+                width: auto;
+                margin-bottom: 0;
+            }
+
+            .form-row .col-lg-4 {
+                justify-content: flex-end;
+            }
+
+        .table .btn {
+            padding: 2px 6px; /* Giảm padding trên màn hình nhỏ */
+            height: 26px;
+            font-size: 0.7rem;
+        }
+
+        .table .btn-primary, .table .btn-secondary {
+            min-width: 35px;
+        }
+
+        .table .btn-edit, .table .btn-danger {
+            min-width: 45px;
+        }
+    }
+
+    @@media (max-width: 575px) {
+        .page-header {
+            padding: 15px;
+        }
+
+        .table thead th, .table tbody td {
+            font-size: 0.75rem;
+            padding: 6px;
+        }
+
+        .btn {
+            padding: 5px 10px;
+            font-size: 0.65rem;
+        }
+
+        .form-control, .custom-select {
+            font-size: 0.75rem;
+            height: 32px;
+            min-width: 100px;
+        }
+
+        .form-row {
+            flex-wrap: nowrap;
+            gap: 5px;
+        }
+
+        .table .btn {
+            padding: 1px 4px;
+            height: 24px;
+            font-size: 0.65rem;
+        }
+
+        .table .btn-primary, .table .btn-secondary {
+            min-width: 30px;
+        }
+
+        .table .btn-edit, .table .btn-danger {
+            min-width: 40px;
+        }
+    }
+</style>
+
+<div class="page-header">
+    <nav class="breadcrumb breadcrumb-dash">
+        <a asp-area="Admin" asp-controller="Home" asp-action="Index" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Home</a>
+        <span class="breadcrumb-item active">Danh sách đơn hàng</span>
+    </nav>
+</div>
+
+<div class="container">
+    <div class="card">
+        <div class="card-body">
+            <h2 class="text-center">Danh sách đơn hàng</h2>
+            <div class="row m-b-20 form-row">
+                <div class="col-lg-8">
+                    <form asp-action="Index" method="get" class="form-inline">
+                        <div class="input-affix">
+                            <i class="prefix-icon anticon anticon-search"></i>
+                            <input type="text" id="search" name="search" class="form-control" placeholder="Tìm theo tên người nhận" value="@ViewBag.Search" />
+                        </div>
+                        <select id="status" name="status" class="custom-select">
+                            <option value="">Tất cả trạng thái</option>
+                            @foreach (var status in ViewBag.Statuses)
+                            {
+                                <option value="@status.TransactStatusId" selected="@(ViewBag.Status == status.TransactStatusId.ToString() ? "selected" : null)">@status.Status</option>
+                            }
+                        </select>
+                        <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                    </form>
+                </div>
+                <div class="col-lg-4">
+                    <a class="btn btn-success" asp-action="Create"><i class="far fa-plus-square m-r-5"></i>Thêm mới</a>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Mã đơn</th>
+                            <th>Tên nhận</th>
+                            <th>Tài khoản</th>
+                            <th>Ngày mua</th>
+                            <th>Khuyến mãi</th>
+                            <th>Mã giảm</th>
+                            <th>Tổng tiền</th>
+                            <th>Trạng thái</th>
+                            <th>Chức năng</th>
+                        </tr>
+                    </thead>
+                    <tbody id="records_table">
+                        @if (Model?.Any() == true)
+                        {
+                            foreach (var item in Model)
+                            {
+                                string badgeClass = item.TransactStatusId switch
+                                {
+                                    1 => "badge-primary",
+                                    2 => "badge-info",
+                                    3 => "badge-success",
+                                    4 => "badge-success",
+                                    5 => "badge-danger",
+                                    _ => "badge-secondary"
+                                };
+                                <tr>
+                                    <td>@index</td>
+                                    <td>@item.OrderId</td>
+                                    <td>@(item.ReceiverName ?? "N/A")</td>
+                                    <td>@(item.CustomerId?.ToString() ?? "N/A")</td>
+                                    <td>@(item.OrderDate?.ToString("dd/MM/yyyy HH:mm") ?? "N/A")</td>
+                                    <td>@(item.Promotion?.PromotionName ?? "Không có")</td>
+                                    <td>@(item.Voucher?.VoucherCode ?? "Không có")</td>
+                                    <td>@((item.TotalMoney ?? 0).ToString("#,##0")) VNĐ</td>
+                                    <td><span class="badge @badgeClass">@(item.TransactStatus?.Status ?? "N/A")</span></td>
+                                    <td>
+                                        <a class="btn btn-primary btn-sm m-r-5" asp-action="Details" asp-route-id="@item.OrderId"><i class="far fa-eye"></i></a>
+                                        <a class="btn btn-secondary btn-sm m-r-5" asp-action="ChangeStatus" asp-route-id="@item.OrderId"><i class="fas fa-sync"></i></a>
+                                        <a class="btn btn-edit btn-sm m-r-5" asp-action="Edit" asp-route-id="@item.OrderId"><i class="far fa-edit"></i></a>
+                                        <a class="btn btn-danger btn-sm m-r-5" asp-action="Delete" asp-route-id="@item.OrderId"><i class="far fa-trash-alt"></i></a>
+                                    </td>
+                                </tr>
+                                index++;
+                            }
+                        }
+                        else
+                        {
+                            <tr><td colspan="10" style="text-align: center; color: #4A5568;">Không có đơn hàng!</td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                <ul class="pagination">
+                    <pager class="page-container" list="@Model" options="@PagedListRenderOptions.Bootstrap4PageNumbersOnly" asp-route-search="@ViewBag.Search" asp-route-status="@ViewBag.Status" asp-area="Admin" asp-controller="AdminOrders" asp-action="Index" />
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            function loadOrders(page, search, status) {
+                $.ajax({
+                    url: '@Url.Action("FilterOrder", "AdminOrders", new { area = "Admin" })',
+                    type: 'GET',
+                    data: { page: page, search: search, status: status },
+                    success: function (response) {
+                        if (response.success) {
+                            $('#records_table').html(response.html);
+                            toastr.success('Cập nhật danh sách đơn hàng thành công!');
+                        } else {
+                            $('#records_table').html('<tr><td colspan="10" style="text-align: center; color: #4A5568;">' + response.message + '</td></tr>');
+                            toastr.error(response.message);
+                        }
+                    },
+                    error: function (xhr) {
+                        toastr.error('Lỗi khi tải danh sách đơn hàng!');
+                        console.log('Error:', xhr.responseText);
+                    }
+                });
+            }
+
+            $('#search').on('keypress', function (e) {
+                if (e.which === 13) {
+                    loadOrders(1, $(this).val(), $('#status').val());
+                }
+            });
+
+            $('#status').change(function () {
+                loadOrders(1, $('#search').val(), $(this).val());
+            });
+        });
+    </script>
+}

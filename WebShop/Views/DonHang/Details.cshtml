@@ -1,0 +1,290 @@
+﻿@model WebShop.Models.Order
+@inject WebShop.Models.webshopContext _context
+@using System.Globalization
+
+@{
+    ViewData["Title"] = "Chi tiết đơn hàng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<OrderDetail> orderDetails = ViewBag.ChiTiet;
+}
+
+<div class="main-content">
+    <div class="container">
+        <div class="order-header">
+            <h1 class="order-title">Chi tiết đơn hàng</h1>
+            <p class="order-id">Mã đơn hàng: <strong>#@Model.OrderId</strong></p>
+        </div>
+        <div class="order-card">
+            <div class="order-section">
+                <h4 class="section-title" style="color: #000000; ">THÔNG TIN ĐƠN HÀNG</h4>
+                <div class="order-details">
+                    <div class="detail-item"><span class="label">Người nhận:</span> <span class="value">@Model.Customer?.FullName</span></div>
+                    <div class="detail-item"><span class="label">Địa chỉ:</span> <span class="value">@Model.Address</span></div>
+                    <div class="detail-item"><span class="label">Số điện thoại:</span> <span class="value">@Model.Customer?.Phone</span></div>
+                    <div class="detail-item"><span class="label">Ngày mua:</span> <span class="value">@(Model.OrderDate?.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture) ?? "Chưa có ngày")</span></div>
+                    <div class="detail-item"><span class="label">Trạng thái:</span> <span class="value">@(Model.TransactStatus?.Status ?? "Chưa xác định")</span></div>
+                </div>
+            </div>
+            <div class="order-section">
+                <h4 class="section-title">Sản phẩm đã mua</h4>
+                <div class="table-responsive">
+                    <table class="order-table">
+                        <thead>
+                            <tr>
+                                <th style="color: #131212;">STT</th>
+                                <th style="color: #131212;">Sản phẩm</th>
+                                <th style="color: #131212;">Kích thước</th>
+                                <th style="color: #131212;">Màu sắc</th>
+                                <th style="color: #131212;">Số lượng</th>
+                                <th style="color: #131212;">Đơn giá</th>
+                                <th style="color: #131212;">Tổng</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (orderDetails != null && orderDetails.Any())
+                            {
+                                int i = 1;
+                                foreach (var item in orderDetails)
+                                {
+                                    <tr>
+                                        <td>@i</td>
+                                        <td>@(item.ProductDetail?.Product?.ProductName ?? "Không xác định")</td>
+                                        <td>@(item.ProductDetail?.Size?.SizeName ?? "N/A")</td>
+                                        <td>@(item.ProductDetail?.Color?.ColorName ?? "N/A")</td>
+                                        <td>@item.Amount</td>
+                                        <td>@(item.Price.HasValue ? string.Format("{0:N0}", item.Price.Value) : "0") VND</td>
+                                        <td>@(item.Price.HasValue && item.Amount.HasValue ? string.Format("{0:N0}", item.Amount.Value * item.Price.Value) : "0") VND</td>
+                                    </tr>
+                                    i++;
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="7" class="text-center">Không có chi tiết đơn hàng</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="order-section">
+                <h4 class="section-title">Ưu đãi áp dụng</h4>
+                <div class="order-details">
+                    @if (Model.VoucherId.HasValue && Model.Voucher != null)
+                    {
+                        <div class="detail-item"><span class="label">Voucher:</span> <span class="value">@Model.Voucher.VoucherCode (@(Model.Voucher.DiscountType == "Percentage" ? $"{Model.Voucher.DiscountValue}%" : $"{string.Format("{0:N0}", Model.Voucher.DiscountValue)} VND"))</span></div>
+                    }
+                    else
+                    {
+                        <p class="text-muted">Không có voucher nào được áp dụng.</p>
+                    }
+                    @if (Model.PromotionId.HasValue && Model.Promotion != null)
+                    {
+                        <div class="detail-item"><span class="label">Khuyến mãi:</span> <span class="value">@Model.Promotion.PromotionName (@Model.Promotion.Discount%)</span></div>
+                    }
+                    else
+                    {
+                        <p class="text-muted">Không có chương trình khuyến mãi nào được áp dụng.</p>
+                    }
+                </div>
+            </div>
+            <div class="order-section">
+                <h4 class="section-title">Tổng thanh toán</h4>
+                <div class="order-details">
+                    <div class="detail-item"><span class="label">Tổng tiền hàng:</span> <span class="value">@(Model.TotalMoney.HasValue ? string.Format("{0:N0}", Model.TotalMoney.Value + Model.TotalDiscount) : "0") VND</span></div>
+                    @if (Model.TotalDiscount > 0)
+                    {
+                        <div class="detail-item"><span class="label">Giảm giá:</span> <span class="value">-@(string.Format("{0:N0}", Model.TotalDiscount)) VND</span></div>
+                    }
+                    <div class="detail-item total-row"><span class="label">Thành tiền:</span> <span class="value total-amount">@(Model.TotalMoney.HasValue ? string.Format("{0:N0}", Model.TotalMoney.Value) : "0") VND</span></div>
+                </div>
+            </div>
+            <div class="order-section note-section">
+                <p class="text-muted">
+                    <small>
+                        Shop LEVITATE cảm ơn quý khách đã ủng hộ. Vui lòng kiểm tra kỹ sản phẩm khi nhận hàng. Nếu có vấn đề, liên hệ qua số điện thoại: <strong>0963-008-274</strong> hoặc email: <strong>LEVITATE@gmail.com</strong>.
+                    </small>
+                </p>
+            </div>
+            <div class="text-center mt-3">
+                <a asp-controller="DonHang" asp-action="Index" class="btn btn-shopee">Quay lại</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .main-content {
+        padding: 15px 0;
+        background-color: #f5f5f5;
+    }
+
+    .order-header {
+        padding: 15px;
+        background-color: #fff;
+        border-radius: 8px 8px 0 0;
+        margin-bottom: 0;
+    }
+
+    .order-title {
+        font-size: 22px;
+        color: #222;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    .order-id {
+        font-size: 14px;
+        color: #757575;
+        margin: 5px 0 0;
+    }
+
+        .order-id strong {
+            color: #FF6200;
+            font-weight: 500;
+        }
+
+    .order-card {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        padding: 0 15px 15px;
+    }
+
+    .order-section {
+        padding: 15px 0;
+        border-bottom: 1px solid #e8e8e8;
+    }
+
+    .note-section {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+
+    .section-title {
+        font-size: 16px;
+        color: #222;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .order-details {
+        padding-left: 30px; /* Increased padding to center content and reduce side emptiness */
+        padding-right: 30px;
+    }
+
+    .detail-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+        font-size: 14px;
+        color: #333;
+    }
+
+    .label {
+        font-weight: 500;
+        color: #757575;
+        min-width: 120px;
+    }
+
+    .value {
+        text-align: right;
+        color: #222;
+    }
+
+    .total-row {
+        font-weight: 600;
+        background-color: #fffaf0;
+        padding: 10px 0;
+    }
+
+    .total-amount {
+        color: #FF6200;
+        font-size: 18px;
+    }
+
+    .order-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+
+        .order-table th {
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid #e8e8e8;
+            font-size: 14px;
+            color: #333333; /* Dark gray for table headers */
+            background-color: #fafafa;
+            font-weight: 500;
+        }
+
+        .order-table td {
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid #e8e8e8;
+            font-size: 14px;
+            color: #333;
+        }
+
+    .text-muted {
+        color: #757575;
+        font-size: 12px;
+    }
+
+    .btn-shopee {
+        background-color: #FF6200;
+        border: none;
+        border-radius: 4px;
+        color: #fff;
+        font-size: 14px;
+        font-weight: 500;
+        padding: 10px 20px;
+        text-decoration: none;
+        transition: background-color 0.3s;
+    }
+
+        .btn-shopee:hover {
+            background-color: #e65b00;
+        }
+
+    @@media (max-width: 768px) {
+        .order-title
+
+    {
+        font-size: 18px;
+    }
+
+    .order-card {
+        padding: 10px;
+    }
+
+    .order-details {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .detail-item {
+        flex-direction: column;
+        text-align: left;
+        padding: 5px 0;
+    }
+
+    .value {
+        margin-top: 5px;
+    }
+
+    .order-table th,
+    .order-table td {
+        font-size: 12px;
+        padding: 6px;
+    }
+
+    .btn-shopee {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    }
+</style>

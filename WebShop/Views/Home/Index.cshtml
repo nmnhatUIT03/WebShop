@@ -1,0 +1,1608 @@
+﻿@using WebShop.ModelViews
+@model WebShop.ModelViews.HomeViewVM
+@{
+    ViewData["Title"] = "Home Page";
+}
+<!-- Hero Section with Full-Width Carousel -->
+<section class="hero" style="position: relative; min-height: 80vh; background: linear-gradient(135deg, #0A0A0A 0%, #1A1A1A 100%); overflow: hidden;">
+    <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" style="width: 100vw; margin: 0; padding: 0;">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <div class="carousel-image-container" style="position: relative; width: 100%; height: 80vh;">
+                    <img src="assets/img/hero/fashion-bg1.jpg" alt="Hero 1" class="d-block carousel-image" style="width: 100%; height: 100%; object-fit: cover; filter: brightness(0.8);" onerror="this.src='https://via.placeholder.com/1920x1080?text=Image+Not+Found';">
+                    <div class="carousel-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4);"></div>
+                </div>
+                <div class="carousel-caption d-flex flex-column justify-content-center h-100 reveal" style="text-align: left; padding: 20px; background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 10px; max-width: 400px; left: 10%; min-height: 350px; max-height: 450px; overflow: hidden;">
+                    <h6 style="font-family: 'Lora', serif; font-size: 0.9rem; color: #FFFFFF; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 15px;">Thời Trang Mùa Đông</h6>
+                    <h1 style="font-family: 'Playfair Display', serif; font-size: 2.5rem; color: #FFFFFF; line-height: 1.1; margin-bottom: 20px; text-transform: uppercase;">Ưu Đãi Đỉnh Cao - Giảm Giá 50%!</h1>
+                    <p style="font-family: 'Lora', serif; font-size: 0.9rem; color: #A0A0A0; margin-bottom: 20px;">Khám phá những xu hướng thời trang cao cấp nhất trong bộ sưu tập mùa đông độc quyền của chúng tôi. Đừng bỏ lỡ cơ hội sở hữu những thiết kế tinh tế với mức giá hấp dẫn chưa từng có!</p>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="carousel-image-container" style="position: relative; width: 100%; height: 80vh;">
+                    <img src="assets/img/hero/fashion-bg2.jpg" alt="Hero 2" class="d-block carousel-image" style="width: 100%; height: 100%; object-fit: cover; filter: brightness(0.8);" onerror="this.src='https://via.placeholder.com/1920x1080?text=Image+Not+Found';">
+                    <div class="carousel-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4);"></div>
+                </div>
+                <div class="carousel-caption d-flex flex-column justify-content-center h-100 reveal" style="text-align: left; padding: 20px; background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 10px; max-width: 400px; left: 10%; min-height: 350px; max-height: 450px; overflow: hidden;">
+                    <h6 style="font-family: 'Lora', serif; font-size: 0.9rem; color: #FFFFFF; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 15px;">Sản Phẩm Mới Nhất</h6>
+                    <h1 style="font-family: 'Playfair Display', serif; font-size: 2.5rem; color: #FFFFFF; line-height: 1.1; margin-bottom: 20px; text-transform: uppercase;">Nâng Tầm Phong Cách Của Bạn</h1>
+                    <p style="font-family: 'Lora', serif; font-size: 0.9rem; color: #A0A0A0; margin-bottom: 20px;">Thể hiện cá tính riêng biệt với những bộ sưu tập được tuyển chọn kỹ lưỡng. Nhanh tay sở hữu ngay với ưu đãi giảm giá đặc biệt để làm mới tủ đồ của bạn theo cách đẳng cấp!</p>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="carousel-image-container" style="position: relative; width: 100%; height: 80vh;">
+                    <img src="assets/img/hero/fashion-bg3.jpg" alt="Hero 3" class="d-block carousel-image" style="width: 100%; height: 100%; object-fit: cover; filter: brightness(0.8);" onerror="this.src='https://via.placeholder.com/1920x1080?text=Image+Not+Found';">
+                    <div class="carousel-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4);"></div>
+                </div>
+                <div class="carousel-caption d-flex flex-column justify-content-center h-100 reveal" style="text-align: left; padding: 20px; background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 10px; max-width: 400px; left: 10%; min-height: 350px; max-height: 450px; overflow: hidden;">
+                    <h6 style="font-family: 'Lora', serif; font-size: 0.9rem; color: #FFFFFF; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 15px;">Tinh Tế Vĩnh Cửu</h6>
+                    <h1 style="font-family: 'Playfair Display', serif; font-size: 2.5rem; color: #FFFFFF; line-height: 1.1; margin-bottom: 20px; text-transform: uppercase;">Tái Định Nghĩa Sự Sang Trọng</h1>
+                    <p style="font-family: 'Lora', serif; font-size: 0.9rem; color: #A0A0A0; margin-bottom: 20px;">Thiết kế dành riêng cho những ai dám tỏa sáng và khẳng định phong cách cá nhân. Đừng bỏ lỡ cơ hội mua sắm với mức giảm giá hấp dẫn, mang đến sự hoàn hảo cho mọi gu thời trang!</p>
+                </div>
+            </div>
+        </div>
+        <!-- Preview Frames for Upcoming Slides -->
+        <div class="carousel-previews" style="position: absolute; top: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 3;">
+            <div class="preview-item active" data-bs-target="#heroCarousel" data-bs-slide-to="0" aria-label="Preview Slide 1">
+                <img src="assets/img/hero/fashion-bg1.jpg" alt="Preview 1" style="width: 100px; height: 60px; object-fit: cover; border-radius: 8px; border: 2px solid rgba(255, 255, 255, 0.3); opacity: 0.7; transition: opacity 0.3s ease, border-color 0.3s ease;" onerror="this.src='https://via.placeholder.com/120x80?text=Preview+Not+Found';">
+            </div>
+            <div class="preview-item" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Preview Slide 2">
+                <img src="assets/img/hero/fashion-bg2.jpg" alt="Preview 2" style="width: 100px; height: 60px; object-fit: cover; border-radius: 8px; border: 2px solid rgba(255, 255, 255, 0.3); opacity: 0.7; transition: opacity 0.3s ease, border-color 0.3s ease;" onerror="this.src='https://via.placeholder.com/120x80?text=Preview+Not+Found';">
+            </div>
+            <div class="preview-item" data-bs-target="#heroCarousel" data-bs-slide-to="2" aria-label="Preview Slide 3">
+                <img src="assets/img/hero/fashion-bg3.jpg" alt="Preview 3" style="width: 100px; height: 60px; object-fit: cover; border-radius: 8px; border: 2px solid rgba(255, 255, 255, 0.3); opacity: 0.7; transition: opacity 0.3s ease, border-color 0.3s ease;" onerror="this.src='https://via.placeholder.com/120x80?text=Preview+Not+Found';">
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev" aria-label="Previous Slide">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+     
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next" aria-label="Next Slide">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      
+        </button>
+        <!-- Floating Social Icons -->
+        <div class="hero__social" style="position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); display: flex; gap: 20px; z-index: 2;">
+            <a href="#" style="color: #A0A0A0; font-size: 1.2rem; transition: all 0.3s ease;" aria-label="Facebook"><i class="fa fa-facebook"></i></a>
+            <a href="#" style="color: #A0A0A0; font-size: 1.2rem; transition: all 0.3s ease;" aria-label="Twitter"><i class="fa fa-twitter"></i></a>
+            <a href="#" style="color: #A0A0A0; font-size: 1.2rem; transition: all 0.3s ease;" aria-label="Pinterest"><i class="fa fa-pinterest"></i></a>
+            <a href="#" style="color: #A0A0A0; font-size: 1.2rem; transition: all 0.3s ease;" aria-label="Instagram"><i class="fa fa-instagram"></i></a>
+        </div>
+    </div>
+</section>
+<!-- Hero Section End -->
+<!-- Banner Section -->
+<section class="banner" style="background: #FFFFFF; padding: 50px 0; position: relative;">
+    <div class="container">
+        <h2 style="font-family: 'Playfair Display', serif; font-size: 3.2rem; color: #0A0A0A; text-align: center; margin-bottom: 50px; letter-spacing: 3px; position: relative;">
+            Khám Phá Sản Phẩm
+            <span style="position: absolute; bottom: -15px; left: 50%; transform: translateX(-50%); width: 80px; height: 1px; background: #A0A0A0;"></span>
+        </h2>
+        <div class="row justify-content-center">
+            @{
+                var items = new[] {
+                        new { Img = "assets/img/banner/ao.jpg", Title = "Áo thun 2025", Subtitle = "Tinh tế trong từng chất liệu", Class = "frame-one", CatId = 1018 },
+                        new { Img = "assets/img/banner/phukien.jpg", Title = "Phụ Kiện", Subtitle = "Phong cách tinh tế", Class = "frame-two", CatId = 1013 },
+                        new { Img = "assets/img/banner/quanao.jpg", Title = "Đồ Thể Thao", Subtitle = "Thời trang hiện đại", Class = "frame-three", CatId = 1020 }
+                        };
+            }
+            <div class="banner-row" style="display: flex; justify-content: center; gap: 20px;">
+                @foreach (var item in items)
+                {
+                    <div class=" coches col-lg-4 col-md-6 mb-5 @(item.Class)">
+                        <div class="banner__item" style="background: #FFFFFF; border-radius: 16px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); position: relative; overflow: hidden; transition: transform 0.4s ease, box-shadow 0.4s ease;">
+                            <div class="banner__item__pic" style="position: relative; overflow: hidden;">
+                                <img style="width: 100%; height: auto; object-fit: cover; border-radius: 16px 16px 0 0; filter: brightness(0.95); transition: filter 0.3s ease;"
+                                     src="@item.Img"
+                                     alt="@item.Title"
+                                     onerror="this.src='https://via.placeholder.com/400x400?text=Image+Not+Found';">
+                            </div>
+                            <div class="banner__item__text" style="padding: 15px 20px; text-align: left; background: #FFFFFF; border-radius: 0 0 16px 16px; min-height: 130px; display: flex; flex-direction: column; justify-content: space-between; width: 50%; box-sizing: border-box; position: absolute; top: 50%; left: 0; transform: translateY(-50%);">
+                                <h2 style="font-family: 'Playfair Display', serif; font-size: 1.2rem; color: #0A0A0A; margin-bottom: 6px; font-weight: 500; line-height: 1.2; letter-spacing: 1px; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">@item.Title</h2>
+                                <p style="font-family: 'Lora', serif; font-size: 0.7rem; color: #666666; margin-bottom: 10px; line-height: 1.4; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">@item.Subtitle</p>
+                                <a asp-controller="Product" asp-action="Index" asp-route-categoryId="@item.CatId" class="btn btn-custom-dark lg-size rounded-0" style="border: none !important;background-color:none !important">MUA NGAY</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        <div style="position: absolute; top: 30px; left: 30px; width: 100px; height: 1px; background: linear-gradient(90deg, #A0A0A0, transparent); opacity: 0.3;"></div>
+        <div style="position: absolute; bottom: 30px; right: 30px; width: 100px; height: 1px; background: linear-gradient(90deg, transparent, #A0A0A0); opacity: 0.3;"></div>
+    </div>
+</section>
+<!-- Banner Section End -->
+<!-- Promotion Section -->
+<section class="promotion-section" style="background: #F8F9FA; padding: 50px 0; position: relative;">
+    <div class="container">
+        <h2 style="font-family: 'Playfair Display', serif; font-size: 2.5rem; color: #0A0A0A; text-align: center; margin-bottom: 30px; letter-spacing: 2px; position: relative;">
+            Chương Trình Khuyến Mãi
+            <span style="position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); width: 80px; height: 1px; background: #A0A0A0;"></span>
+        </h2>
+        <div class="promotion-wrapper" style="background: #000000; padding: 30px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);">
+            @{
+                var promotionProducts = ViewBag.PromotionProducts as IEnumerable<PromotionProductVM>;
+                DateTime currentDate = DateTime.Now;
+                DateTime? nearestEndDate = promotionProducts?.OrderBy(p => p.Promotion.EndDate).FirstOrDefault()?.Promotion.EndDate;
+            }
+            <div class="promotion-container" style="position: relative; overflow: hidden;">
+                <div class="promotion-carousel" style="display: flex; gap: 20px; transition: transform 0.5s ease;">
+                    @if (promotionProducts != null && promotionProducts.Any())
+                    {
+                        foreach (var item in promotionProducts)
+                        {
+                            string url = $"/{item.Product.Alias}-{item.Product.ProductId}.html";
+                            decimal? finalPrice = item.Product.Price * (1 - (item.Promotion.Discount / 100m));
+                            <div class="promotion-item" style="flex: 0 0 240px; background: #FFFFFF; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); overflow: hidden; transition: transform 0.3s ease; height: 360px; display: flex; flex-direction: column;">
+                                <div class="promotion-img" style="position: relative; height: 160px; overflow: hidden;">
+                                    <a href="@url">
+                                        @{
+                                            var promoThumb = !string.IsNullOrEmpty(item.Product.Thumb) 
+                                                ? (item.Product.Thumb.StartsWith("/") || item.Product.Thumb.StartsWith("~") 
+                                                    ? item.Product.Thumb 
+                                                    : "/images/products/" + item.Product.Thumb)
+                                                : "/images/products/default.jpg";
+                                        }
+                                        <img src="@Url.Content(promoThumb)"
+                                             alt="@item.Product.ProductName"
+                                             style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px 8px 0 0;"
+                                             onerror="this.src='/images/products/default.jpg';">
+                                    </a>
+                                    <div class="discount-badge" style="position: absolute; top: 10px; left: 10px; background: #FF4444; color: #FFFFFF; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold;">
+                                        -@item.Promotion.Discount%
+                                    </div>
+                                </div>
+                                <div class="promotion-text" style="padding: 12px; text-align: center; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                                    <h3 style="font-family: 'Lora', serif; font-size: 0.95rem; color: #0A0A0A; margin-bottom: 8px; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">@item.Product.ProductName</h3>
+                                    <p style="font-size: 0.85rem; color: #A0A0A0; margin-bottom: 8px;">
+                                        <span style="text-decoration: line-through;">@item.Product.Price?.ToString("#,##0") VNĐ</span>
+                                        <span style="color: #FF4444; margin-left: 5px;">@finalPrice?.ToString("#,##0") VNĐ</span>
+                                    </p>
+                                    <h4 style="font-family: 'Lora', serif; font-size: 0.9rem; color: #000000; margin-bottom: 8px; font-weight: bold;">@item.Promotion.PromotionName</h4>
+                                    <div class="item-countdown" style="font-family: 'Lora', serif; font-size: 0.85rem; color: #FF4444; margin-bottom: 8px;">
+                                        <span>Kết thúc trong: </span><br />
+                                        @if (item.Promotion.EndDate > currentDate)
+                                        {
+                                            <span class="countdown" data-end-date="@item.Promotion.EndDate.ToString("yyyy-MM-ddTHH:mm:ssZ")">Đang tải...</span>
+                                        }
+                                        else
+                                        {
+                                            <span>Đã hết hạn</span>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p style="font-family: 'Lora', serif; color: #A0A0A0; text-align: center; width: 100%;">Không có sản phẩm khuyến mãi nào.</p>
+                    }
+                </div>
+                <button class="carousel-prev" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: white; border: none; padding: 10px; cursor: pointer; border-radius: 50%;"><</button>
+                <button class="carousel-next" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: white; border: none; padding: 10px; cursor: pointer; border-radius: 50%;">></button>
+            </div>
+            @if (nearestEndDate.HasValue && nearestEndDate > currentDate)
+            {
+                <div class="main-countdown" style="text-align: center; margin: 20px 0; background: rgba(255, 255, 255, 0.1); padding: 12px; border-radius: 8px; color: #FFFFFF; font-size: 1rem; font-family: 'Lora', serif;">
+                    <span>Khuyến mãi gần nhất kết thúc trong: </span>
+                    <span class="countdown" data-end-date="@nearestEndDate.Value.ToString("yyyy-MM-ddTHH:mm:ssZ")">Đang tải...</span>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+<!-- Promotion Section End -->
+<!-- Featured Products Section -->
+<section class="featured-products" style="background: #FFFFFF; padding: 40px 0;">
+    <div class="container">
+        <h2 style="font-family: 'Playfair Display', serif; font-size: 3.2rem; color: #0A0A0A; text-align: center; margin-bottom: 50px; letter-spacing: 3px; position: relative;">
+            Sản Phẩm Nổi Bật
+            <span style="position: absolute; bottom: -15px; left: 50%; transform: translateX(-50%); width: 80px; height: 1px; background: #A0A0A0;"></span>
+        </h2>
+        <div class="row" style="padding-left: 90px; padding-right: 90px;">
+            @{
+                var featuredPromotionProducts = ViewBag.PromotionProducts as IEnumerable<PromotionProductVM>;
+                // Tạo tập hợp ProductId và ánh xạ Discount, chọn Discount cao nhất cho mỗi ProductId
+                var promotionProductIds = featuredPromotionProducts?.Where(p => p.Promotion != null && p.Promotion.Discount > 0)
+                .Select(p => p.Product.ProductId)
+                .ToHashSet() ?? new HashSet<int>();
+                var discountMap = featuredPromotionProducts?.Where(p => p.Promotion != null && p.Promotion.Discount > 0)
+                .GroupBy(p => p.Product.ProductId)
+                .ToDictionary(
+                g => g.Key,
+                g => g.OrderByDescending(p => p.Promotion.Discount)
+                .ThenByDescending(p => p.Promotion.StartDate)
+                .First()
+                .Promotion.Discount
+                ) ?? new Dictionary<int, decimal>();
+                // Debug: In danh sách ProductId và Discount
+                <p style="display: none;">
+                    Debug Promotion Products: @(featuredPromotionProducts != null ? string.Join(", ", featuredPromotionProducts.Select(p => $"ProductId: {p.Product.ProductId}, Discount: {p.Promotion?.Discount ?? 0}")) : "No promotion products")
+                </p>
+            }
+            @if (Model.TopProducts != null && Model.TopProducts.Any())
+            {
+                @foreach (var product in Model.TopProducts.Take(12))
+                {
+                    string safeAlias = string.IsNullOrEmpty(product.Alias)
+                    ? (string.IsNullOrEmpty(product.ProductName)
+                    ? "san-pham"
+                    : product.ProductName.ToLower().Replace(" ", "-").Replace("/", "-"))
+                    : product.Alias.ToLower().Replace(" ", "-").Replace("/", "-");
+                    string url = $"/{safeAlias}-{product.ProductId}.html";
+                    // Tính giá cuối cùng giống Promotion Section
+                    decimal? finalPrice = promotionProductIds.Contains(product.ProductId) && discountMap.TryGetValue(product.ProductId, out var discount)
+                    ? product.Price * (1 - (discount / 100m))
+                    : product.Price;
+                    <p style="display: none;">Product: @product.ProductName, Alias: @safeAlias, Id: @product.ProductId, Discount: @(discountMap.TryGetValue(product.ProductId, out var debugDiscount) ? debugDiscount.ToString() : "None")</p>
+                    <div class="col-lg-4 col-md-6 mb-5">
+                        <div class="product-item" style="display: flex; flex-direction: column; height: 450px; background: #FFFFFF; border-radius: 16px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); overflow: hidden; transition: transform 0.4s ease, box-shadow 0.4s ease;">
+                            <div class="product-img" style="flex: 0 0 300px; position: relative; overflow: hidden;">
+                                <a href="@url" class="product-link">
+                                    @{
+                                        var homeThumb = !string.IsNullOrEmpty(product.Thumb) 
+                                            ? (product.Thumb.StartsWith("/") || product.Thumb.StartsWith("~") 
+                                                ? product.Thumb 
+                                                : "/images/products/" + product.Thumb)
+                                            : "/images/products/default.jpg";
+                                    }
+                                    <img src="@Url.Content(homeThumb)"
+                                         alt="@product.ProductName"
+                                         loading="lazy"
+                                         style="width: 100%; height: 100%; object-fit: cover; border-radius: 16px 16px 0 0;"
+                                         onerror="this.src='/images/products/default.jpg'; this.onerror=null;">
+                                    @if (promotionProductIds.Contains(product.ProductId) && discountMap.TryGetValue(product.ProductId, out var discountValue))
+                                    {
+                                        <!-- Hiển thị discount-badge giống Promotion Section, chỉ khi discount > 0 -->
+                                        <div class="discount-badge" style="position: absolute; top: 10px; left: 10px; background: #FF4444; color: #FFFFFF; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold;">
+                                            -@discountValue%
+                                        </div>
+                                    }
+                                </a>
+                            </div>
+                            <div class="product-text" style="flex: 1; display: flex; flex-direction: column; justify-content: space-between; padding: 20px; text-align: center;">
+                                <h3 style="font-family: 'Playfair Display', serif; font-size: 1.2rem; color: #0A0A0A; margin-bottom: 10px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">@product.ProductName</h3>
+                                <p style="font-family: 'Lora', serif; font-size: 0.9rem; color: #A0A0A0; margin-bottom: 10px; flex-grow: 1;">
+                                    @if (promotionProductIds.Contains(product.ProductId) && discountMap.TryGetValue(product.ProductId, out var discountDisplay))
+                                    {
+                                        <!-- Hiển thị giá giống Promotion Section -->
+                                        <span style="text-decoration: line-through;">@product.Price?.ToString("#,##0") VNĐ</span>
+                                        <span style="color: #FF4444; margin-left: 10px;">@finalPrice?.ToString("#,##0") VNĐ</span>
+                                    }
+                                    else
+                                    {
+                                        <span>@product.Price?.ToString("#,##0") VNĐ</span>
+                                    }
+                                </p>
+                                @if (product.UnitsInStock > 0)
+                                {
+                                    <div class="button-group" style="display: flex; justify-content: center; gap: 5px; flex-wrap: nowrap;">
+                                        <button class="btn btn-custom-dark rounded-0 open-variant-modal" data-product-id="@product.ProductId" data-action="buy-now" style="background: #000000; color: #FFFFFF; padding: 8px 12px; font-size: 0.7rem; min-width: 120px; text-align: center; white-space: nowrap;">MUA NGAY</button>
+                                        <button class="btn btn-custom-dark rounded-0 open-variant-modal" data-product-id="@product.ProductId" data-action="add-to-cart" style="background: #e64500; color: #FFFFFF; padding: 8px 12px; font-size: 0.7rem; min-width: 140px; text-align: center; white-space: nowrap;">THÊM GIỎ HÀNG</button>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="button-group" style="display: flex; justify-content: center; gap: 5px; flex-wrap: nowrap;">
+                                        <button class="btn btn-secondary rounded-0" disabled style="padding: 8px 12px; font-size: 0.7rem; min-width: 120px; text-align: center; white-space: nowrap;">HẾT HÀNG</button>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <p style="text-align: center; font-family: 'Lora', serif; color: #A0A0A0;">Hiện chưa có sản phẩm nổi bật.</p>
+            }
+        </div>
+    </div>
+</section>
+<!-- Featured Products Section End -->
+<!-- About Levitate Section -->
+<section class="about-levitate" style="background: linear-gradient(135deg, #0A0A0A 0%, #2A2A2A 100%); padding: 100px 0; position: relative; overflow: hidden;">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-5">
+                <div class="about-levitate__text" style="position: relative; padding: 40px; background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(12px); border: 1px solid rgba(230, 69, 0, 0.2); border-radius: 12px; box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2); z-index: 2;">
+                    <h2 class="about-levitate__title reveal-text" style="font-family: 'Playfair Display', serif; font-size: 3rem; color: #FFFFFF; margin-bottom: 20px; letter-spacing: 2px; text-transform: uppercase;">LEVITATE</h2>
+                    <p class="about-levitate__desc reveal-text" style="font-family: 'Lora', serif; font-size: 1.2rem; color: #FFFFFF; line-height: 1.8; margin-bottom: 20px; border-left: 2px solid rgba(230, 69, 0, 0.3); padding-left: 15px;">
+                        Chào bạn đến với LEVITATE! Chúng tôi mang thời trang đến tương lai, với thiết kế tinh tế và phong cách riêng, giúp bạn tự tin tỏa sáng.
+                    </p>
+                   
+                </div>
+            </div>
+            <div class="col-lg-7">
+                <div class="about-levitate__visual parallax-image" style="position: relative; height: 450px; border-radius: 12px; overflow: hidden; box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3); border: 1px solid rgba(230, 69, 0, 0.2);">
+                    <img src="assets/img/about/about.png" alt="Levitate Aesthetic" style="width: 100%; height: 100%; object-fit: cover; filter: brightness(0.9); transition: transform 0.5s ease, filter 0.5s ease;" class="reveal-pic" loading="lazy" onerror="this.src='https://via.placeholder.com/800x400?text=Image+Not+Found';">
+                    <div class="visual-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, rgba(0, 0, 0, 0.3), rgba(230, 69, 0, 0.1)); pointer-events: none;"></div>
+                    <div class="neon-border" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; box-shadow: inset 0 0 12px rgba(230, 69, 0, 0.3); pointer-events: none; transition: box-shadow 0.5s ease;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Decorative Elements -->
+    <div class="decor-line" style="position: absolute; top: 20px; left: 20px; width: 100px; height: 2px; background: linear-gradient(90deg, #e64500, transparent); opacity: 0.5;"></div>
+    <div class="decor-line" style="position: absolute; bottom: 20px; right: 20px; width: 100px; height: 2px; background: linear-gradient(90deg, transparent, #e64500); opacity: 0.5;"></div>
+</section>
+<!-- About Levitate Section End -->
+<!-- Latest Blog Section -->
+<section class="latest" style="background: linear-gradient(135deg, #F5F6F8 0%, #FFFFFF 100%); padding: 150px 0;">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-title" style="text-align: center; margin-bottom: 100px;">
+                    <h2 style="font-family: 'Playfair Display', serif; font-size: 3.2rem; color: #0A0A0A; letter-spacing: 3px; position: relative;">
+                        Tin Tức Mới Nhất
+                        <span style="position: absolute; bottom: -15px; left: 50%; transform: translateX(-50%); width: 80px; height: 1px; background: #A0A0A0;"></span>
+                    </h2>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            @foreach (var item in Model.TinTucs)
+            {
+                <div class="col-lg-4 col-md-6 col-sm-6 mb-5">
+                    <div class="blog-item" style="background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 15px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1); position: relative; overflow: hidden; transition: transform 0.4s ease, box-shadow 0.4s ease;">
+                        <div class="blog-img" style="position: relative; overflow: hidden;">
+                            <a href="/Blog/Detail/@item.PostId">
+                                <img style="width: 100%; height: 300px; object-fit: cover; border-radius: 15px 15px 0 0;"
+                                     src="@item.Thumb"
+                                     alt="@item.Title"
+                                     loading="lazy"
+                                     onerror="this.src='https://via.placeholder.com/350x280?text=Image+Not+Found';">
+                            </a>
+                        </div>
+                        <div class="blog-content" style="padding: 35px; display: flex; flex-direction: column; justify-content: space-between; min-height: 240px;">
+                            <div>
+                                <h5 style="font-family: 'Lora', serif; font-size: 1.5rem; color: #0A0A0A; margin-bottom: 20px; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+                                    @item.Title
+                                </h5>
+                                <span style="font-family: 'Lora', serif; font-size: 0.9rem; color: #A0A0A0; display: flex; align-items: center; margin-bottom: 25px;">
+                                    <img src="assets/img/icon/calendar.png" alt="calendar" style="width: 16px; height: 16px; margin-right: 12px;">
+                                    @(item.CreatedDate.HasValue? item.CreatedDate.Value.ToString("dd MMMM yyyy") : "N/A")
+                                </span>
+                            </div>
+                            <div class="button-wrap" style="text-align: center;">
+                                <a href="/Blog/Detail/@item.PostId" class="btn btn-custom-dark lg-size btn-dark rounded-0 glowing-btn">Đọc Thêm</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+<!-- Latest Blog Section End -->
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lora:wght@400;500&display=swap');
+
+    body {
+        background: #FFFFFF;
+        overflow-x: hidden;
+        font-family: 'Lora', serif;
+    }
+
+    /* Container Styling */
+    .container {
+        max-width: 1440px;
+        padding-left: 20px;
+        padding-right: 20px;
+        margin: 0 auto;
+    }
+
+    /* Hero Carousel */
+    .hero .carousel {
+        margin: 0;
+        padding: 0;
+        border-radius: 0;
+        overflow: hidden;
+    }
+
+    .hero .carousel-inner {
+        height: 80vh;
+    }
+
+    .hero .carousel-item {
+        transition: opacity 0.8s ease-in-out;
+    }
+
+    .hero .carousel-image-container {
+        position: relative;
+        width: 100%;
+        height: 80vh;
+    }
+
+    .hero .carousel-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: brightness(0.8);
+    }
+
+    .hero .carousel-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.4);
+    }
+
+    .hero .carousel-caption {
+        top: 10%;
+        transform: translateY(30px);
+        opacity: 0;
+        transition: all 0.6s ease;
+        text-align: left;
+        max-width: 400px;
+        left: 10%;
+        min-height: 350px;
+        max-height: 450px;
+        overflow: hidden;
+    }
+
+    .hero .carousel-item.active .carousel-caption {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    .hero .carousel-indicators button {
+        background: #A0A0A0;
+        border-radius: 50%;
+        width: 10px;
+        height: 10px;
+        margin: 0 12px;
+        transition: background 0.3s ease, transform 0.3s ease;
+    }
+
+    .hero .carousel-indicators .active {
+        background: #FFFFFF;
+        transform: scale(1.2);
+    }
+
+    .hero .carousel-control-prev,
+    .hero .carousel-control-next {
+        width: 6%;
+        opacity: 0.7;
+        transition: opacity 0.3s ease;
+        background: none;
+        border: none;
+    }
+
+        .hero .carousel-control-prev:hover,
+        .hero .carousel-control-next:hover {
+            opacity: 1;
+            background: none;
+        }
+
+    .hero .carousel-control-prev-icon,
+    .hero .carousel-control-next-icon {
+        filter: brightness(0) invert(1);
+        width: 30px;
+        height: 30px;
+    }
+
+    /* Preview Frames */
+    .carousel-previews {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        z-index: 3;
+    }
+
+        .carousel-previews .preview-item {
+            cursor: pointer;
+        }
+
+            .carousel-previews .preview-item img {
+                width: 100px;
+                height: 60px;
+                object-fit: cover;
+                border-radius: 8px;
+                border: 2px solid rgba(255, 255, 255, 0.3);
+                opacity: 0.7;
+                transition: opacity 0.3s ease, border-color 0.3s ease;
+            }
+
+            .carousel-previews .preview-item:hover img {
+                opacity: 1;
+                border-color: #FFFFFF;
+            }
+
+            .carousel-previews .preview-item.active img {
+                opacity: 1;
+                border-color: #FFFFFF;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            }
+
+    /* Banner Section */
+    .banner-row {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: nowrap;
+    }
+
+    .col-lg-4 {
+        flex: 0 0 25%;
+        max-width: 25%;
+    }
+
+    .banner__item {
+        background: #FFFFFF;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+
+        .banner__item:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.2);
+        }
+
+    .banner__item__pic {
+        position: relative;
+        overflow: hidden;
+    }
+
+        .banner__item__pic img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            border-radius: 16px 16px 0 0;
+            filter: brightness(0.95);
+            transition: filter 0.3s ease;
+        }
+
+    .banner__item:hover .banner__item__pic img {
+        filter: brightness(1);
+    }
+
+    .banner__item__text {
+        padding: 15px 20px;
+        text-align: left;
+        background: #FFFFFF;
+        border-radius: 0 0 16px 16px;
+        min-height: 130px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 50%;
+        box-sizing: border-box;
+        position: absolute;
+        top: 50%;
+        left: 0;
+        transform: translateY(-50%);
+    }
+
+        .banner__item__text h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            color: #0A0A0A;
+            margin-bottom: 6px;
+            font-weight: 500;
+            line-height: 1.2;
+            letter-spacing: 1px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        .banner__item__text p {
+            font-family: 'Lora', serif;
+            font-size: 0.7rem;
+            color: #666666;
+            margin-bottom: 10px;
+            line-height: 1.4;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+    .frame-one .banner__item {
+        border-top: 8px solid #E0E0E0;
+    }
+
+    .frame-two .banner__item {
+        border-left: 8px solid #E0E0E0;
+        border-right: 8px solid #E0E0E0;
+    }
+
+    .frame-three .banner__item {
+        border-bottom: 8px solid #E0E0E0;
+    }
+
+    .frame-one {
+        margin-top: -20px;
+    }
+
+    .frame-two {
+        margin-top: 30px;
+    }
+
+    .frame-three {
+        margin-top: -10px;
+    }
+
+    /* Promotion Section */
+    .promotion-section {
+        background: #F8F9FA;
+    }
+
+    .promotion-container {
+        position: relative;
+        overflow: hidden;
+        padding: 20px 0;
+    }
+
+    .promotion-carousel {
+        display: flex;
+        gap: 20px;
+        width: max-content;
+        padding: 0 40px; /* Để tạo không gian cho nút prev/next */
+    }
+
+    .promotion-item {
+        flex: 0 0 240px;
+        background: #FFFFFF;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transition: transform 0.3s ease;
+        height: 360px;
+        display: flex;
+        flex-direction: column;
+    }
+
+        .promotion-item:hover {
+            transform: translateY(-5px);
+        }
+
+    .promotion-img {
+        position: relative;
+        height: 160px;
+        overflow: hidden;
+    }
+
+        .promotion-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px 8px 0 0;
+        }
+
+    .discount-badge {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background: #FF4444;
+        color: #FFFFFF;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: bold;
+    }
+
+    .promotion-text {
+        padding: 12px;
+        text-align: center;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+        .promotion-text h3 {
+            font-family: 'Lora', serif;
+            font-size: 0.95rem;
+            color: #0A0A0A;
+            margin-bottom: 8px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        .promotion-text p {
+            font-size: 0.85rem;
+            color: #A0A0A0;
+            margin-bottom: 8px;
+        }
+
+        .promotion-text h4 {
+            font-family: 'Lora', serif;
+            font-size: 0.9rem;
+            color: #000000;
+            margin-bottom: 8px;
+            font-weight: bold;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+        }
+
+    .item-countdown {
+        font-family: 'Lora', serif;
+        font-size: 0.85rem;
+        color: #FF4444;
+        margin-bottom: 8px;
+    }
+
+    .open-variant-modal {
+        background: #e64500;
+        color: #FFFFFF;
+        padding: 8px 12px;
+        font-size: 0.7rem;
+        border: none;
+        border-radius: 0;
+        min-width: 140px;
+        text-align: center;
+        white-space: nowrap;
+        transition: background 0.3s ease;
+        margin-top: auto;
+    }
+
+        .open-variant-modal:hover {
+            background: #d53f00;
+        }
+
+    .main-countdown {
+        text-align: center;
+        margin: 20px 0;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 12px;
+        border-radius: 8px;
+        color: #FFFFFF;
+        font-size: 1rem;
+        font-family: 'Lora', serif;
+    }
+
+    .carousel-prev, .carousel-next {
+        z-index: 10;
+        font-size: 1.2rem;
+        transition: background 0.3s ease;
+    }
+
+        .carousel-prev:hover, .carousel-next:hover {
+            background: rgba(0,0,0,0.7);
+        }
+
+    /* Featured Products Section */
+    .featured-products .product-item {
+        display: flex;
+        flex-direction: column;
+        height: 450px;
+        background: #FFFFFF;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+        transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .featured-products .product-img {
+        flex: 0 0 300px;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .featured-products .product-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 16px 16px 0 0;
+            filter: brightness(0.95);
+            transition: transform 0.5s ease, filter 0.3s ease;
+        }
+
+    .featured-products .product-text {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 20px;
+        text-align: center;
+    }
+
+        .featured-products .product-text h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            color: #0A0A0A;
+            margin-bottom: 10px;
+            font-weight: 500;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .featured-products .product-text p {
+            font-family: 'Lora', serif;
+            font-size: 0.9rem;
+            color: #A0A0A0;
+            margin-bottom: 10px;
+            flex-grow: 1;
+        }
+
+        .featured-products .product-text .btn {
+            margin-top: auto;
+        }
+
+    .featured-products .product-item:hover {
+        transform: translateY(-15px);
+        box-shadow: 0 25px 70px rgba(0, 0, 0, 0.2);
+    }
+
+        .featured-products .product-item:hover .product-img img {
+            transform: scale(1.05);
+            filter: brightness(1);
+        }
+
+    /* Latest Blog Section */
+    .blog-item:hover {
+        transform: translateY(-15px);
+        box-shadow: 0 25px 70px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Button Styling */
+    .btn-dark {
+        background: none;
+        border: none;
+        padding: 8px 20px;
+        font-family: 'Lora', serif;
+        font-size: 0.8rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: #FFFFFF;
+        position: relative;
+        text-decoration: none;
+    }
+
+    .hero .btn-dark:hover {
+        background: none !important;
+        color: #FFFFFF;
+        text-decoration: none;
+    }
+
+    .btn-custom-dark {
+        background: none;
+        border: none;
+        border-radius: 0;
+        padding: 8px 12px;
+        font-family: 'Lora', serif;
+        font-size: 0.7rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: #0A0A0A;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.4s ease;
+    }
+
+        .btn-custom-dark:hover {
+            color: #0A0A0A;
+            border: none;
+        }
+
+    .glowing-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        transition: 0.5s;
+    }
+
+    .glowing-btn:hover::before {
+        left: 100%;
+    }
+
+    .latest .btn-dark {
+        background: linear-gradient(135deg, #000000 0%, #333333 100%);
+        border: none;
+        border-radius: 8px;
+        padding: 12px 30px;
+        font-size: 1rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #ffffff;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+        .latest .btn-dark:hover {
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+    /* Social Icons */
+    .hero__social a:hover {
+        color: #FFFFFF;
+        transform: scale(1.15);
+    }
+
+    /* About Levitate Section */
+    .about-levitate {
+        position: relative;
+        z-index: 1;
+        overflow: hidden;
+    }
+
+    .about-levitate__text {
+        transition: box-shadow 0.4s ease, transform 0.4s ease;
+    }
+
+        .about-levitate__text:hover {
+            box-shadow: 0 20px 50px rgba(230, 69, 0, 0.15);
+            transform: translateY(-5px);
+        }
+
+    .about-levitate__title {
+        position: relative;
+        font-weight: 700;
+    }
+
+        .about-levitate__title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, #e64500, transparent);
+            transition: width 0.4s ease;
+        }
+
+        .about-levitate__title:hover::after {
+            width: 100px;
+        }
+
+    .about-levitate__desc {
+        font-size: 1.2rem;
+        color: #FFFFFF;
+        transition: border-color 0.4s ease;
+    }
+
+        .about-levitate__desc:hover {
+            border-color: rgba(230, 69, 0, 0.5);
+        }
+
+    .about-levitate__visual {
+        position: relative;
+    }
+
+        .about-levitate__visual:hover img {
+            transform: scale(1.03);
+            filter: brightness(1);
+        }
+
+        .about-levitate__visual:hover .neon-border {
+            box-shadow: inset 0 0 20px rgba(230, 69, 0, 0.4);
+        }
+
+    .btn-custom-dark {
+        position: relative;
+        overflow: hidden;
+    }
+
+        .btn-custom-dark:hover {
+            box-shadow: 0 0 12px rgba(230, 69, 0, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .btn-custom-dark::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(230, 69, 0, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-custom-dark:hover::before {
+            left: 100%;
+        }
+
+    /* Animations */
+    @@keyframes fadeInUp {
+        0% {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Responsive Design */
+    @@media (max-width: 767.98px) {
+        .hero .carousel-inner {
+            height: 60vh;
+        }
+
+        .hero .carousel-image-container {
+            height: 60vh;
+        }
+
+        .hero .carousel-caption {
+            max-width: 90%;
+            padding: 15px;
+            left: 5%;
+            min-height: 250px;
+            max-height: 350px;
+        }
+
+            .hero .carousel-caption h1 {
+                font-size: 2rem;
+            }
+
+            .hero .carousel-caption h6 {
+                font-size: 0.8rem;
+            }
+
+            .hero .carousel-caption p {
+                font-size: 0.9rem;
+                margin-bottom: 15px;
+            }
+
+        .carousel-previews {
+            top: 60px;
+            right: 15px;
+        }
+
+            .carousel-previews .preview-item img {
+                width: 80px;
+                height: 50px;
+            }
+
+        .banner-row {
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .col-lg-4 {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+
+        .banner__item__text {
+            padding: 12px;
+            min-height: 100px;
+            width: 50%;
+        }
+
+            .banner__item__text h2 {
+                font-size: 1.0rem;
+            }
+
+            .banner__item__text p {
+                font-size: 0.6rem;
+            }
+
+        .hero__social {
+            bottom: 20px;
+            gap: 15px;
+        }
+
+            .hero__social a {
+                font-size: 1rem;
+            }
+
+        .frame-one .banner__item,
+        .frame-two .banner__item,
+        .frame-three .banner__item {
+            border: none;
+        }
+
+        .frame-one,
+        .frame-two,
+        .frame-three {
+            margin-top: 0;
+        }
+
+        .featured-products .product-item {
+            height: 400px;
+        }
+
+        .featured-products .product-img {
+            flex: 0 0 250px;
+        }
+
+        .featured-products .product-text h3 {
+            font-size: 1rem;
+        }
+
+        .featured-products .product-text p {
+            font-size: 0.8rem;
+        }
+
+        .featured-products .product-text .btn {
+            padding: 6px 12px;
+            font-size: 0.65rem;
+        }
+
+        .featured-products .row {
+            padding-left: 70px;
+            padding-right: 70px;
+        }
+
+        .featured-products .button-group {
+            gap: 4px;
+        }
+
+            .featured-products .button-group .btn:first-child {
+                min-width: 110px;
+            }
+
+            .featured-products .button-group .btn:last-child {
+                min-width: 120px;
+            }
+
+        .about-levitate__text {
+            padding: 30px;
+        }
+
+        .about-levitate__visual {
+            height: 320px;
+            margin-top: 20px;
+        }
+
+        .about-levitate .row {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .about-levitate__text, .about-levitate__visual {
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .about-levitate__desc {
+            font-size: 1.1rem;
+        }
+
+        .about-levitate__title {
+            font-size: 2.2rem;
+        }
+
+        .promotion-item {
+            flex: 0 0 200px;
+            height: 320px;
+        }
+
+        .promotion-img {
+            height: 120px;
+        }
+
+        .promotion-text h3 {
+            font-size: 0.85rem;
+        }
+
+        .promotion-text p {
+            font-size: 0.75rem;
+        }
+
+        .promotion-text h4 {
+            font-size: 0.8rem;
+        }
+
+        .item-countdown {
+            font-size: 0.75rem;
+        }
+
+        .open-variant-modal {
+            padding: 6px 10px;
+            font-size: 0.75rem;
+        }
+
+        .main-countdown {
+            font-size: 0.9rem;
+            padding: 10px;
+        }
+    }
+
+    @@media (max-width: 575.98px) {
+        .hero .carousel-inner {
+            height: 60vh;
+        }
+
+        .hero .carousel-image-container {
+            height: 60vh;
+        }
+
+        .hero .carousel-caption {
+            max-width: 90%;
+            padding: 15px;
+            left: 5%;
+            min-height: 200px;
+            max-height: 300px;
+        }
+
+            .hero .carousel-caption h1 {
+                font-size: 1.5rem;
+            }
+
+            .hero .carousel-caption h6 {
+                font-size: 0.7rem;
+            }
+
+            .hero .carousel-caption p {
+                font-size: 0.8rem;
+                margin-bottom: 15px;
+            }
+
+        .carousel-previews {
+            top: 50px;
+            right: 10px;
+        }
+
+            .carousel-previews .preview-item img {
+                width: 60px;
+                height: 40px;
+            }
+
+        .banner__item__text {
+            padding: 10px;
+            min-height: 90px;
+        }
+
+            .banner__item__text h2 {
+                font-size: 0.8rem;
+            }
+
+            .banner__item__text p {
+                font-size: 0.5rem;
+            }
+
+        .hero__social {
+            bottom: 15px;
+            gap: 10px;
+        }
+
+            .hero__social a {
+                font-size: 0.9rem;
+            }
+
+        .featured-products .product-item {
+            height: 350px;
+        }
+
+        .featured-products .product-img {
+            flex: 0 0 200px;
+        }
+
+        .featured-products .product-text h3 {
+            font-size: 0.9rem;
+        }
+
+        .featured-products .product-text p {
+            font-size: 0.7rem;
+        }
+
+        .featured-products .product-text .btn {
+            padding: 5px 10px;
+            font-size: 0.6rem;
+        }
+
+        .featured-products .row {
+            padding-left: 50px;
+            padding-right: 50px;
+        }
+
+        .featured-products .button-group {
+            gap: 3px;
+        }
+
+            .featured-products .button-group .btn:first-child {
+                min-width: 100px;
+            }
+
+            .featured-products .button-group .btn:last-child {
+                min-width: 110px;
+            }
+
+        .about-levitate__text {
+            padding: 20px;
+        }
+
+        .about-levitate__visual {
+            height: 260px;
+        }
+
+        .about-levitate__desc {
+            font-size: 1rem;
+        }
+
+        .about-levitate__title {
+            font-size: 1.8rem;
+        }
+
+        .promotion-item {
+            flex: 0 0 180px;
+            height: 300px;
+        }
+
+        .promotion-img {
+            height: 100px;
+        }
+
+        .promotion-text h3 {
+            font-size: 0.8rem;
+        }
+
+        .promotion-text p {
+            font-size: 0.7rem;
+        }
+
+        .promotion-text h4 {
+            font-size: 0.75rem;
+        }
+
+        .item-countdown {
+            font-size: 0.7rem;
+        }
+
+        .open-variant-modal {
+            padding: 5px 8px;
+            font-size: 0.7rem;
+        }
+
+        .main-countdown {
+            font-size: 0.85rem;
+            padding: 8px;
+        }
+    }
+
+    /* Fallback for reveal-text */
+    .reveal-text {
+        opacity: 1 !important;
+        transform: translateY(0) !important;
+    }
+
+    /* Parallax Image */
+    .parallax-image {
+        will-change: transform;
+    }
+</style>
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/scrollreveal@4.0.9/dist/scrollreveal.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            console.log("Script loaded and jQuery ready");
+
+            // Check GSAP and ScrollTrigger
+            if (typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") {
+                console.error("GSAP or ScrollTrigger failed to load.");
+                $('.reveal-text').css({ opacity: 1, transform: 'translateY(0)' });
+                return;
+            }
+
+            gsap.registerPlugin(ScrollTrigger);
+
+            // Hero Carousel Interactions
+            $('#heroCarousel').carousel({
+                interval: 5000,
+                pause: 'hover'
+            });
+
+            $('#heroCarousel').on('mouseenter', function () {
+                $(this).carousel('pause');
+            }).on('mouseleave', function () {
+                $(this).carousel('cycle');
+            });
+
+            $('#heroCarousel').on('slide.bs.carousel', function (e) {
+                $('.carousel-previews .preview-item').removeClass('active').eq(e.to).addClass('active');
+            });
+
+            // Set initial active preview
+            $('.carousel-previews .preview-item').eq(0).addClass('active');
+
+            function animateCaption(element) {
+                gsap.fromTo(element,
+                    { y: 40, opacity: 0 },
+                    { y: 0, opacity: 1, duration: 1.2, ease: 'power4.out' }
+                );
+            }
+
+            // Animate initial caption
+            animateCaption($('.carousel-item.active .carousel-caption'));
+
+            $('#heroCarousel').on('slid.bs.carousel', function (e) {
+                const newCaption = $(e.relatedTarget).find('.carousel-caption');
+                animateCaption(newCaption);
+            });
+
+            // Scroll Reveal for other sections
+            ScrollReveal().reveal('.reveal', {
+                delay: 100,
+                distance: '20px',
+                origin: 'bottom',
+                duration: 800,
+                easing: 'cubic-bezier(0.5, 0, 0, 1)',
+                interval: 150
+            });
+
+            ScrollReveal().reveal('.reveal-text', {
+                delay: 400,
+                distance: '15px',
+                origin: 'bottom',
+                duration: 1000,
+                easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
+                opacity: 0,
+                reset: false,
+                viewFactor: 0.3,
+                beforeReveal: function (el) {
+                    el.style.willChange = 'opacity, transform';
+                    el.style.transform = 'translateY(15px)';
+                    el.style.opacity = '0';
+                },
+                afterReveal: function (el) {
+                    el.style.willChange = 'auto';
+                    el.style.transition = 'none';
+                }
+            });
+
+            ScrollReveal().reveal('.reveal-pic', {
+                delay: 200,
+                distance: '20px',
+                origin: 'right',
+                duration: 1200,
+                opacity: 0,
+                easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
+                reset: false
+            });
+
+            // Hàm Countdown Timer
+            function startCountdown() {
+                console.log("Bắt đầu countdown...");
+                const countdownElements = document.querySelectorAll('.countdown');
+                if (!countdownElements.length) {
+                    console.log('Không tìm thấy phần tử countdown.');
+                    return;
+                }
+
+                countdownElements.forEach(element => {
+                    const endDateStr = element.getAttribute('data-end-date');
+                    console.log('Data-end-date:', endDateStr);
+                    if (!endDateStr) {
+                        element.innerHTML = 'Ngày giờ không hợp lệ';
+                        return;
+                    }
+
+                    let endDate = new Date(endDateStr);
+                    if (isNaN(endDate.getTime())) {
+                        element.innerHTML = 'Lỗi định dạng ngày';
+                        return;
+                    }
+                    const offsetVietnam = 7 * 60 * 60 * 1000; // +07:00
+                    endDate = new Date(endDate.getTime() + offsetVietnam);
+                    console.log('End date (Việt Nam):', endDate);
+
+                    function updateCountdown() {
+                        const now = new Date();
+                        const nowVietnam = new Date(now.getTime() + offsetVietnam);
+                        const distance = endDate - nowVietnam;
+
+                        if (distance < 0) {
+                            element.innerHTML = 'Đã hết hạn';
+                            return;
+                        }
+
+                        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                        element.innerHTML = `${days} ngày ${hours} giờ ${minutes} phút ${seconds} giây`;
+                    }
+
+                    updateCountdown(); // Cập nhật ngay lập tức
+                    setInterval(updateCountdown, 1000); // Cập nhật mỗi giây
+                });
+            }
+
+            startCountdown();
+
+            // Handle Variant Popup
+            $('.open-variant-modal').on('click', function (e) {
+                e.preventDefault(); // Ngăn chặn điều hướng mặc định
+                var productId = $(this).data('product-id');
+                var action = $(this).data('action');
+                console.log('Opening variant popup for ProductId:', productId, 'Action:', action);
+
+                $.ajax({
+                    url: '/Home/GetVariantPopup',
+                    type: 'GET',
+                    data: { productId: productId },
+                    success: function (response) {
+                        if (typeof response === 'object' && response.success === false) {
+                            toastr.error(response.message || 'Lỗi khi tải biến thể sản phẩm.');
+                            return;
+                        }
+                        if ($('#variantModal').length === 0) {
+                            $('body').append(response);
+                        } else {
+                            $('#variantModal').replaceWith(response);
+                        }
+                        $('#actionType').val(action);
+                        $('#variantModal').modal('show');
+                    },
+                    error: function () {
+                        toastr.error('Lỗi khi tải biến thể sản phẩm.');
+                    }
+                });
+            });
+
+            // Carousel Auto Scroll and Manual Navigation
+            const carousel = $('.promotion-carousel');
+            const itemWidth = $('.promotion-item').outerWidth(true);
+            let currentPosition = 0;
+            const visibleItems = Math.floor($('.promotion-container').width() / itemWidth);
+            const totalItems = $('.promotion-item').length;
+            const maxScroll = -(totalItems - visibleItems) * itemWidth;
+
+            function autoScroll() {
+                currentPosition -= itemWidth;
+                if (currentPosition < maxScroll) currentPosition = 0;
+                carousel.css('transform', `translateX(${currentPosition}px)`);
+            }
+
+            let autoScrollInterval = setInterval(autoScroll, 3000);
+
+            $('.promotion-container').hover(
+                function () {
+                    clearInterval(autoScrollInterval);
+                },
+                function () {
+                    autoScrollInterval = setInterval(autoScroll, 3000);
+                }
+            );
+
+            $('.carousel-prev').on('click', function () {
+                currentPosition += itemWidth;
+                if (currentPosition > 0) currentPosition = 0;
+                carousel.css('transform', `translateX(${currentPosition}px)`);
+            });
+
+            $('.carousel-next').on('click', function () {
+                currentPosition -= itemWidth;
+                if (currentPosition < maxScroll) currentPosition = maxScroll;
+                carousel.css('transform', `translateX(${currentPosition}px)`);
+            });
+
+          
+        });
+    </script>
+}

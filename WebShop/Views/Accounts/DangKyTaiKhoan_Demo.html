@@ -1,0 +1,361 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng ký tài khoản</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #e6e9f0 0%, #eef1f5 100%);
+            font-family: 'Roboto', sans-serif;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card {
+            border-radius: 12px;
+            border: none;
+            background: #ffffff;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        .card-body {
+            padding: 2rem;
+        }
+
+        .header-section {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .header-section .h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #000000;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.5px;
+        }
+
+        .header-section h5 {
+            font-size: 0.9rem;
+            font-weight: 400;
+            color: #666666;
+            letter-spacing: 0.3px;
+            line-height: 1.3;
+            margin-top: 5px;
+        }
+
+        .logo-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            min-height: 400px;
+            background: linear-gradient(135deg, #f8f8f8 0%, #ffffff 100%);
+        }
+
+        .logo-container img {
+            max-width: 85%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-outline {
+            margin-bottom: 1rem;
+        }
+
+        .form-control {
+            border-radius: 6px;
+            padding: 0.7rem 1rem;
+            font-size: 0.9rem;
+            font-weight: 400;
+            background-color: #f9f9f9;
+            border: 1px solid #d5d5d5;
+            transition: all 0.3s ease;
+        }
+
+        .form-control::placeholder {
+            color: #999999;
+            font-weight: 300;
+            font-size: 0.85rem;
+        }
+
+        .form-control:focus {
+            border-color: #000000;
+            background-color: #ffffff;
+            box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-check {
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-check-input {
+            width: 1.2rem;
+            height: 1.2rem;
+            margin-top: 0;
+            border: 2px solid #333333;
+            background-color: #ffffff;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .form-check-input:checked {
+            background-color: #000000;
+            border-color: #000000;
+        }
+
+        .form-check-input:focus {
+            box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+            border-color: #000000;
+            outline: none;
+        }
+
+        .form-check-label {
+            margin-left: 0.75rem;
+            font-size: 0.85rem;
+            color: #333333;
+            font-weight: 400;
+            cursor: pointer;
+        }
+
+        .form-check-label a {
+            color: #000000;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .form-check-label a:hover {
+            text-decoration: underline;
+        }
+
+        .btn-dark {
+            background-color: #000000;
+            border: none;
+            border-radius: 6px;
+            padding: 0.7rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            color: white;
+            width: 100%;
+        }
+
+        .btn-dark:hover {
+            background-color: #1a1a1a;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .pb-lg-2 {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #333333;
+            margin-top: 0.5rem;
+            margin-bottom: 0;
+        }
+
+        .pb-lg-2 a {
+            color: #000000;
+            font-weight: 500;
+            text-decoration: none;
+        }
+
+        .pb-lg-2 a:hover {
+            text-decoration: underline;
+        }
+
+        .text-danger {
+            font-size: 0.8rem;
+            font-weight: 400;
+            color: #dc3545;
+            margin-top: 0.25rem;
+            display: block;
+        }
+
+        section {
+            min-height: 100vh;
+        }
+
+        @media (max-width: 767.98px) {
+            .logo-container {
+                min-height: 180px;
+                padding: 1rem;
+            }
+
+            .card-body {
+                padding: 1.5rem;
+            }
+
+            .header-section .h1 {
+                font-size: 1.5rem;
+            }
+
+            .header-section h5 {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section>
+        <div class="container py-3">
+            <div class="row min-vh-100 d-flex justify-content-center align-items-center">
+                <div class="col col-xl-10">
+                    <div class="card">
+                        <div class="row g-0">
+                            <!-- Form bên trái -->
+                            <div class="col-md-7 col-lg-6 d-flex align-items-center">
+                                <div class="card-body text-black">
+                                    <form onsubmit="handleSubmit(event)">
+                                        <div class="header-section">
+                                            <span class="h1">ĐĂNG KÝ TÀI KHOẢN</span>
+                                            <h5 class="sub-title">Tài khoản của bạn – Phong cách của bạn!</h5>
+                                        </div>
+
+                                        <div class="form-outline">
+                                            <input type="text" id="fullName" placeholder="Họ và tên" class="form-control" required />
+                                            <span class="text-danger" id="fullNameError"></span>
+                                        </div>
+
+                                        <div class="form-outline">
+                                            <input type="email" id="email" placeholder="Email" class="form-control" required />
+                                            <span class="text-danger" id="emailError"></span>
+                                        </div>
+
+                                        <div class="form-outline">
+                                            <input type="tel" id="phone" placeholder="Số điện thoại" class="form-control" required />
+                                            <span class="text-danger" id="phoneError"></span>
+                                        </div>
+
+                                        <div class="form-outline">
+                                            <input type="password" id="password" placeholder="Mật khẩu" class="form-control" required minlength="5" />
+                                            <span class="text-danger" id="passwordError"></span>
+                                        </div>
+
+                                        <div class="form-outline">
+                                            <input type="password" id="confirmPassword" placeholder="Nhập lại mật khẩu" class="form-control" required minlength="5" />
+                                            <span class="text-danger" id="confirmPasswordError"></span>
+                                        </div>
+
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="flexCheckDefault" required />
+                                            <label class="form-check-label" for="flexCheckDefault">
+                                                Đồng ý với các <a href="#!">Điều khoản</a>
+                                            </label>
+                                        </div>
+
+                                        <div class="pt-1">
+                                            <button class="btn btn-dark btn-lg btn-block" type="submit">Đăng ký</button>
+                                        </div>
+
+                                        <p class="pb-lg-2">
+                                            Bạn đã có tài khoản? <a href="#!">Đăng nhập ở đây</a>
+                                        </p>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <!-- Logo bên phải -->
+                            <div class="col-md-5 col-lg-6 d-none d-md-block">
+                                <div class="logo-container">
+                                    <div style="text-align: center; color: #999;">
+                                        <p style="font-size: 3rem; margin: 0;">👔</p>
+                                        <p style="font-weight: 600; margin: 10px 0 0 0;">WebShop Logo</p>
+                                        <p style="font-size: 0.85rem; color: #666;">Thời trang - Phong cách</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+            
+            // Validate
+            const fullName = document.getElementById('fullName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const terms = document.getElementById('flexCheckDefault').checked;
+
+            let isValid = true;
+
+            // Clear errors
+            document.querySelectorAll('.text-danger').forEach(el => el.textContent = '');
+
+            // Validate
+            if (!fullName) {
+                document.getElementById('fullNameError').textContent = 'Vui lòng nhập họ và tên';
+                isValid = false;
+            }
+
+            if (!email) {
+                document.getElementById('emailError').textContent = 'Vui lòng nhập email';
+                isValid = false;
+            } else if (!email.includes('@')) {
+                document.getElementById('emailError').textContent = 'Email không hợp lệ';
+                isValid = false;
+            }
+
+            if (!phone) {
+                document.getElementById('phoneError').textContent = 'Vui lòng nhập số điện thoại';
+                isValid = false;
+            } else if (phone.length < 10) {
+                document.getElementById('phoneError').textContent = 'Số điện thoại phải có ít nhất 10 chữ số';
+                isValid = false;
+            }
+
+            if (!password) {
+                document.getElementById('passwordError').textContent = 'Vui lòng nhập mật khẩu';
+                isValid = false;
+            } else if (password.length < 5) {
+                document.getElementById('passwordError').textContent = 'Mật khẩu phải có ít nhất 5 ký tự';
+                isValid = false;
+            }
+
+            if (!confirmPassword) {
+                document.getElementById('confirmPasswordError').textContent = 'Vui lòng xác nhận mật khẩu';
+                isValid = false;
+            } else if (password !== confirmPassword) {
+                document.getElementById('confirmPasswordError').textContent = 'Mật khẩu không giống nhau';
+                isValid = false;
+            }
+
+            if (!terms) {
+                alert('Vui lòng đồng ý với điều khoản');
+                isValid = false;
+            }
+
+            if (isValid) {
+                alert('✅ Form hợp lệ!\n\nHộ tên: ' + fullName + '\nEmail: ' + email + '\nSĐT: ' + phone);
+            }
+        }
+    </script>
+</body>
+</html>

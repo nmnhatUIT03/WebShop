@@ -1,0 +1,530 @@
+﻿@using PagedList.Core.Mvc
+@model PagedList.Core.IPagedList<WebShop.Models.Category>
+@{
+    int index = 1; // Biến đếm thứ tự danh mục
+    int CurrentPage = ViewBag.CurrentPage; // Trang hiện tại
+    ViewData["Title"] = "Danh sách danh mục - Trang " + CurrentPage; // Tiêu đề trang
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml"; // Sử dụng layout quản trị
+}
+
+<!-- CSS tùy chỉnh với phông Montserrat và màu sắc tương phản cao -->
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap');
+
+    body {
+        background: #CBD5E0;
+        font-family: 'Montserrat', sans-serif;
+        color: #1A202C;
+        overflow-x: hidden;
+    }
+
+    .container {
+        max-width: 1440px;
+        padding: 0 20px;
+        margin: 0 auto;
+    }
+
+    .page-header {
+        background: linear-gradient(135deg, #FFFFFF 0%, #CBD5E0 100%);
+        padding: 30px 0;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        margin-bottom: 30px;
+    }
+
+    .header-sub-title {
+        text-align: center;
+    }
+
+    .breadcrumb {
+        background: none;
+        padding: 0;
+        margin: 0;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.9rem;
+        color: #4A5568;
+    }
+
+    .breadcrumb-item {
+        color: #4A5568;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+        .breadcrumb-item:hover {
+            color: #f05a00;
+        }
+
+        .breadcrumb-item.active {
+            color: #1A202C;
+            font-weight: 500;
+        }
+
+        .breadcrumb-item + .breadcrumb-item::before {
+            content: '>';
+            margin: 0 10px;
+            color: #4A5568;
+        }
+
+    .card {
+        background: #FFFFFF; /* Thay đổi sang màu trắng như trong mã sản phẩm */
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        overflow: hidden;
+        transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+        }
+
+    .card-body {
+        padding: 30px;
+    }
+
+    .input-affix {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .custom-select, .form-control {
+        background: #EDF2F7;
+        border: 1px solid rgba(240, 90, 0, 0.4);
+        border-radius: 8px;
+        padding: 10px 15px;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.9rem;
+        color: #1A202C;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .custom-select:focus, .form-control:focus {
+            border-color: #f05a00;
+            box-shadow: 0 0 8px rgba(240, 90, 0, 0.5);
+            outline: none;
+        }
+
+    .prefix-icon {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #4A5568;
+    }
+
+    .form-control {
+        padding-left: 40px;
+    }
+
+    .btn {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border-radius: 8px;
+        padding: 8px 12px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        border: none;
+        color: #FFFFFF;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .btn-success {
+        background: #f05a00;
+        border: none;
+        color: #FFFFFF;
+    }
+
+        .btn-success:hover {
+            background: #d94f00;
+        }
+
+    .btn-primary {
+        background: #1A202C;
+        border: none;
+        color: #FFFFFF;
+    }
+
+        .btn-primary:hover {
+            background: #2D3748;
+        }
+
+    .btn-secondary {
+        background: #4A5568;
+        border: none;
+        color: #FFFFFF;
+    }
+
+        .btn-secondary:hover {
+            background: #2D3748;
+        }
+
+    .btn-danger {
+        background: #F56565;
+        border: none;
+        color: #FFFFFF;
+    }
+
+        .btn-danger:hover {
+            background: #E53E3E;
+        }
+
+    .btn-edit {
+        background: linear-gradient(to right, #a8a8a8 0%, #a8a8a8 100%);
+        border: none;
+        color: #FFFFFF;
+    }
+
+        .btn-edit:hover {
+            background: linear-gradient(to right, #a8a8a8 0%, #a8a8a8 80%, #9a9a9a 100%);
+        }
+
+    .btn-custom-delete {
+        background: #f05a00;
+        border: none;
+        color: #FFFFFF;
+    }
+
+        .btn-custom-delete:hover {
+            background: #d94f00;
+        }
+
+    .btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        transition: left 0.5s ease;
+    }
+
+    .btn:hover::before {
+        left: 100%;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 10px;
+        font-family: 'Montserrat', sans-serif;
+    }
+
+        .table thead th {
+            background: #EDF2F7;
+            color: #1A202C;
+            font-size: 0.9rem;
+            padding: 12px;
+            border: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            white-space: nowrap;
+            text-align: center;
+            vertical-align: middle;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+
+        .table tbody tr {
+            background: #FFFFFF;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+            .table tbody tr:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            }
+
+        .table tbody td {
+            padding: 15px;
+            border: none;
+            font-size: 0.9rem;
+            color: #1A202C;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+    .action-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 5px;
+    }
+
+    .badge {
+        display: inline-flex;
+        align-items: center;
+        font-size: 0.8rem;
+        padding: 5px 10px;
+        border-radius: 4px;
+    }
+
+    .badge-success {
+        background: #f05a00;
+        color: #FFFFFF;
+    }
+
+    .badge-danger {
+        background: #F56565;
+        color: #FFFFFF;
+    }
+
+    .badge-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-right: 8px;
+    }
+
+    .pagination {
+        justify-content: center;
+        margin-top: 30px;
+    }
+
+        .pagination .page-item .page-link {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            color: #1A202C;
+            background: #EDF2F7;
+            border: 1px solid rgba(240, 90, 0, 0.4);
+            border-radius: 8px;
+            margin: 0 5px;
+            padding: 8px 15px;
+            transition: all 0.3s ease;
+        }
+
+        .pagination .page-item.active .page-link {
+            background: #f05a00;
+            border-color: #f05a00;
+            color: #FFFFFF;
+        }
+
+        .pagination .page-item .page-link:hover {
+            background: #f05a00;
+            border-color: #f05a00;
+            color: #FFFFFF;
+            box-shadow: 0 4px 12px rgba(240, 90, 0, 0.5);
+        }
+
+    .search-form {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .search-input {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.9rem;
+        border-radius: 8px;
+        border: 1px solid #CBD5E0;
+        padding: 10px 15px;
+        width: 100%;
+        max-width: 300px;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .search-input:focus {
+            border-color: #f05a00;
+            box-shadow: 0 0 8px rgba(240, 90, 0, 0.3);
+            outline: none;
+        }
+
+    .search-button {
+        background: #f05a00;
+        border: none;
+        color: #FFFFFF;
+        padding: 10px 15px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+        .search-button:hover {
+            background: #d94f00;
+            box-shadow: 0 6px 20px rgba(240, 90, 0, 0.5);
+        }
+
+    @@media (max-width: 767.98px) {
+        .card-body {
+            padding: 20px;
+        }
+
+        .table thead th {
+            font-size: 0.8rem;
+            padding: 8px;
+        }
+
+        .table tbody td {
+            font-size: 0.8rem;
+            padding: 10px;
+        }
+
+        .btn {
+            padding: 6px 10px;
+            font-size: 0.7rem;
+        }
+
+        .row.m-b-30 {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .col-lg-8, .col-lg-4 {
+            width: 100%;
+            max-width: 100%;
+            margin-bottom: 20px;
+        }
+
+            .col-lg-4.text-right {
+                text-align: center !important;
+            }
+
+        .action-buttons {
+            gap: 3px;
+        }
+
+        .search-input {
+            font-size: 0.8rem;
+            max-width: 200px;
+        }
+    }
+
+    @@media (max-width: 575.98px) {
+        .page-header {
+            padding: 20px 0;
+        }
+
+        .card-body {
+            padding: 15px;
+        }
+
+        .table thead th {
+            font-size: 0.7rem;
+            padding: 6px;
+        }
+
+        .table tbody td {
+            font-size: 0.75rem;
+            padding: 8px;
+        }
+
+        .btn {
+            padding: 5px 8px;
+            font-size: 0.65rem;
+        }
+
+        .pagination .page-item .page-link {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+
+        .action-buttons {
+            gap: 2px;
+        }
+
+        .search-input {
+            font-size: 0.75rem;
+            max-width: 150px;
+        }
+    }
+</style>
+
+<!-- Tiêu đề trang -->
+<div class="page-header">
+    <div class="header-sub-title">
+        <nav class="breadcrumb breadcrumb-dash">
+            <a asp-area="Admin" asp-controller="HomeAdmin" asp-action="Index" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Home</a>
+            <span class="breadcrumb-item active">Danh sách danh mục: Trang @CurrentPage</span>
+        </nav>
+    </div>
+</div>
+<!-- Thẻ chứa bảng -->
+<div class="card">
+    <div class="card-body">
+        <h2 class="text-center">Danh sách danh mục</h2>
+        <div class="row m-b-30" style="padding: 15px 0;">
+            <div class="col-lg-8">
+                <form asp-action="Index" method="get" class="search-form">
+                    <input type="text" name="searchString" value="@ViewData["CurrentFilter"]" placeholder="Tìm kiếm danh mục..." class="search-input" />
+                    <button type="submit" class="search-button"><i class="fa fa-search"></i></button>
+                </form>
+            </div>
+            <div class="col-lg-4 text-right">
+                <a class="btn btn-success" asp-controller="AdminCategories" asp-action="Create"><i class="far fa-plus-square m-r-5 fa-lg"></i><span>Thêm danh mục</span></a>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover e-commerce-table">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Tên loại</th>
+                        <th>Trạng thái</th>
+                        <th>Chức năng</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@index</td>
+                                <td>@item.CatName</td>
+                                <td>
+                                    @if (item.Published == true)
+                                    {
+                                        <div class="d-flex align-items-center">
+                                            <div class="badge badge-success badge-dot m-r-10"></div>
+                                            <div>Đã phát hành</div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="d-flex align-items-center">
+                                            <div class="badge badge-danger badge-dot m-r-10"></div>
+                                            <div>Chưa phát hành</div>
+                                        </div>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <a class="btn btn-primary btn-sm" asp-area="Admin" asp-controller="AdminCategories" asp-action="Details" asp-route-id="@item.CatId"><i class="far fa-eye"></i></a>
+                                        <a class="btn btn-secondary btn-sm" asp-area="Admin" asp-controller="AdminCategories" asp-action="Edit" asp-route-id="@item.CatId"><i class="far fa-edit"></i></a>
+                                        <a class="btn btn-danger btn-sm" asp-area="Admin" asp-controller="AdminCategories" asp-action="Delete" asp-route-id="@item.CatId"><i class="far fa-trash-alt"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                            index++;
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="4" style="text-align: center; color: #4A5568;">Không có danh mục nào.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div aria-label="Page navigation example">
+                <ul class="pagination">
+                    <pager class="page-container" list="@Model" options="@PagedListRenderOptions.Bootstrap4PageNumbersOnly" asp-area="Admin" asp-controller="AdminCategories" asp-action="Index" asp-route-searchString="@ViewData["CurrentFilter"]" />
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,422 @@
+﻿
+@using PagedList.Core.Mvc;
+@model PagedList.Core.IPagedList<WebShop.Models.Page>
+@{
+    int index = 1;
+    int CurrentPage = ViewBag.CurrentPage;
+    ViewData["Title"] = "Danh sách page" + CurrentPage;
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: #CBD5E0;
+            font-family: 'Montserrat', sans-serif;
+            color: #1A202C;
+            font-weight: 400;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1440px;
+            padding: 0 20px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, #FFFFFF 0%, #CBD5E0 100%);
+            padding: 20px 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            margin-bottom: 30px;
+        }
+
+        .header-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 500;
+            color: #1A202C;
+            text-align: center;
+        }
+
+        .header-sub-title {
+            text-align: center;
+        }
+
+        .breadcrumb {
+            background: none;
+            padding: 0;
+            margin: 0;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            color: #4A5568;
+        }
+
+        .breadcrumb-item {
+            color: #4A5568;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+            .breadcrumb-item:hover {
+                color: #f05a00;
+            }
+
+            .breadcrumb-item.active {
+                color: #1A202C;
+                font-weight: 500;
+            }
+
+            .breadcrumb-item + .breadcrumb-item::before {
+                content: '>';
+                margin: 0 10px;
+                color: #4A5568;
+            }
+
+        .card {
+            background: #FFFFFF;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+
+            .card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+            }
+
+        .card-body {
+            padding: 30px;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        .table {
+            width: 100%;
+            margin-bottom: 1rem;
+            color: #1A202C;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+            .table th,
+            .table td {
+                padding: 12px 15px;
+                vertical-align: middle;
+                border-top: 1px solid #E2E8F0;
+            }
+
+            .table thead th {
+                background: #F7FAFC;
+                font-weight: 500;
+                color: #1A202C;
+                border-bottom: 2px solid #E2E8F0;
+            }
+
+            .table tbody tr:hover {
+                background: #F7FAFC;
+            }
+
+        .btn {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.75rem; /* Reduced font size */
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 6px; /* Slightly smaller border-radius */
+            padding: 6px 6px; /* Reduced padding */
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-width: 30px; /* Ensure buttons don't collapse */
+        }
+
+            .btn i {
+                font-size: 0.9rem; /* Reduced icon size */
+                line-height: 1;
+            }
+
+        .btn-group {
+            display: flex;
+            flex-wrap: nowrap; /* Prevent wrapping */
+            gap: 5px; /* Space between buttons */
+            align-items: center;
+        }
+
+        .btn-create {
+            background: #f05a00;
+            border: none;
+            color: #FFFFFF;
+        }
+
+            .btn-create:hover {
+                background: #d94f00;
+                box-shadow: 0 6px 20px rgba(240, 90, 0, 0.5);
+            }
+
+        .btn-details {
+            background: #1A202C;
+            border: none;
+            color: #FFFFFF;
+        }
+
+            .btn-details:hover {
+                background: #2D3748;
+                box-shadow: 0 6px 20px rgba(74, 85, 104, 0.5);
+            }
+
+        .btn-update {
+            background: #4A5568;
+            border: none;
+            color: #FFFFFF;
+        }
+
+            .btn-update:hover {
+                background: #2D3748;
+                box-shadow: 0 6px 20px rgba(74, 85, 104, 0.5);
+            }
+
+        .btn-delete {
+            background: #F56565;
+            border: none;
+            color: #FFFFFF;
+        }
+
+            .btn-delete:hover {
+                background: #e53e3e;
+                box-shadow: 0 6px 20px rgba(245, 101, 101, 0.5);
+            }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .badge {
+            font-size: 0.8rem;
+            padding: 5px 10px;
+            border-radius: 12px;
+        }
+
+        .badge-success {
+            background: #28a745;
+            color: #FFFFFF;
+        }
+
+        .badge-warning {
+            background: #FFC107;
+            color: #1A202C;
+        }
+
+        .pagination {
+            font-family: 'Montserrat', sans-serif;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .page-item .page-link {
+            color: #4A5568;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            margin: 0 5px;
+            padding: 8px 12px;
+            transition: all 0.3s ease;
+        }
+
+        .page-item.active .page-link {
+            background: #f05a00;
+            border-color: #f05a00;
+            color: #FFFFFF;
+        }
+
+        .page-item .page-link:hover {
+            background: #F7FAFC;
+            border-color: #f05a00;
+            color: #f05a00;
+        }
+
+        @@media (max-width: 767.98px) {
+            .card-body
+
+        {
+            padding: 20px;
+        }
+
+        .btn {
+            padding: 4px 4px; /* Smaller padding for mobile */
+            font-size: 0.65rem; /* Smaller font size */
+        }
+
+            .btn i {
+                font-size: 0.8rem; /* Smaller icon */
+            }
+
+        .table th,
+        .table td {
+            padding: 8px 10px;
+        }
+
+        .btn-group {
+            gap: 3px; /* Tighter spacing on mobile */
+        }
+
+        }
+
+        @@media (max-width: 575.98px) {
+            .page-header
+
+        {
+            padding: 15px 0;
+        }
+
+        .header-title {
+            font-size: 1.5rem;
+        }
+
+        .breadcrumb {
+            font-size: 0.8rem;
+        }
+
+        .card-body {
+            padding: 15px;
+        }
+
+        .btn {
+            padding: 3px 3px; /* Even smaller padding */
+            font-size: 0.6rem; /* Smaller font size */
+        }
+
+            .btn i {
+                font-size: 0.7rem; /* Smaller icon */
+            }
+
+        .table th,
+        .table td {
+            padding: 6px 8px;
+            font-size: 0.75rem;
+        }
+
+        .btn-group {
+            gap: 2px; /* Tighter spacing */
+        }
+
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="page-header">
+            <h2 class="header-title">Danh sách page</h2>
+            <div class="header-sub-title">
+                <nav class="breadcrumb breadcrumb-dash">
+                    <a asp-area="Admin" asp-controller="HomeAdmin" asp-action="Index" class="breadcrumb-item"><i class="fas fa-home m-r-5"></i>Home</a>
+                    <span class="breadcrumb-item active">Danh sách page: page @CurrentPage</span>
+                </nav>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row m-b-30">
+                            <div class="col-lg-8"></div>
+                            <div class="col-lg-4 text-right">
+                                <a class="btn btn-create btn-tone m-r-5" asp-controller="AdminPages" asp-action="Create"><i class="far fa-plus-square m-r-5 fa-lg"></i>Thêm trang</a>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>STT</th>
+                                        <th>Tên trang</th>
+                                        <th>Trạng thái</th>
+                                        <th>Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model != null)
+                                    {
+                                        foreach (var item in Model)
+                                        {
+                                            <tr>
+                                                <td>@index</td>
+                                                <td>@item.PageName</td>
+                                                <td>
+                                                    @if (item.Published == true)
+                                                    {
+                                                        <span class="badge badge-success">Hoạt động</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="badge badge-warning">Ngừng hoạt động</span>
+                                                    }
+                                                </td>
+                                                <td>
+                                                    <div class="btn-group">
+                                                        <a class="btn btn-details btn-tone m-r-5" asp-area="Admin" asp-controller="AdminPages" asp-action="Details" asp-route-id="@item.PageId"><i class="far fa-eye fa-lg"></i></a>
+                                                        <a class="btn btn-update btn-tone m-r-5" asp-area="Admin" asp-controller="AdminPages" asp-action="Edit" asp-route-id="@item.PageId"><i class="far fa-edit fa-lg"></i></a>
+                                                        <a class="btn btn-delete btn-tone m-r-5" asp-area="Admin" asp-controller="AdminPages" asp-action="Delete" asp-route-id="@item.PageId"><i class="far fa-trash-alt fa-lg"></i></a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            index = index + 1;
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                            <div aria-label="Page navigation example">
+                                <ul class="pagination">
+                                    <pager class="page-container" list="@Model" options="@PagedListRenderOptions.Bootstrap4PageNumbersOnly" asp-area="Admin" asp-controller="AdminPages" asp-action="Index" />
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @section Scripts {
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/perfect-scrollbar/1.5.5/perfect-scrollbar.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                // Initialize perfectScrollbar
+                try {
+                    if (typeof $.fn.perfectScrollbar === 'function') {
+                        $('.table-responsive').perfectScrollbar();
+                    } else {
+                        console.warn('perfectScrollbar không được tải.');
+                    }
+                } catch (e) {
+                    console.error('Lỗi khi khởi tạo perfectScrollbar:', e);
+                }
+            });
+        </script>
+    }
+</body>
+</html>
