@@ -1,4 +1,4 @@
-﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
@@ -791,7 +791,8 @@ namespace WebShop.Controllers
                     Email = customer.Email,
                     Phone = customer.Phone,
                     Address = customer.Address,
-                    TinhThanh = customer.LocationId ?? 0,
+                    TinhThanh = customer.LocationId ?? 0, // ✅ Giữ lại cho tương thích
+                    TinhThanhText = customer.Location?.Name ?? "", // ✅ Demo: Lấy tên tỉnh thành
                     QuanHuyen = customer.Address?.Split(',').Length > 1 ? customer.Address.Split(',')[1].Trim() : "",
                     PhuongXa = customer.Address?.Split(',').Length > 2 ? customer.Address.Split(',')[2].Trim() : "",
                     SelectedProductDetailIds = JsonSerializer.Serialize(selectedProductDetailIds),
@@ -841,7 +842,9 @@ namespace WebShop.Controllers
 
                 model.CustomerId = customerId;
 
-                var customer = await _context.Customers.FirstOrDefaultAsync(x => x.CustomerId == customerId);
+                var customer = await _context.Customers
+                    .Include(c => c.Location) // ✅ Include Location để lấy tên tỉnh/thành
+                    .FirstOrDefaultAsync(x => x.CustomerId == customerId);
                 if (customer == null)
                 {
                     _logger.LogWarning("Không tìm thấy khách hàng với CustomerId: {CustomerId}", customerId);
@@ -890,7 +893,8 @@ namespace WebShop.Controllers
                     return View(model);
                 }
 
-                if (string.IsNullOrEmpty(model.FullName) || string.IsNullOrEmpty(model.Phone) || model.TinhThanh <= 0 || string.IsNullOrEmpty(model.QuanHuyen) || string.IsNullOrEmpty(model.PhuongXa))
+                // ✅ Demo mode: Chỉ cần > 1 ký tự cho mỗi field
+                if (string.IsNullOrEmpty(model.FullName) || string.IsNullOrEmpty(model.Phone) || string.IsNullOrEmpty(model.TinhThanhText) || string.IsNullOrEmpty(model.QuanHuyen) || string.IsNullOrEmpty(model.PhuongXa))
                 {
                     if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
                         return Json(new { success = false, message = "Vui lòng điền đầy đủ thông tin giao hàng!" });
@@ -923,6 +927,8 @@ namespace WebShop.Controllers
                 var productDetailIds = selectedItems.Select(x => x.productDetail.ProductDetailId).ToList();
                 var productDetails = await _context.ProductDetails
                     .Include(pd => pd.Product)
+                    .Include(pd => pd.Size)
+                    .Include(pd => pd.Color)
                     .Where(p => productDetailIds.Contains(p.ProductDetailId))
                     .ToListAsync();
 
@@ -1017,11 +1023,11 @@ namespace WebShop.Controllers
                         {
                             CustomerId = model.CustomerId,
                             ReceiverName = model.FullName,
-                            Address = $"{model.Address}, {model.QuanHuyen}, {model.PhuongXa}",
-                            LocationId = model.TinhThanh,
+                            Address = $"{model.Address}, {model.TinhThanhText}, {model.QuanHuyen}, {model.PhuongXa}", // ✅ Dùng TinhThanhText
+                            LocationId = null, // ✅ Demo mode: Set = null vì TinhThanhText là text input
                             OrderDate = DateTime.Now,
                             TransactStatusId = 1,
-                            Deleted = false,
+                            Deleted = false, // ✅ Explicitly set to false
                             Paid = model.PaymentID == 1,
                             PaymentDate = model.PaymentID == 1 ? null : DateTime.Now,
                             TotalMoney = (int)(totalOrderValue - totalDiscount),
@@ -1048,7 +1054,9 @@ namespace WebShop.Controllers
                                 Quantity = item.amount,
                                 ShipDate = null,
                                 Price = item.product.Price,
-                                Total = (int)(item.product.Price * item.amount)
+                                Total = (int)(item.product.Price * item.amount),
+                                SizeName = productDetail.Size?.SizeName,
+                                ColorName = productDetail.Color?.ColorName
                             };
                             _context.OrderDetails.Add(orderDetail);
 

@@ -1,4 +1,4 @@
-﻿namespace WebShop.Models.ViewModels
+namespace WebShop.Models.ViewModels
 {
     public class UserPromotionSummaryViewModel
     {

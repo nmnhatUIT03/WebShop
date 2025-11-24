@@ -1,4 +1,4 @@
-﻿// ShoppingCartController: Quản lý giỏ hàng, bao gồm thêm, xóa, cập nhật sản phẩm, đồng bộ giỏ hàng và xử lý mua ngay.
+// ShoppingCartController: Quản lý giỏ hàng, bao gồm thêm, xóa, cập nhật sản phẩm, đồng bộ giỏ hàng và xử lý mua ngay.
 // Chứa 21 phương thức: CheckLogin, GetCartCount, AddToCart, BuyNow, ProceedToCheckout, RemoveFromCart, RemoveMultipleFromCart, UpdateCart, SyncCart, SyncLocalCart,
 // GetDiscount, Index, AddToSessionCart, GetSessionCartItems, ClearSessionCart, RestoreCartFromCookie, RestoreBuyNowFromCookie, SaveCartToCookie, SaveBuyNowToCookie,
 // EstimateMaxItems, UpdateCartTokenCookie.

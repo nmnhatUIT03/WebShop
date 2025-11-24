@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 #nullable disable
@@ -17,6 +17,10 @@ namespace WebShop.Models
         public DateTime? ShipDate { get; set; }
         public int? Amount { get; set; }
         public int? Price { get; set; }
+        
+        // Thêm SizeName và ColorName để lưu trực tiếp (denormalized)
+        public string SizeName { get; set; }
+        public string ColorName { get; set; }
 
         public virtual Order Order { get; set; }
         public virtual ProductDetail ProductDetail { get; set; }

@@ -1,8 +1,8 @@
-﻿@using System.Linq
+@using System.Linq
 @using WebShop.Models
 @model WebShop.Models.Order
 @{
-    ViewData["Title"] = "Đặt hàng thành công";
+    ViewData["Title"] = "�?t h�ng th�nh c�ng";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -14,38 +14,38 @@
                     <div class="order-container">
                         <div class="order-header">
                             <div class="success-icon"></div>
-                            <h1>Đặt hàng thành công</h1>
-                            <p class="order-id">Mã đơn hàng: <strong>#@Model.OrderId</strong></p>
+                            <h1>�?t h�ng th�nh c�ng</h1>
+                            <p class="order-id">M� don h�ng: <strong>#@Model.OrderId</strong></p>
                         </div>
                         <div class="order-content">
                             <div class="row">
-                                <!-- Thông tin giao hàng -->
+                                <!-- Th�ng tin giao h�ng -->
                                 <div class="col-lg-6 col-md-12">
                                     <div class="order-section">
-                                        <h5>Thông tin giao hàng</h5>
+                                        <h5>Th�ng tin giao h�ng</h5>
                                         <div class="info-list">
-                                            <div class="info-item"><span class="label">Người nhận:</span><span class="value">@(Model.ReceiverName ?? "Chưa xác định")</span></div>
-                                            <div class="info-item"><span class="label">Địa chỉ:</span><span class="value">@(Model.Address ?? "")</span></div>
-                                            <div class="info-item"><span class="label">Tỉnh/Thành:</span><span class="value">@(Model.Location?.Name ?? "Chưa xác định")</span></div>
-                                            <div class="info-item"><span class="label">Quận/Huyện:</span><span class="value">@(ViewBag.QuanHuyen ?? "")</span></div>
-                                            <div class="info-item"><span class="label">Phường:</span><span class="value">@(ViewBag.PhuongXa ?? "")</span></div>
-                                            <div class="info-item"><span class="label">Trạng thái:</span><span class="value">@(Model.TransactStatus?.Status ?? "Chưa cập nhật")</span></div>
+                                            <div class="info-item"><span class="label">Ngu?i nh?n:</span><span class="value">@(Model.ReceiverName ?? "Chua x�c d?nh")</span></div>
+                                            <div class="info-item"><span class="label">�?a ch?:</span><span class="value">@(Model.Address ?? "")</span></div>
+                                            <div class="info-item"><span class="label">T?nh/Th�nh:</span><span class="value">@(Model.Location?.Name ?? "Chua x�c d?nh")</span></div>
+                                            <div class="info-item"><span class="label">Qu?n/Huy?n:</span><span class="value">@(ViewBag.QuanHuyen ?? "")</span></div>
+                                            <div class="info-item"><span class="label">Phu?ng:</span><span class="value">@(ViewBag.PhuongXa ?? "")</span></div>
+                                            <div class="info-item"><span class="label">Tr?ng th�i:</span><span class="value">@(Model.TransactStatus?.Status ?? "Chua c?p nh?t")</span></div>
                                         </div>
                                     </div>
                                 </div>
-                                <!-- Chi tiết đơn hàng -->
+                                <!-- Chi ti?t don h�ng -->
                                 <div class="col-lg-6 col-md-12">
                                     <div class="order-section">
-                                        <h5>Chi tiết đơn hàng</h5>
+                                        <h5>Chi ti?t don h�ng</h5>
                                         @if (ViewBag.OrderDetails != null && ((List<WebShop.Models.OrderDetail>)ViewBag.OrderDetails).Any())
                                         {
                                             <table class="details-table">
                                                 <thead>
                                                     <tr>
-                                                        <th>Sản phẩm</th>
-                                                        <th>Số lượng</th>
-                                                        <th>Đơn giá</th>
-                                                        <th>Tổng</th>
+                                                        <th>S?n ph?m</th>
+                                                        <th>S? lu?ng</th>
+                                                        <th>�on gi�</th>
+                                                        <th>T?ng</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -54,18 +54,17 @@
                                                         <tr>
                                                             <td class="product-info">
                                                                 <div class="product__cart__item__pic">
-                                                                    <img src="@Url.Content(item.ProductDetail?.Product?.Thumb ?? "/products/default.jpg")"
-                                                                         alt="@(item.ProductDetail?.Product?.ProductName ?? "Sản phẩm")"
-                                                                         loading="lazy"
-                                                                         onerror="this.src='/products/default.jpg'; this.onerror=null;">
+                                                                    <img src="@Url.Content(item.ProductDetail?.Product?.Thumb ?? "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7")"
+                                                                         alt="@(item.ProductDetail?.Product?.ProductName ?? "S?n ph?m")"
+                                                                         loading="lazy">
                                                                 </div>
                                                                 <div class="product__cart__item__text">
                                                                     <a href="/Product/Detail/@item.ProductDetail.ProductId">@(item.ProductDetail?.Product?.ProductName ?? "N/A")</a>
                                                                 </div>
                                                             </td>
                                                             <td>@item.Quantity</td>
-                                                            <td>@(item.Price.HasValue ? string.Format("{0:N0}", item.Price.Value) : "0") VNĐ</td>
-                                                            <td>@(item.Total.HasValue ? string.Format("{0:N0}", item.Total.Value) : "0") VNĐ</td>
+                                                            <td>@(item.Price.HasValue ? string.Format("{0:N0}", item.Price.Value) : "0") VN�</td>
+                                                            <td>@(item.Total.HasValue ? string.Format("{0:N0}", item.Total.Value) : "0") VN�</td>
                                                         </tr>
                                                     }
                                                 </tbody>
@@ -73,42 +72,42 @@
                                         }
                                         else
                                         {
-                                            <p class="text-muted">Không có chi tiết đơn hàng.</p>
+                                            <p class="text-muted">Kh�ng c� chi ti?t don h�ng.</p>
                                         }
                                     </div>
                                 </div>
                             </div>
-                            <!-- Tổng quan -->
+                            <!-- T?ng quan -->
                             <div class="order-section mt-4">
-                                <h5>Tổng quan</h5>
+                                <h5>T?ng quan</h5>
                                 <div class="summary-wrapper">
                                     <table class="summary-table">
                                         @if (Model.TotalMoney.HasValue)
                                         {
-                                            <tr><td class="label">Tạm tính:</td><td class="value">@string.Format("{0:N0}", Model.TotalMoney + Model.TotalDiscount) VNĐ</td></tr>
+                                            <tr><td class="label">T?m t�nh:</td><td class="value">@string.Format("{0:N0}", Model.TotalMoney + Model.TotalDiscount) VN�</td></tr>
                                             if (Model.VoucherId.HasValue && Model.Voucher != null)
                                             {
-                                                <tr><td class="label">Voucher: (@Model.Voucher.VoucherCode):</td><td class="value">-@(Model.Voucher.DiscountType == "Percentage" ? $"{Model.Voucher.DiscountValue}%" : $"{string.Format("{0:N0}", Model.Voucher.DiscountValue)} VNĐ")</td></tr>
+                                                <tr><td class="label">Voucher: (@Model.Voucher.VoucherCode):</td><td class="value">-@(Model.Voucher.DiscountType == "Percentage" ? $"{Model.Voucher.DiscountValue}%" : $"{string.Format("{0:N0}", Model.Voucher.DiscountValue)} VN�")</td></tr>
                                             }
                                             if (Model.PromotionId.HasValue && Model.Promotion != null)
                                             {
-                                                <tr><td class="label">Khuyến mãi: (@Model.Promotion.PromotionName):</td><td class="value">-@Model.Promotion.Discount%</td></tr>
+                                                <tr><td class="label">Khuy?n m�i: (@Model.Promotion.PromotionName):</td><td class="value">-@Model.Promotion.Discount%</td></tr>
                                             }
-                                            <tr><td class="label">Tổng giảm giá:</td><td class="value">@string.Format("{0:N0}", Model.TotalDiscount) VNĐ</td></tr>
-                                            <tr class="total-row"><td class="label total-label">Tổng tiền:</td><td class="value total-amount">@string.Format("{0:N0}", Model.TotalMoney) VNĐ</td></tr>
+                                            <tr><td class="label">T?ng gi?m gi�:</td><td class="value">@string.Format("{0:N0}", Model.TotalDiscount) VN�</td></tr>
+                                            <tr class="total-row"><td class="label total-label">T?ng ti?n:</td><td class="value total-amount">@string.Format("{0:N0}", Model.TotalMoney) VN�</td></tr>
                                         }
                                         else
                                         {
-                                            <tr><td colspan="2" class="text-muted">Không có thông tin tổng quan.</td></tr>
+                                            <tr><td colspan="2" class="text-muted">Kh�ng c� th�ng tin t?ng quan.</td></tr>
                                         }
                                     </table>
                                 </div>
                             </div>
                         </div>
-                        <p class="text-muted mt-3">Chúng tôi sẽ xử lý đơn hàng của bạn sớm nhất có thể. Theo dõi trạng thái tại "Danh sách đơn hàng".</p>
+                        <p class="text-muted mt-3">Ch�ng t�i s? x? l� don h�ng c?a b?n s?m nh?t c� th?. Theo d�i tr?ng th�i t?i "Danh s�ch don h�ng".</p>
                         <div class="text-center mt-4">
-                            <a asp-controller="Accounts" asp-action="Dashboard" class="btn checkout-btn">Xem danh sách đơn hàng</a>
-                            <a asp-controller="Home" asp-action="Index" class="btn checkout-btn-black">Tiếp tục mua sắm</a>
+                            <a asp-controller="Accounts" asp-action="Dashboard" class="btn checkout-btn">Xem danh s�ch don h�ng</a>
+                            <a asp-controller="Home" asp-action="Index" class="btn checkout-btn-black">Ti?p t?c mua s?m</a>
                         </div>
                     </div>
                 </div>
@@ -147,7 +146,7 @@
     }
 
         .success-icon::after {
-            content: "✔";
+            content: "?";
             color: #ffffff !important; /* Corrected to proper white hex code */
             font-size: 30px;
             position: absolute;
@@ -196,7 +195,7 @@
     .info-list {
         display: flex;
         flex-direction: column;
-        gap: 10px; /* Tách các dòng ra */
+        gap: 10px; /* T�ch c�c d�ng ra */
     }
 
     .info-item {
@@ -208,7 +207,7 @@
         .info-item .label {
             font-weight: 600;
             color: #1a202c;
-            width: 120px; /* Giới hạn width label */
+            width: 120px; /* Gi?i h?n width label */
             text-align: left;
         }
 
@@ -232,15 +231,15 @@
         .info-table .label, .summary-table .label {
             font-weight: 600;
             color: #1a202c;
-            width: 280px; /* Tăng width để tránh xuống hàng và căn đều */
-            text-align: left; /* Căn trái label */
+            width: 280px; /* Tang width d? tr�nh xu?ng h�ng v� can d?u */
+            text-align: left; /* Can tr�i label */
             padding-right: 20px;
         }
 
         .summary-table .value {
-            text-align: left; /* Căn trái value */
-            white-space: nowrap; /* Ngăn xuống hàng */
-            padding-left: 20px; /* Thêm khoảng cách bên trái cho value */
+            text-align: left; /* Can tr�i value */
+            white-space: nowrap; /* Ngan xu?ng h�ng */
+            padding-left: 20px; /* Th�m kho?ng c�ch b�n tr�i cho value */
         }
 
         .summary-table .total-label {
@@ -258,14 +257,14 @@
         background-color: #f9fafb;
         border-radius: 8px;
         overflow: hidden;
-        min-width: 500px; /* Tăng width tối thiểu để căn đều */
-        margin: 0 auto; /* Căn giữa bảng */
+        min-width: 500px; /* Tang width t?i thi?u d? can d?u */
+        margin: 0 auto; /* Can gi?a b?ng */
     }
 
         .summary-table tr {
             border-bottom: 1px solid #e5e7eb;
             display: flex;
-            justify-content: space-between; /* Căn đều label và value */
+            justify-content: space-between; /* Can d?u label v� value */
             align-items: center;
         }
 
@@ -423,11 +422,11 @@
     }
 
     .info-item .label, .summary-table .label {
-        width: 120px; /* Giảm width trên mobile */
+        width: 120px; /* Gi?m width tr�n mobile */
     }
 
     .summary-table {
-        min-width: 300px; /* Giảm width tối thiểu trên mobile */
+        min-width: 300px; /* Gi?m width t?i thi?u tr�n mobile */
     }
 
     .details-table th,

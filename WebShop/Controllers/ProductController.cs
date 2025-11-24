@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PagedList.Core;
 using System;
@@ -12,8 +12,8 @@ namespace WebShop.Controllers
     public class ProductController : Controller
     {
         private readonly webshopContext _context;
-        private const int IndexPageSize = 12; // 12 sản phẩm/trang cho Index
-        private const int ListPageSize = 20;  // 20 sản phẩm/trang cho List
+        private const int IndexPageSize = 12; // 12 s?n ph?m/trang cho Index
+        private const int ListPageSize = 20;  // 20 s?n ph?m/trang cho List
 
         public ProductController(webshopContext context)
         {
@@ -40,7 +40,7 @@ namespace WebShop.Controllers
                 searchString = currentFilter;
             }
 
-            // Lấy dữ liệu cho sidebar
+            // L?y d? li?u cho sidebar
             ViewBag.Categories = await _context.Categories.Where(c => c.Published).ToListAsync();
             ViewBag.Suppliers = await _context.Suppliers.ToListAsync();
 
@@ -48,25 +48,25 @@ namespace WebShop.Controllers
                 .AsNoTracking()
                 .Where(p => p.Active == true && p.UnitsInStock > 0);
 
-            // Tìm kiếm
+            // T�m ki?m
             if (!string.IsNullOrEmpty(searchString))
             {
                 products = products.Where(s => s.ProductName.Contains(searchString) || s.Price.ToString().Contains(searchString));
             }
 
-            // Bộ lọc danh mục
+            // B? l?c danh m?c
             if (categoryId.HasValue)
             {
                 products = products.Where(p => p.CatId == categoryId.Value);
             }
 
-            // Bộ lọc nhà cung cấp
+            // B? l?c nh� cung c?p
             if (supplierId.HasValue)
             {
                 products = products.Where(p => p.SupplierId == supplierId.Value);
             }
 
-            // Bộ lọc giá
+            // B? l?c gi�
             if (!string.IsNullOrEmpty(priceRange))
             {
                 try
@@ -81,23 +81,23 @@ namespace WebShop.Controllers
                 }
                 catch (FormatException)
                 {
-                    // Bỏ qua nếu priceRange không hợp lệ
+                    // B? qua n?u priceRange kh�ng h?p l?
                 }
             }
 
-            // Bộ lọc sản phẩm giảm giá
+            // B? l?c s?n ph?m gi?m gi�
             if (isDiscounted.HasValue && isDiscounted.Value)
             {
                 products = products.Where(p => p.Discount.HasValue && p.Discount.Value > 0);
             }
 
-            // Bộ lọc sản phẩm nổi bật
+            // B? l?c s?n ph?m n?i b?t
             if (isBestSeller.HasValue && isBestSeller.Value)
             {
                 products = products.Where(p => p.BestSellers.HasValue && p.BestSellers.Value);
             }
 
-            // Sắp xếp
+            // S?p x?p
             switch (sortOrder)
             {
                 case "low-to-high":
@@ -158,7 +158,7 @@ namespace WebShop.Controllers
                     return NotFound();
                 }
 
-                // Kiểm tra Alias nếu cần thiết
+                // Ki?m tra Alias n?u c?n thi?t
                 if (!string.IsNullOrEmpty(Alias) && product.Alias != Alias)
                 {
                     Console.WriteLine($"Alias mismatch: expected={product.Alias}, received={Alias}");
@@ -172,11 +172,21 @@ namespace WebShop.Controllers
                     .Take(4)
                     .ToList();
 
+                // Load ProductDetails v?i Size v� Color cho popup
+                var productDetails = _context.ProductDetails
+                    .Include(pd => pd.Size)
+                    .Include(pd => pd.Color)
+                    .AsNoTracking()
+                    .Where(pd => pd.ProductId == id && pd.Active)
+                    .ToList();
+                
+                ViewBag.ProductDetails = productDetails;
+
                 var productVM = new ProductHomeVM
                 {
                     ProductId = product.ProductId,
                     ProductName = product.ProductName,
-                    Thumb = !string.IsNullOrEmpty(product.Thumb) ? product.Thumb : "/images/products/default.jpg",
+                    Thumb = !string.IsNullOrEmpty(product.Thumb) ? product.Thumb : "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7",
                     Price = product.Price,
                     DiscountPrice = product.Discount.HasValue ? product.Price * (1 - (product.Discount.Value / 100m)) : product.Price,
                     UnitsInStock = product.UnitsInStock ?? 0,
@@ -187,7 +197,7 @@ namespace WebShop.Controllers
                     {
                         ProductId = p.ProductId,
                         ProductName = p.ProductName,
-                        Thumb = !string.IsNullOrEmpty(p.Thumb) ? p.Thumb : "/images/products/default.jpg",
+                        Thumb = !string.IsNullOrEmpty(p.Thumb) ? p.Thumb : "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7",
                         Price = p.Price,
                         Discount = p.Discount,
                         Alias = p.Alias

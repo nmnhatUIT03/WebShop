@@ -1,4 +1,4 @@
-﻿
+
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
@@ -142,6 +142,8 @@ namespace WebShop.Models
                 entity.Property(e => e.OrderId).HasColumnName("OrderID");
                 entity.Property(e => e.ProductDetailId).HasColumnName("ProductDetailID");
                 entity.Property(e => e.ShipDate).HasColumnType("datetime");
+                entity.Property(e => e.SizeName).HasMaxLength(50);
+                entity.Property(e => e.ColorName).HasMaxLength(50);
                 entity.HasOne(d => d.Order).WithMany(p => p.OrderDetails).HasForeignKey(d => d.OrderId).HasConstraintName("FK_OrderDetails_Orders");
                 entity.HasOne(d => d.ProductDetail).WithMany(p => p.OrderDetails).HasForeignKey(d => d.ProductDetailId).HasConstraintName("FK_OrderDetails_ProductDetails");
             });

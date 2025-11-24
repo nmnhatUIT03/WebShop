@@ -1,4 +1,4 @@
-﻿@model PagedList.Core.PagedList<WebShop.Models.Product>
+@model PagedList.Core.PagedList<WebShop.Models.Product>
 
 @{
     ViewData["Title"] = "Shop - Page " + Model.PageNumber;
@@ -15,16 +15,16 @@
                     <div class="shop__sidebar">
                         <div class="shop__sidebar__search">
                             <form asp-action="Index" method="get" id="filterForm">
-                                <input type="text" name="searchString" value="@ViewData["CurrentFilter"]" placeholder="Tìm kiếm sản phẩm..." style="font-family: 'Lora', serif; padding: 8px; border-radius: 8px; border: 1px solid #A0A0A0;" />
+                                <input type="text" name="searchString" value="@ViewData["CurrentFilter"]" placeholder="T�m ki?m s?n ph?m..." style="font-family: 'Roboto', serif; padding: 8px; border-radius: 8px; border: 1px solid #A0A0A0;" />
                                 <button type="submit" style="background: #e64500; color: #FFFFFF; border: none; padding: 8px; border-radius: 8px;"><i class="fa fa-search"></i></button>
                             </form>
                         </div>
                         <div class="shop__sidebar__accordion">
                             <div class="accordion" id="accordionExample">
-                                <!-- Danh mục -->
+                                <!-- Danh m?c -->
                                 <div class="card">
                                     <div class="card-heading">
-                                        <a data-toggle="collapse" data-target="#collapseOne">Danh mục</a>
+                                        <a data-toggle="collapse" data-target="#collapseOne">Danh m?c</a>
                                     </div>
                                     <div id="collapseOne" class="collapse show" data-parent="#accordionExample">
                                         <div class="card-body">
@@ -40,10 +40,10 @@
                                         </div>
                                     </div>
                                 </div>
-                                <!-- Nhà cung cấp -->
+                                <!-- Nh� cung c?p -->
                                 <div class="card">
                                     <div class="card-heading">
-                                        <a data-toggle="collapse" data-target="#collapseTwo">Nhà cung cấp</a>
+                                        <a data-toggle="collapse" data-target="#collapseTwo">Nh� cung c?p</a>
                                     </div>
                                     <div id="collapseTwo" class="collapse show" data-parent="#accordionExample">
                                         <div class="card-body">
@@ -59,35 +59,35 @@
                                         </div>
                                     </div>
                                 </div>
-                                <!-- Giá -->
+                                <!-- Gi� -->
                                 <div class="card">
                                     <div class="card-heading">
-                                        <a data-toggle="collapse" data-target="#collapseThree">Giá</a>
+                                        <a data-toggle="collapse" data-target="#collapseThree">Gi�</a>
                                     </div>
                                     <div id="collapseThree" class="collapse show" data-parent="#accordionExample">
                                         <div class="card-body">
                                             <div class="shop__sidebar__price">
                                                 <ul>
-                                                    <li><a href="?priceRange=0-500000" onclick="setFilter('priceRange', '0-500000')">0 - 500,000 VNĐ</a></li>
-                                                    <li><a href="?priceRange=500000-1000000" onclick="setFilter('priceRange', '500000-1000000')">500,000 - 1,000,000 VNĐ</a></li>
-                                                    <li><a href="?priceRange=1000000-2000000" onclick="setFilter('priceRange', '1000000-2000000')">1,000,000 - 2,000,000 VNĐ</a></li>
-                                                    <li><a href="?priceRange=2000000-999999999" onclick="setFilter('priceRange', '2000000-999999999')">Trên 2,000,000 VNĐ</a></li>
+                                                    <li><a href="?priceRange=0-500000" onclick="setFilter('priceRange', '0-500000')">0 - 500,000 VN�</a></li>
+                                                    <li><a href="?priceRange=500000-1000000" onclick="setFilter('priceRange', '500000-1000000')">500,000 - 1,000,000 VN�</a></li>
+                                                    <li><a href="?priceRange=1000000-2000000" onclick="setFilter('priceRange', '1000000-2000000')">1,000,000 - 2,000,000 VN�</a></li>
+                                                    <li><a href="?priceRange=2000000-999999999" onclick="setFilter('priceRange', '2000000-999999999')">Tr�n 2,000,000 VN�</a></li>
                                                 </ul>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <!-- Khác -->
+                                <!-- Kh�c -->
                                 <div class="card">
                                     <div class="card-heading">
-                                        <a data-toggle="collapse" data-target="#collapseFour">Khác</a>
+                                        <a data-toggle="collapse" data-target="#collapseFour">Kh�c</a>
                                     </div>
                                     <div id="collapseFour" class="collapse show" data-parent="#accordionExample">
                                         <div class="card-body">
                                             <div class="shop__sidebar__other">
                                                 <ul>
-                                                    <li><a href="?isDiscounted=true" onclick="setFilter('isDiscounted', 'true')">Sản phẩm giảm giá</a></li>
-                                                    <li><a href="?isBestSeller=true" onclick="setFilter('isBestSeller', 'true')">Sản phẩm nổi bật</a></li>
+                                                    <li><a href="?isDiscounted=true" onclick="setFilter('isDiscounted', 'true')">S?n ph?m gi?m gi�</a></li>
+                                                    <li><a href="?isBestSeller=true" onclick="setFilter('isBestSeller', 'true')">S?n ph?m n?i b?t</a></li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -102,7 +102,7 @@
                         <div class="row">
                             <div class="col-lg-6 col-md-6 col-sm-6">
                                 <div class="shop__product__option__left">
-                                    <p>Showing @(Model.PageNumber * 12 - 11)–@(Math.Min(Model.PageNumber * 12, Model.TotalItemCount)) of @Model.TotalItemCount results</p>
+                                    <p>Showing @(Model.PageNumber * 12 - 11)�@(Math.Min(Model.PageNumber * 12, Model.TotalItemCount)) of @Model.TotalItemCount results</p>
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-6">
@@ -143,42 +143,41 @@
                                             <a href="@url">
                                                 @{
                                                     var thumbPath = !string.IsNullOrEmpty(item.Thumb) 
-                                                        ? (item.Thumb.StartsWith("/") || item.Thumb.StartsWith("~") 
+                                                        ? (item.Thumb.StartsWith("/") || item.Thumb.StartsWith("~") || item.Thumb.StartsWith("http")
                                                             ? item.Thumb 
                                                             : "/images/products/" + item.Thumb)
-                                                        : "/images/products/default.jpg";
+                                                        : "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
                                                 }
                                                 <img src="@Url.Content(thumbPath)"
                                                      alt="@item.ProductName"
                                                      loading="lazy"
-                                                     style="width: 100%; height: 100%; object-fit: cover; border-radius: 16px 16px 0 0; transition: transform 0.5s ease;"
-                                                     onerror="this.src='/images/products/default.jpg';" />
+                                                     style="width: 100%; height: 100%; object-fit: cover; border-radius: 16px 16px 0 0; transition: transform 0.5s ease;" />
                                             </a>
                                         </div>
                                         <div class="product-text" style="flex: 1; display: flex; flex-direction: column; justify-content: space-between; padding: 20px; text-align: center;">
                                             <h3 style="font-family: 'Playfair Display', serif; font-size: 1.2rem; color: #0A0A0A; margin-bottom: 10px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">@item.ProductName</h3>
-                                            <p style="font-family: 'Lora', serif; font-size: 0.9rem; color: #A0A0A0; margin-bottom: 10px; flex-grow: 1;">
+                                            <p style="font-family: 'Roboto', serif; font-size: 0.9rem; color: #A0A0A0; margin-bottom: 10px; flex-grow: 1;">
                                                 @if (item.Discount.HasValue && item.Discount.Value > 0)
                                                 {
-                                                    <span style="text-decoration: line-through;">@item.Price.Value.ToString("#,##0") VNĐ</span>
-                                                    <span style="color: #FF0000; margin-left: 10px;">@finalPrice.Value.ToString("#,##0") VNĐ</span>
+                                                    <span style="text-decoration: line-through;">@item.Price.Value.ToString("#,##0") VN�</span>
+                                                    <span style="color: #FF0000; margin-left: 10px;">@finalPrice.Value.ToString("#,##0") VN�</span>
                                                 }
                                                 else
                                                 {
-                                                    <span>@item.Price.Value.ToString("#,##0") VNĐ</span>
+                                                    <span>@item.Price.Value.ToString("#,##0") VN�</span>
                                                 }
                                             </p>
                                             @if (item.UnitsInStock > 0)
                                             {
                                                 <div class="button-group" style="display: flex; justify-content: center; gap: 5px; flex-wrap: nowrap;">
                                                     <button class="btn btn-custom-dark rounded-0 open-variant-modal buy-now" data-product-id="@item.ProductId" data-action="buy-now" style="background: #000000; color: #FFFFFF; padding: 8px 12px; font-size: 0.7rem; min-width: 120px; text-align: center; white-space: nowrap;">MUA NGAY</button>
-                                                    <button class="btn btn-custom-dark rounded-0 open-variant-modal add-to-cart" data-product-id="@item.ProductId" data-action="add-to-cart" style="background: #e64500; color: #FFFFFF; padding: 8px 12px; font-size: 0.7rem; min-width: 140px; text-align: center; white-space: nowrap;">THÊM GIỎ HÀNG</button>
+                                                    <button class="btn btn-custom-dark rounded-0 open-variant-modal add-to-cart" data-product-id="@item.ProductId" data-action="add-to-cart" style="background: #e64500; color: #FFFFFF; padding: 8px 12px; font-size: 0.7rem; min-width: 140px; text-align: center; white-space: nowrap;">TH�M GI? H�NG</button>
                                                 </div>
                                             }
                                             else
                                             {
                                                 <div class="button-group" style="display: flex; justify-content: center; gap: 5px; flex-wrap: nowrap;">
-                                                    <button class="btn btn-secondary rounded-0" disabled style="padding: 8px 12px; font-size: 0.7rem; min-width: 120px; text-align: center; white-space: nowrap;">HẾT HÀNG</button>
+                                                    <button class="btn btn-secondary rounded-0" disabled style="padding: 8px 12px; font-size: 0.7rem; min-width: 120px; text-align: center; white-space: nowrap;">H?T H�NG</button>
                                                 </div>
                                             }
                                         </div>
@@ -188,7 +187,7 @@
                         }
                         else
                         {
-                            <p style="text-align: center; font-family: 'Lora', serif; color: #A0A0A0;">Không tìm thấy sản phẩm nào.</p>
+                            <p style="text-align: center; font-family: 'Roboto', serif; color: #A0A0A0;">Kh�ng t�m th?y s?n ph?m n�o.</p>
                         }
                     </div>
                     <div class="row">
@@ -232,7 +231,7 @@
     .shop__sidebar__other ul li a {
         color: #A0A0A0 !important;
         text-decoration: none;
-        font-family: 'Lora', serif;
+        font-family: 'Roboto', serif;
         font-size: 1.1rem; /* Increased font size */
         padding: 2px 0; /* Reduced padding for closer spacing */
         display: block;
@@ -248,7 +247,7 @@
     .card-heading a {
         position: relative;
         padding-right: 30px;
-        font-family: 'Lora', serif;
+        font-family: 'Roboto', serif;
         font-size: 1rem;
         color: #0A0A0A;
         text-decoration: none;
@@ -342,21 +341,21 @@
                         });
                     },
                     error: function () {
-                        alert('Lỗi khi tải thông tin sản phẩm.');
+                        alert('L?i khi t?i th�ng tin s?n ph?m.');
                     }
                 });
             });
 
-            // Cập nhật dropdown sau khi form submit
+            // C?p nh?t dropdown sau khi form submit
             function updateSortDropdown() {
                 var currentSort = "@ViewData["CurrentSort"]";
                 $("#sortOrderSelect").val(currentSort);
             }
 
-            // Gọi hàm khi trang load
+            // G?i h�m khi trang load
             updateSortDropdown();
 
-            // Xử lý submit form
+            // X? l� submit form
             $("#sortOrderSelect").on("change", function () {
                 this.form.submit();
             });

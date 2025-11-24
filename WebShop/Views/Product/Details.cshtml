@@ -1,14 +1,33 @@
-﻿@model WebShop.ModelViews.ProductHomeVM
+@using Newtonsoft.Json
+@using Microsoft.AspNetCore.Http
+@model WebShop.ModelViews.ProductHomeVM
 
 @{
     ViewData["Title"] = Model.ProductName;
     Layout = "~/Views/Shared/_Layout.cshtml";
     var lsProducts = Model.lsProducts ?? new List<WebShop.Models.Product>();
     var defaultThumb = !string.IsNullOrEmpty(Model.Thumb) 
-        ? (Model.Thumb.StartsWith("/") || Model.Thumb.StartsWith("~") 
+        ? (Model.Thumb.StartsWith("/") || Model.Thumb.StartsWith("~") || Model.Thumb.StartsWith("http")
             ? Model.Thumb 
             : "/images/products/" + Model.Thumb)
-        : "/images/products/default.jpg";
+        : "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='500' height='500'%3E%3Crect fill='%23f5f5f5' width='500' height='500'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%23999' font-size='20' font-family='Arial'%3ENo Image%3C/text%3E%3C/svg%3E";
+    
+    // Load ProductDetails for JavaScript
+    var productDetails = ViewBag.ProductDetails as List<WebShop.Models.ProductDetail> ?? new List<WebShop.Models.ProductDetail>();
+    var productDetailsJson = JsonConvert.SerializeObject(
+        productDetails.Where(pd => pd.Active).Select(pd => new {
+            ProductDetailId = pd.ProductDetailId,
+            SizeId = pd.SizeId,
+            SizeName = pd.Size?.SizeName,
+            ColorId = pd.ColorId,
+            ColorName = pd.Color?.ColorName,
+            Stock = pd.Stock
+        })
+    );
+    
+    // Check login status
+    var customerId = Context.Session.GetString("CustomerId");
+    var isUserLoggedIn = !string.IsNullOrEmpty(customerId) && User.Identity.IsAuthenticated;
 }
 
 <!-- Shop Details Section Begin -->
@@ -17,7 +36,7 @@
         <div class="container-fluid">
             <div class="row">
                 <!--div class="col-lg-12">
-                    <!-- Breadcrumb đã được xóa -->
+                    <!-- Breadcrumb removed -->
             </div>
         </div>
         <div class="row align-items-start justify-content-center">
@@ -25,22 +44,22 @@
                 <ul class="nav nav-tabs product__details__pic__thumbs" role="tablist" style="display: flex; flex-direction: column; gap: 10px; padding-top: 0; height: 400px; justify-content: space-between;">
                     <li class="nav-item">
                         <a class="nav-link active" data-toggle="tab" href="#tabs-1" role="tab">
-                            <img src="@Url.Content(defaultThumb)" alt="@Model.ProductName" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 2px solid rgba(230, 69, 0, 0.2); transition: border-color 0.3s ease;" onerror="this.src='https://via.placeholder.com/80x80?text=Image+Not+Found';">
+                            <img src="@Url.Content(defaultThumb)" alt="@Model.ProductName" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 2px solid rgba(230, 69, 0, 0.2); transition: border-color 0.3s ease;" onerror="this.onerror=null; this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';">
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" data-toggle="tab" href="#tabs-2" role="tab">
-                            <img src="@Url.Content(defaultThumb)" alt="@Model.ProductName" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 2px solid rgba(230, 69, 0, 0.2); transition: border-color 0.3s ease;" onerror="this.src='https://via.placeholder.com/80x80?text=Image+Not+Found';">
+                            <img src="@Url.Content(defaultThumb)" alt="@Model.ProductName" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 2px solid rgba(230, 69, 0, 0.2); transition: border-color 0.3s ease;" onerror="this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';">
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" data-toggle="tab" href="#tabs-3" role="tab">
-                            <img src="@Url.Content(defaultThumb)" alt="@Model.ProductName" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 2px solid rgba(230, 69, 0, 0.2); transition: border-color 0.3s ease;" onerror="this.src='https://via.placeholder.com/80x80?text=Image+Not+Found';">
+                            <img src="@Url.Content(defaultThumb)" alt="@Model.ProductName" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 2px solid rgba(230, 69, 0, 0.2); transition: border-color 0.3s ease;" onerror="this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';">
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" data-toggle="tab" href="#tabs-4" role="tab">
-                            <img src="@Url.Content(defaultThumb)" alt="@Model.ProductName" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 2px solid rgba(230, 69, 0, 0.2); transition: border-color 0.3s ease;" onerror="this.src='https://via.placeholder.com/80x80?text=Image+Not+Found';">
+                            <img src="@Url.Content(defaultThumb)" alt="@Model.ProductName" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 2px solid rgba(230, 69, 0, 0.2); transition: border-color 0.3s ease;" onerror="this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';">
                         </a>
                     </li>
                 </ul>
@@ -50,22 +69,22 @@
                     <div class="tab-content">
                         <div class="tab-pane active" id="tabs-1" role="tabpanel">
                             <div class="product__details__pic__item">
-                                <img class="img-full" src="@Url.Content(defaultThumb)" alt="@Model.ProductName" style="width: 100%; height: auto; max-height: 400px; object-fit: contain; transition: transform 0.5s ease;" onerror="this.src='https://via.placeholder.com/500x500?text=Image+Not+Found';">
+                                <img class="img-full" src="@Url.Content(defaultThumb)" alt="@Model.ProductName" style="width: 100%; height: auto; max-height: 400px; object-fit: contain; transition: transform 0.5s ease;" onerror="this.onerror=null; this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';">
                             </div>
                         </div>
                         <div class="tab-pane" id="tabs-2" role="tabpanel">
                             <div class="product__details__pic__item">
-                                <img class="img-full" src="@Url.Content(defaultThumb)" alt="@Model.ProductName" style="width: 100%; height: auto; max-height: 400px; object-fit: contain; transition: transform 0.5s ease;" onerror="this.src='https://via.placeholder.com/500x500?text=Image+Not+Found';">
+                                <img class="img-full" src="@Url.Content(defaultThumb)" alt="@Model.ProductName" style="width: 100%; height: auto; max-height: 400px; object-fit: contain; transition: transform 0.5s ease;" onerror="this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';">
                             </div>
                         </div>
                         <div class="tab-pane" id="tabs-3" role="tabpanel">
                             <div class="product__details__pic__item">
-                                <img class="img-full" src="@Url.Content(defaultThumb)" alt="@Model.ProductName" style="width: 100%; height: auto; max-height: 400px; object-fit: contain; transition: transform 0.5s ease;" onerror="this.src='https://via.placeholder.com/500x500?text=Image+Not+Found';">
+                                <img class="img-full" src="@Url.Content(defaultThumb)" alt="@Model.ProductName" style="width: 100%; height: auto; max-height: 400px; object-fit: contain; transition: transform 0.5s ease;" onerror="this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';">
                             </div>
                         </div>
                         <div class="tab-pane" id="tabs-4" role="tabpanel">
                             <div class="product__details__pic__item">
-                                <img class="img-full" src="@Url.Content(defaultThumb)" alt="@Model.ProductName" style="width: 100%; height: auto; max-height: 400px; object-fit: contain; transition: transform 0.5s ease;" onerror="this.src='https://via.placeholder.com/500x500?text=Image+Not+Found';">
+                                <img class="img-full" src="@Url.Content(defaultThumb)" alt="@Model.ProductName" style="width: 100%; height: auto; max-height: 400px; object-fit: contain; transition: transform 0.5s ease;" onerror="this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';">
                             </div>
                         </div>
                     </div>
@@ -74,53 +93,122 @@
             <div class="col-lg-5 col-md-6">
                 <div class="product__details__text" style="padding: 30px; background: rgba(255, 255, 255, 0.95); border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);">
                     <h4 style="font-family: 'Playfair Display', serif; font-size: 2rem; color: #0A0A0A; margin-bottom: 20px; letter-spacing: 1px; text-align: center;">@Model.ProductName</h4>
-                    <div class="rating" style="font-family: 'Lora', serif; font-size: 0.9rem; color: #A0A0A0; margin-bottom: 20px; text-align: center;">
+                    <div class="rating" style="font-family: 'Roboto', sans-serif; font-size: 0.9rem; color: #A0A0A0; margin-bottom: 20px; text-align: center;">
                         <i class="fa fa-star" style="color: #e64500;"></i>
                         <i class="fa fa-star" style="color: #e64500;"></i>
                         <i class="fa fa-star" style="color: #e64500;"></i>
                         <i class="fa fa-star" style="color: #e64500;"></i>
                         <i class="fa fa-star-o" style="color: #A0A0A0;"></i>
-                        <span style="margin-left: 10px;">- 5 Reviews</span>
+                        <span style="margin-left: 10px;">- 5 Đánh giá</span>
                     </div>
-                    <h4 style="font-family: 'Lora', serif; font-size: 1.8rem; color: #FF4444; margin-bottom: 20px; text-align: center;">
-                        <span>@(Model.DiscountPrice.HasValue? Model.DiscountPrice.Value.ToString("#,##0") : Model.Price.Value.ToString("#,##0")) VNĐ</span>
+                    <h4 style="font-family: 'Roboto', sans-serif; font-size: 1.8rem; color: #FF4444; margin-bottom: 20px; text-align: center;">
+                        <span>@(Model.DiscountPrice.HasValue ? Model.DiscountPrice.Value.ToString("#,##0") : Model.Price.Value.ToString("#,##0")) VND</span>
                         @if (Model.DiscountPrice.HasValue && Model.DiscountPrice.Value != Model.Price.Value)
                         {
-                            <span style="font-size: 1rem; color: #A0A0A0; text-decoration: line-through; margin-left: 10px;">@Model.Price.Value.ToString("#,##0") VNĐ</span>
+                            <span style="font-size: 1rem; color: #A0A0A0; text-decoration: line-through; margin-left: 10px;">@Model.Price.Value.ToString("#,##0") VND</span>
                         }
                     </h4>
-                    <div class="product__details__option" style="margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 15px; align-items: center;">
+                    <div class="product__details__option" style="margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 15px; align-items: flex-start;">
                         <div class="product__details__option__size" style="flex: 1; min-width: 200px;">
-                            <span style="font-family: 'Lora', serif; font-size: 1.2rem; color: #0A0A0A; font-weight: bold; margin-right: 10px;">Size:</span>
-                            <div style="display: flex; gap: 10px; align-items: center;">
-                                <span style="font-family: 'Lora', serif; font-size: 0.85rem; color: #0A0A0A; padding: 8px 12px; border: 1px solid #A0A0A0; border-radius: 4px;">S</span>
-                                <span style="font-family: 'Lora', serif; font-size: 0.85rem; color: #0A0A0A; padding: 8px 12px; border: 1px solid #A0A0A0; border-radius: 4px;">M</span>
-                                <span style="font-family: 'Lora', serif; font-size: 0.85rem; color: #0A0A0A; padding: 8px 12px; border: 1px solid #A0A0A0; border-radius: 4px;">L</span>
-                                <span style="font-family: 'Lora', serif; font-size: 0.85rem; color: #0A0A0A; padding: 8px 12px; border: 1px solid #A0A0A0; border-radius: 4px;">XL</span>
+                            <span style="font-family: 'Roboto', sans-serif; font-size: 1.2rem; color: #0A0A0A; font-weight: bold; display: block; margin-bottom: 8px;">Kích cỡ:</span>
+                            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                                @{
+                                    var availableSizes = productDetails
+                                        .Where(pd => pd.Size != null && pd.Stock > 0)
+                                        .Select(pd => new { pd.SizeId, pd.Size.SizeName })
+                                        .Distinct()
+                                        .ToList();
+                                    
+                                    var categoryName = Model.category?.CatName?.ToLower() ?? "";
+                                    var isShoeCategory = categoryName.Contains("giay") || 
+                                                        categoryName.Contains("dap") ||
+                                                        categoryName.Contains("shoe") ||
+                                                        categoryName.Contains("sandal");
+                                    
+                                    List<dynamic> sizesToShow;
+                                    if (isShoeCategory)
+                                    {
+                                        sizesToShow = availableSizes
+                                            .Where(s => int.TryParse(s.SizeName, out _))
+                                            .OrderBy(s => int.Parse(s.SizeName))
+                                            .ToList<dynamic>();
+                                    }
+                                    else
+                                    {
+                                        sizesToShow = availableSizes
+                                            .Where(s => !int.TryParse(s.SizeName, out _))
+                                            .OrderBy(s => s.SizeName)
+                                            .ToList<dynamic>();
+                                    }
+                                    
+                                    if (sizesToShow.Any())
+                                    {
+                                        foreach (var size in sizesToShow)
+                                        {
+                                            <span class="size-option" data-size="@size.SizeName" data-size-id="@size.SizeId" style="font-family: 'Roboto', sans-serif; font-size: 0.85rem; color: #0A0A0A; padding: 8px 12px; border: 1px solid #A0A0A0; border-radius: 4px; cursor: pointer; transition: all 0.3s ease;">@size.SizeName</span>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <span style="color: #999; font-size: 0.9rem; font-family: 'Roboto', sans-serif;">Không có kích cỡ khả dụng</span>
+                                    }
+                                }
                             </div>
                         </div>
                         <div class="product__details__option__color" style="flex: 1; min-width: 200px;">
-                            <span style="font-family: 'Lora', serif; font-size: 1.2rem; color: #0A0A0A; font-weight: bold; margin-right: 10px;">Color:</span>
-                            <div style="display: flex; gap: 10px; align-items: center;">
-                                <span style="display: inline-block; width: 24px; height: 24px; border-radius: 50%; background: #000000; border: 2px solid #A0A0A0;"></span>
-                                <span style="display: inline-block; width: 24px; height: 24px; border-radius: 50%; background: #FFFFFF; border: 2px solid #A0A0A0;"></span>
-                                <span style="display: inline-block; width: 24px; height: 24px; border-radius: 50%; background: #F5F5DC; border: 2px solid #A0A0A0;"></span>
-                                <span style="display: inline-block; width: 24px; height: 24px; border-radius: 50%; background: #8B4513; border: 2px solid #A0A0A0;"></span>
+                            <span style="font-family: 'Roboto', sans-serif; font-size: 1.2rem; color: #0A0A0A; font-weight: bold; display: block; margin-bottom: 8px;">Màu sắc:</span>
+                            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                                @{
+                                    var availableColors = productDetails
+                                        .Where(pd => pd.Color != null && pd.Stock > 0)
+                                        .Select(pd => new { pd.ColorId, pd.Color.ColorName })
+                                        .GroupBy(c => new { c.ColorId, c.ColorName })
+                                        .Select(g => g.First())
+                                        .ToList();
+                                    
+                                    var colorMap = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+                                    {
+                                        {"Black", "#000000"}, {"Den", "#000000"},
+                                        {"White", "#FFFFFF"}, {"Trang", "#FFFFFF"},
+                                        {"Beige", "#F5F5DC"}, {"Be", "#F5F5DC"}, {"Kem", "#F5F5DC"},
+                                        {"Brown", "#8B4513"}, {"Nau", "#8B4513"},
+                                        {"Red", "#FF0000"}, {"Do", "#FF0000"},
+                                        {"Blue", "#0000FF"}, {"Xanh duong", "#0000FF"}, {"Xanh", "#0000FF"},
+                                        {"Green", "#008000"}, {"Xanh la", "#008000"},
+                                        {"Yellow", "#FFD700"}, {"Vang", "#FFD700"},
+                                        {"Gray", "#808080"}, {"Xam", "#808080"},
+                                        {"Pink", "#FFC0CB"}, {"Hong", "#FFC0CB"},
+                                        {"Orange", "#FF6200"}, {"Cam", "#FF6200"},
+                                        {"Navy", "#000080"}, {"Xanh navy", "#000080"},
+                                        {"Purple", "#800080"}, {"Tim", "#800080"}
+                                    };
+                                    
+                                    if (availableColors.Any())
+                                    {
+                                        foreach (var color in availableColors)
+                                        {
+                                            var colorHex = colorMap.ContainsKey(color.ColorName) ? colorMap[color.ColorName] : "#CCCCCC";
+                                            <span class="color-option" data-color-id="@color.ColorId" data-color-name="@color.ColorName" title="@color.ColorName" style="display: inline-block; width: 30px; height: 30px; border-radius: 50%; background: @colorHex; border: 2px solid #A0A0A0; cursor: pointer; transition: all 0.3s ease; position: relative;"></span>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <span style="color: #999; font-size: 0.9rem; font-family: 'Roboto', sans-serif;">Không có màu sắc khả dụng</span>
+                                    }
+                                }
                             </div>
                         </div>
                     </div>
                     <div class="product__details__cart__option" style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
                         <div class="add-to-cart" style="flex: 1; display: flex; gap: 10px;">
-                            <a href="javascript:void(0)" class="primary-btn open-variant-modal btn-custom-dark" data-product-id="@Model.ProductId" data-action="add-to-cart" style="background: #e64500; color: #FFFFFF; padding: 12px 15px; font-family: 'Lora', serif; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; border-radius: 4px; transition: all 0.3s ease; text-decoration: none; flex: 1; text-align: center; white-space: nowrap;">Thêm vào giỏ hàng</a>
-                            <a href="javascript:void(0)" class="primary-btn open-variant-modal btn-custom-dark" data-product-id="@Model.ProductId" data-action="buy-now" style="background: #0A0A0A; color: #FFFFFF; padding: 12px 15px; font-family: 'Lora', serif; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; border-radius: 4px; transition: all 0.3s ease; text-decoration: none; flex: 1; text-align: center; white-space: nowrap;">Mua ngay</a>
+                            <button type="button" class="primary-btn btn-custom-dark btn-add-cart" data-product-id="@Model.ProductId" style="background: #e64500; color: #FFFFFF; padding: 12px 15px; font-family: 'Roboto', sans-serif; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; border-radius: 4px; border: none; cursor: pointer; transition: all 0.3s ease; flex: 1; text-align: center; white-space: nowrap; font-weight: 600;">Thêm vào giỏ</button>
+                            <button type="button" class="primary-btn btn-custom-dark btn-buy-now" data-product-id="@Model.ProductId" style="background: #0A0A0A; color: #FFFFFF; padding: 12px 15px; font-family: 'Roboto', sans-serif; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; border-radius: 4px; border: none; cursor: pointer; transition: all 0.3s ease; flex: 1; text-align: center; white-space: nowrap; font-weight: 600;">Mua ngay</button>
                         </div>
                     </div>
-                    <div class="product__details__last__option" style="font-family: 'Lora', serif; font-size: 0.9rem; color: #A0A0A0; text-align: center;">
-                        <h5 style="font-family: 'Playfair Display', serif; font-size: 1.2rem; color: #0A0A0A; margin-bottom: 10px;"><span>Đảm bảo thanh toán an toàn</span></h5>
-                        <img src="~/img/shop-details/details-payment.png" alt="Payment Methods" style="width: 200px; margin-bottom: 10px;" onerror="this.src='https://via.placeholder.com/200x50?text=Payment+Methods';">
-                        <ul style="list-style: none; display: inline-block; margin-left: -200px; margin-top: -20px;">
-                            <li><span style="color: #0A0A0A;">Categories:</span> @Model.category?.CatName</li>
-                            <li><span style="color: #0A0A0A;">Tag:</span> @(string.IsNullOrEmpty(Model.Tags) ? "Không có từ khóa" : Model.Tags)</li>
+                    <div class="product__details__last__option" style="font-family: 'Roboto', sans-serif; font-size: 0.9rem; color: #A0A0A0; text-align: center;">
+                        <ul style="list-style: none; display: inline-block; margin-top: 10px;">
+                            <li><span style="color: #0A0A0A;">Danh mục:</span> @Model.category?.CatName</li>
+                            <li><span style="color: #0A0A0A;">Thẻ:</span> @(string.IsNullOrEmpty(Model.Tags) ? "Không có thẻ" : Model.Tags)</li>
                         </ul>
                     </div>
                 </div>
@@ -140,7 +228,7 @@
                         </ul>
                         <div class="tab-content" style="background: #F8F9FA; padding: 15px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);">
                             <div class="tab-pane active" id="tabs-5" role="tabpanel">
-                                <p style="font-family: 'Lora', serif; font-size: 1rem; color: #666666; line-height: 1.8; margin: 0;">@Model.Description</p>
+                                <p style="font-family: 'Roboto', sans-serif; font-size: 1rem; color: #666666; line-height: 1.8; margin: 0;">@Model.Description</p>
                             </div>
                         </div>
                     </div>
@@ -154,7 +242,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <h3 style="font-family: 'Playfair Display', serif; font-size: 2.5rem; color: #0A0A0A; text-align: center; margin-bottom: 40px; letter-spacing: 2px; position: relative;">
-                        Sản Phẩm Liên Quan
+                        Sản phẩm liên quan
                         <span style="position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); width: 80px; height: 1px; background: #A0A0A0;"></span>
                     </h3>
                 </div>
@@ -165,19 +253,19 @@
                     foreach (var item in lsProducts)
                     {
                         string url = $"/{item.Alias}-{item.ProductId}.html";
-                        decimal? finalPrice = item.Discount.HasValue ? item.Price.Value * (1 - (item.Discount.Value / 100m)) : item.Price;
+                        decimal finalPrice = item.Discount.HasValue ? item.Price.Value * (1 - (item.Discount.Value / 100m)) : item.Price.Value;
                         <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
                             <div class="product-item" style="background: #FFFFFF; border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); overflow: hidden; transition: transform 0.4s ease, box-shadow 0.4s ease;">
                                 <div class="product-img" style="position: relative; overflow: hidden;">
                                     <a href="@url">
                                         @{
                                             var relatedThumb = !string.IsNullOrEmpty(item.Thumb) 
-                                                ? (item.Thumb.StartsWith("/") || item.Thumb.StartsWith("~") 
+                                                ? (item.Thumb.StartsWith("/") || item.Thumb.StartsWith("~") || item.Thumb.StartsWith("http")
                                                     ? item.Thumb 
                                                     : "/images/products/" + item.Thumb)
-                                                : "/images/products/default.jpg";
+                                                : "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
                                         }
-                                        <img src="@Url.Content(relatedThumb)" alt="@item.ProductName" style="width: 100%; height: 200px; object-fit: cover; transition: transform 0.5s ease;" onerror="this.src='/images/products/default.jpg';">
+                                        <img src="@Url.Content(relatedThumb)" alt="@item.ProductName" style="width: 100%; height: 200px; object-fit: cover; transition: transform 0.5s ease;">
                                     </a>
                                     @if (item.Discount.HasValue && item.Discount.Value > 0)
                                     {
@@ -190,15 +278,15 @@
                                     <h6 style="font-family: 'Playfair Display', serif; font-size: 1rem; color: #0A0A0A; margin-bottom: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                                         <a href="@url" style="color: #0A0A0A; text-decoration: none;">@item.ProductName</a>
                                     </h6>
-                                    <p style="font-family: 'Lora', serif; font-size: 0.9rem; color: #A0A0A0;">
+                                    <p style="font-family: 'Roboto', sans-serif; font-size: 0.9rem; color: #A0A0A0;">
                                         @if (item.Discount.HasValue && item.Discount.Value > 0)
                                         {
-                                            <span style="text-decoration: line-through;">@item.Price.Value.ToString("#,##0") VNĐ</span>
-                                            <span style="color: #FF4444; margin-left: 10px;">@finalPrice.Value.ToString("#,##0") VNĐ</span>
+                                            <span style="text-decoration: line-through;">@item.Price.Value.ToString("#,##0") VND</span>
+                                            <span style="color: #FF4444; margin-left: 10px;">@finalPrice.ToString("#,##0") VND</span>
                                         }
                                         else
                                         {
-                                            <span>@item.Price.Value.ToString("#,##0") VNĐ</span>
+                                            <span>@item.Price.Value.ToString("#,##0") VND</span>
                                         }
                                     </p>
                                 </div>
@@ -208,7 +296,7 @@
                 }
                 else
                 {
-                    <p style="text-align: center; font-family: 'Lora', serif; color: #A0A0A0; width: 100%;">Không có sản phẩm liên quan.</p>
+                    <p style="text-align: center; font-family: 'Roboto', sans-serif; color: #A0A0A0; width: 100%;">Không có sản phẩm liên quan.</p>
                 }
             </div>
         </div>
@@ -217,12 +305,26 @@
 <!-- Shop Details Section End -->
 
 <style>
+    /* Global Vietnamese Font Support - Using Roboto */
+    .shop-details,
+    .shop-details * {
+        font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    .shop-details h1,
+    .shop-details h2,
+    .shop-details h3,
+    .shop-details h4,
+    .shop-details h5,
+    .shop-details h6 {
+        font-family: 'Playfair Display', 'Roboto', serif;
+    }
+
     /* Shop Details Section */
     .shop-details {
         background: #FFFFFF;
         padding: 30px 0;
         position: relative;
-        font-family: 'Lora', serif;
     }
 
     .container-fluid {
@@ -236,10 +338,33 @@
     .product__details__pic__main {
         margin-left: 0;
         text-align: center;
+        position: relative;
     }
 
         .product__details__pic__main img:hover {
             transform: scale(1.05);
+        }
+
+    /* Thumbnail magnifier */
+    .thumb-magnifier {
+        position: absolute;
+        z-index: 100;
+        width: 200px;
+        height: 200px;
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
+        overflow: hidden;
+        background: #ffffff;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        display: none;
+        pointer-events: none;
+    }
+
+        .thumb-magnifier img {
+            width: 140%;
+            height: auto;
+            object-fit: cover;
+            transform: translate(-10%, -10%);
         }
 
     .product__details__pic__thumbs .nav-link.active img {
@@ -256,34 +381,72 @@
         transition: box-shadow 0.4s ease;
     }
 
+    /* Align Size & Color block nicely to the left */
+    .product__details__option {
+        justify-content: flex-start;
+        text-align: left;
+    }
+
+    .product__details__option__size,
+    .product__details__option__color {
+        text-align: left;
+    }
+
+        .product__details__option__size > span:first-child,
+        .product__details__option__color > span:first-child {
+            letter-spacing: 0.5px;
+        }
+
+    /* Button Styles */
     .btn-custom-dark {
         position: relative;
         overflow: hidden;
         transition: all 0.3s ease;
+        border: none;
+        outline: none;
     }
 
-        .btn-custom-dark:hover {
-            background: #d53f00;
-            box-shadow: 0 0 12px rgba(230, 69, 0, 0.3);
-            transform: translateY(-2px);
-            color: #FFFFFF;
-            text-decoration: none;
+        .btn-custom-dark:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(230, 69, 0, 0.2);
         }
 
-        .btn-custom-dark::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            transition: left 0.5s ease;
+        .btn-custom-dark:active {
+            transform: translateY(0) scale(0.98);
         }
 
-        .btn-custom-dark:hover::before {
-            left: 100%;
-        }
+    .btn-add-cart:hover {
+        background: #d53f00 !important;
+        box-shadow: 0 4px 16px rgba(230, 69, 0, 0.4);
+        transform: translateY(-2px);
+    }
+
+    .btn-buy-now:hover {
+        background: #1a1a1a !important;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+        transform: translateY(-2px);
+    }
+
+    .btn-custom-dark::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        transition: left 0.5s ease;
+    }
+
+    .btn-custom-dark:hover::before {
+        left: 100%;
+    }
+
+    .btn-custom-dark:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none !important;
+    }
 
     .product__details__tab .nav-tabs .nav-link {
         border: none;
@@ -306,10 +469,58 @@
             transform: scale(1.05);
         }
 
+    /* Size and Color Selection Styles */
+    .size-option:hover {
+        border-color: #e64500 !important;
+        background-color: #fff5f0 !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(230, 69, 0, 0.2);
+    }
+
+    .size-option.selected {
+        border-color: #e64500 !important;
+        background-color: #e64500 !important;
+        color: #FFFFFF !important;
+        font-weight: bold;
+        transform: scale(1.05);
+    }
+
+    .color-option:hover {
+        transform: scale(1.15);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .color-option.selected {
+        border-color: #e64500 !important;
+        border-width: 3px !important;
+        transform: scale(1.15);
+        box-shadow: 0 0 0 3px rgba(230, 69, 0, 0.2);
+    }
+
+    .color-option.selected::after {
+        content: '✓';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #e64500;
+        font-size: 14px;
+        font-weight: bold;
+        text-shadow: 0 0 2px #FFFFFF;
+    }
+
     /* Responsive Design */
     @@media (max-width: 767.98px) {
         .shop-details {
             padding: 20px 0;
+        }
+
+        .product__details__option {
+            flex-direction: column;
+        }
+
+        .thumb-magnifier {
+            display: none !important;
         }
 
         .product__details__pic__main img {
@@ -399,36 +610,248 @@
 @section Scripts {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Toastr for notifications -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    
     <script>
         $(document).ready(function () {
-            $('.open-variant-modal').on('click', function (e) {
-                e.preventDefault();
-                var $button = $(this);
-                var productId = $button.data('product-id');
-                var actionType = $button.data('action');
+            // Configure toastr
+            if (typeof toastr !== 'undefined') {
+                toastr.options = {
+                    "closeButton": true,
+                    "progressBar": true,
+                    "positionClass": "toast-top-right",
+                    "timeOut": "3000",
+                    "extendedTimeOut": "1000",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                };
+            }
 
-                $.ajax({
-                    url: '/Home/GetVariantPopup',
-                    type: 'GET',
-                    data: { productId: productId, actionType: actionType },
-                    success: function (response) {
-                        if (typeof response === 'object' && !response.success) {
-                            toastr.error(response.message || 'Lỗi khi tải thông tin sản phẩm.');
-                            return;
+            // Load ProductDetails into JavaScript
+            var productDetails = @Html.Raw(productDetailsJson);
+            var isLoggedIn = @Json.Serialize(isUserLoggedIn);
+            var selectedSizeId = null;
+            var selectedColorId = null;
+            var selectedProductDetailId = null;
+            var selectedSizeName = null;
+            var selectedColorName = null;
+
+            console.log('ProductDetails loaded:', productDetails);
+
+            // Size selection functionality
+            $('.size-option').on('click', function () {
+                $('.size-option').removeClass('selected');
+                $(this).addClass('selected');
+                
+                selectedSizeName = $(this).data('size');
+                selectedSizeId = $(this).data('size-id');
+                 
+                console.log('Selected size:', selectedSizeName, 'SizeId:', selectedSizeId);
+                updateSelectedProductDetail();
+            });
+
+            // Color selection functionality
+            $('.color-option').on('click', function () {
+                $('.color-option').removeClass('selected');
+                $(this).addClass('selected');
+                
+                selectedColorId = $(this).data('color-id');
+                selectedColorName = $(this).data('color-name');
+                 
+                console.log('Selected color:', selectedColorName, 'ColorId:', selectedColorId);
+                updateSelectedProductDetail();
+            });
+
+            // Update ProductDetailId when size/color is selected
+            function updateSelectedProductDetail() {
+                selectedProductDetailId = null;
+                
+                if (selectedSizeId && selectedColorId) {
+                    var match = productDetails.find(pd => 
+                        parseInt(pd.SizeId) === parseInt(selectedSizeId) && 
+                        parseInt(pd.ColorId) === parseInt(selectedColorId)
+                    );
+                    
+                    if (match) {
+                        selectedProductDetailId = match.ProductDetailId;
+                        console.log('ProductDetailId found:', selectedProductDetailId, 'Stock:', match.Stock);
+                        
+                        if (match.Stock <= 0) {
+                            toastr.warning('Biến thể này đã hết hàng!');
                         }
-                        $('body').append(response);
-                        $('#variantModal').modal('show');
-                        $('#actionType').val(actionType);
+                    } else {
+                        console.warn('ProductDetail not found for SizeId:', selectedSizeId, 'ColorId:', selectedColorId);
+                        console.log('Available combinations:', productDetails.map(pd => ({ SizeId: pd.SizeId, ColorId: pd.ColorId })));
+                    }
+                }
+            }
 
-                        $('#variantModal').on('hidden.bs.modal', function () {
-                            $(this).remove();
-                        });
+            // Add to cart handler
+            $('.btn-add-cart').on('click', function (e) {
+                e.preventDefault();
+                
+                if (!selectedSizeId) {
+                    toastr.warning('Vui lòng chọn Kích cỡ!');
+                    return;
+                }
+                if (!selectedColorId) {
+                    toastr.warning('Vui lòng chọn Màu sắc!');
+                    return;
+                }
+                if (!selectedProductDetailId) {
+                    toastr.error('Biến thể này không tồn tại hoặc đã hết hàng!');
+                    return;
+                }
+                
+                if (!isLoggedIn) {
+                    toastr.info('Vui lòng đăng nhập để thêm vào giỏ!');
+                    var currentUrl = encodeURIComponent(window.location.pathname + window.location.search);
+                    setTimeout(function() {
+                        window.location.href = '/dang-nhap.html?returnUrl=' + currentUrl;
+                    }, 800);
+                    return;
+                }
+                
+                var $button = $(this);
+                var originalText = $button.html();
+                $button.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Đang thêm...');
+                
+                console.log('Adding to cart - ProductDetailId:', selectedProductDetailId);
+                
+                $.ajax({
+                    url: '/api/cart/add',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        ProductDetailId: selectedProductDetailId,
+                        Amount: 1
+                    }),
+                    success: function (response) {
+                        if (response.success) {
+                            toastr.success('Đã thêm vào giỏ hàng!');
+                            if (response.cartCount) {
+                                $('.cart-count').text(response.cartCount);
+                            }
+                        } else {
+                            toastr.error(response.message || 'Có lỗi xảy ra!');
+                        }
+                        $button.prop('disabled', false).html(originalText);
                     },
-                    error: function () {
-                        toastr.error('Lỗi khi tải thông tin sản phẩm.');
+                    error: function (xhr, status, error) {
+                        console.error('Add to cart error:', error);
+                        toastr.error('Lỗi kết nối! Vui lòng thử lại.');
+                        $button.prop('disabled', false).html(originalText);
                     }
                 });
             });
+
+            // Buy now handler
+            $('.btn-buy-now').on('click', function (e) {
+                e.preventDefault();
+                
+                if (!selectedSizeId) {
+                    toastr.warning('Vui lòng chọn Kích cỡ!');
+                    return;
+                }
+                if (!selectedColorId) {
+                    toastr.warning('Vui lòng chọn Màu sắc!');
+                    return;
+                }
+                if (!selectedProductDetailId) {
+                    toastr.error('Biến thể này không tồn tại hoặc đã hết hàng!');
+                    return;
+                }
+                
+                if (!isLoggedIn) {
+                    toastr.info('Vui lòng đăng nhập để mua!');
+                    var currentUrl = encodeURIComponent(window.location.pathname + window.location.search);
+                    setTimeout(function() {
+                        window.location.href = '/dang-nhap.html?returnUrl=' + currentUrl;
+                    }, 800);
+                    return;
+                }
+                
+                var $button = $(this);
+                var originalText = $button.html();
+                $button.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Đang xử lý...');
+                
+                console.log('Buy now - ProductDetailId:', selectedProductDetailId);
+                
+                $.ajax({
+                    url: '/api/cart/buynow',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        ProductDetailId: selectedProductDetailId,
+                        Amount: 1
+                    }),
+                    success: function (response) {
+                        if (response.success) {
+                            toastr.success('Đang chuyển đến thanh toán...');
+                            setTimeout(function() {
+                                window.location.href = '/checkout.html';
+                            }, 500);
+                        } else {
+                            toastr.error(response.message || 'Có lỗi xảy ra!');
+                            $button.prop('disabled', false).html(originalText);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Buy now error:', error);
+                        toastr.error('Lỗi kết nối! Vui lòng thử lại.');
+                        $button.prop('disabled', false).html(originalText);
+                    }
+                });
+            });
+
+            // Thumbnail hover & select + magnifier
+            var $mainImage = $('.product__details__pic__main .img-full');
+            if ($mainImage.length) {
+                var $thumbMagnifier = $('<div class="thumb-magnifier"><img src="" alt=""></div>');
+                $('.product__details__pic').append($thumbMagnifier);
+
+                $('.product__details__pic__thumbs .nav-link').on('mouseenter', function () {
+                    var $img = $(this).find('img');
+                    var src = $img.attr('src');
+                    var alt = $img.attr('alt') || '';
+
+                    $('.product__details__pic__thumbs .nav-link').removeClass('active');
+                    $(this).addClass('active');
+
+                    if (src) {
+                        $mainImage.attr('src', src).attr('alt', alt);
+                        $thumbMagnifier.find('img').attr('src', src).attr('alt', alt);
+                    }
+
+                    var offset = $img.offset();
+                    if (offset) {
+                        $thumbMagnifier.css({
+                            top: offset.top - $(window).scrollTop() - 40,
+                            left: offset.left + $img.outerWidth() + 15,
+                            display: 'block'
+                        });
+                    }
+                }).on('mouseleave', function () {
+                    $thumbMagnifier.hide();
+                });
+
+                $('.product__details__pic__thumbs .nav-link').on('click', function (e) {
+                    e.preventDefault();
+                    var $img = $(this).find('img');
+                    var src = $img.attr('src');
+                    var alt = $img.attr('alt') || '';
+                    if (src) {
+                        $mainImage.attr('src', src).attr('alt', alt);
+                    }
+                });
+
+                $thumbMagnifier.on('mouseleave', function () {
+                    $(this).hide();
+                });
+            }
         });
     </script>
 }

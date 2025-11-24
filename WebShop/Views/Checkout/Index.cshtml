@@ -1,7 +1,7 @@
-﻿@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Http
 @model WebShop.ModelViews.MuaHangVM
 @{
-    ViewData["Title"] = "Mua hàng";
+    ViewData["Title"] = "Mua h�ng";
     Layout = "~/Views/Shared/_Layout.cshtml";
     List<WebShop.ModelViews.CartItem> Carts = ViewBag.GioHang ?? new List<WebShop.ModelViews.CartItem>();
     var AvailableVouchers = ViewBag.AvailableVouchers as List<WebShop.ModelViews.VoucherViewModel> ?? new List<WebShop.ModelViews.VoucherViewModel>();
@@ -12,9 +12,9 @@
     <div class="container">
         <div class="checkout-container" id="checkoutContainer">
             <div class="checkout-content">
-                <!-- Thông tin cá nhân -->
+                <!-- Th�ng tin c� nh�n -->
                 <div class="info-section">
-                    <h2 class="section-title">Thông tin cá nhân</h2>
+                    <h2 class="section-title">Th�ng tin c� nh�n</h2>
                     <form asp-controller="Checkout" asp-action="Index" method="post" id="checkoutForm">
                         @Html.AntiForgeryToken()
                         <input hidden asp-for="CustomerId" />
@@ -22,55 +22,53 @@
                         <input hidden asp-for="VoucherId" id="selectedVoucherId" />
                         <input hidden asp-for="PromotionId" id="selectedPromotionId" />
                         <div class="form-group">
-                            <label>Họ và tên <span>*</span></label>
-                            <input asp-for="FullName" placeholder="Nhập họ và tên" class="form-control" value="@Model?.FullName" required />
+                            <label>H? v� t�n <span>*</span></label>
+                            <input asp-for="FullName" placeholder="Nh?p h? v� t�n" class="form-control" value="@Model?.FullName" required minlength="2" />
                             <span asp-validation-for="FullName" class="text-danger"></span>
                         </div>
                         <div class="form-group">
-                            <label>Số điện thoại <span>*</span></label>
-                            <input asp-for="Phone" placeholder="Nhập số điện thoại" class="form-control" value="@Model?.Phone" required pattern="[0-9]{10}" />
+                            <label>S? di?n tho?i <span>*</span></label>
+                            <input asp-for="Phone" placeholder="Nh?p s? di?n tho?i" class="form-control" value="@Model?.Phone" required minlength="2" />
                             <span asp-validation-for="Phone" class="text-danger"></span>
                         </div>
                         <div class="form-group">
-                            <label>Địa chỉ nhận hàng <span>*</span></label>
-                            <input asp-for="Address" placeholder="Nhập địa chỉ" class="form-control" value="@Model?.Address" required />
+                            <label>�?a ch? nh?n h�ng <span>*</span></label>
+                            <input asp-for="Address" placeholder="Nh?p d?a ch?" class="form-control" value="@Model?.Address" required minlength="2" />
                             <span asp-validation-for="Address" class="text-danger"></span>
                         </div>
                         <div class="form-group address-grid">
                             <div class="address-field">
-                                <label>Tỉnh/Thành <span>*</span></label>
-                                <select asp-for="TinhThanh" class="form-control" asp-items="ViewBag.lsTinhThanh" required>
-                                    <option value="0" disabled selected>Chọn Tỉnh/Thành</option>
-                                </select>
-                                <span asp-validation-for="TinhThanh" class="text-danger"></span>
+                                <label>T?nh/Th�nh <span>*</span></label>
+                                <input asp-for="TinhThanhText" placeholder="Nh?p T?nh/Th�nh" class="form-control" value="@Model?.TinhThanhText" required minlength="2" />
+                                <span asp-validation-for="TinhThanhText" class="text-danger"></span>
                             </div>
                             <div class="address-field">
-                                <label>Quận/Huyện <span>*</span></label>
-                                <input asp-for="QuanHuyen" placeholder="Nhập Quận/Huyện" class="form-control" value="@Model?.QuanHuyen" required />
+                                <label>Qu?n/Huy?n <span>*</span></label>
+                                <input asp-for="QuanHuyen" placeholder="Nh?p Qu?n/Huy?n" class="form-control" value="@Model?.QuanHuyen" required minlength="2" />
                                 <span asp-validation-for="QuanHuyen" class="text-danger"></span>
                             </div>
                             <div class="address-field">
-                                <label>Phường/Xã <span>*</span></label>
-                                <input asp-for="PhuongXa" placeholder="Nhập Phường/Xã" class="form-control" value="@Model?.PhuongXa" required />
+                                <label>Phu?ng/X� <span>*</span></label>
+                                <input asp-for="PhuongXa" placeholder="Nh?p Phu?ng/X�" class="form-control" value="@Model?.PhuongXa" required minlength="2" />
                                 <span asp-validation-for="PhuongXa" class="text-danger"></span>
                             </div>
                         </div>
                     </form>
                 </div>
-                <!-- Thông tin đơn hàng và thanh toán -->
+                <!-- Th�ng tin don h�ng v� thanh to�n -->
                 <div class="order-payment-section">
                     <div class="order-section">
-                        <h2 class="section-title">Thông tin đơn hàng</h2>
+                        <h2 class="section-title">Th�ng tin don h�ng</h2>
                         <div class="order-table">
                             <table>
                                 <thead>
                                     <tr>
                                         <th><input type="checkbox" id="selectAllCheckout" checked></th>
-                                        <th>Hình</th>
-                                        <th>Sản phẩm</th>
+                                        <th>H�nh</th>
+                                        <th>S?n ph?m</th>
                                         <th>Size</th>
-                                        <th>Màu</th>
-                                        <th>Thành tiền</th>
+                                        <th>M�u</th>
+                                        <th>Th�nh ti?n</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -80,13 +78,13 @@
                                         {
                                             <tr class="cart_item">
                                                 <td><input type="checkbox" class="selectCheckoutItem" value="@item.productDetail.ProductDetailId" checked></td>
-                                                <td><img src="@Url.Content(item.product.Thumb)" alt="@item.product.ProductName" class="product-img" onerror="this.src='/products/default.jpg';"></td>
-                                                <td>@item.product.ProductName <span>× @item.amount</span></td>
+                                                <td><img src="@Url.Content(item.product.Thumb ?? "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7")" alt="@item.product.ProductName" class="product-img"></td>
+                                                <td>@item.product.ProductName <span>� @item.amount</span></td>
                                                 <td>@(item.SizeName ?? "N/A")</td>
                                                 <td>@(item.ColorName ?? "N/A")</td>
                                                 <td class="cart-product-total">
                                                     <span class="amount">
-                                                        @((item.product.Price.HasValue ? (item.product.Price.Value * item.amount).ToString("N0", System.Globalization.CultureInfo.CreateSpecificCulture("vi-VN")) : "0")) VNĐ
+                                                        @((item.product.Price.HasValue ? (item.product.Price.Value * item.amount).ToString("N0", System.Globalization.CultureInfo.CreateSpecificCulture("vi-VN")) : "0")) VN�
                                                     </span>
                                                 </td>
                                             </tr>
@@ -95,16 +93,16 @@
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <td colspan="5">Tổng đơn</td>
-                                        <td><strong class="order-total-amount">@Carts.Sum(x => (decimal)x.product.Price * x.amount).ToString("N0", System.Globalization.CultureInfo.CreateSpecificCulture("vi-VN")) VNĐ</strong></td>
+                                        <td colspan="5">T?ng don</td>
+                                        <td><strong class="order-total-amount">@Carts.Sum(x => (decimal)x.product.Price * x.amount).ToString("N0", System.Globalization.CultureInfo.CreateSpecificCulture("vi-VN")) VN�</strong></td>
                                     </tr>
                                     <tr>
-                                        <td colspan="5">Giảm giá</td>
-                                        <td><strong class="order-discount-amount">0 VNĐ</strong></td>
+                                        <td colspan="5">Gi?m gi�</td>
+                                        <td><strong class="order-discount-amount">0 VN�</strong></td>
                                     </tr>
                                     <tr>
-                                        <td colspan="5">Tổng thanh toán</td>
-                                        <td><strong class="final-total-amount">@Carts.Sum(x => (decimal)x.product.Price * x.amount).ToString("N0", System.Globalization.CultureInfo.CreateSpecificCulture("vi-VN")) VNĐ</strong></td>
+                                        <td colspan="5">T?ng thanh to�n</td>
+                                        <td><strong class="final-total-amount">@Carts.Sum(x => (decimal)x.product.Price * x.amount).ToString("N0", System.Globalization.CultureInfo.CreateSpecificCulture("vi-VN")) VN�</strong></td>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -112,7 +110,7 @@
                     </div>
                     <!-- Voucher Section -->
                     <div class="voucher-section">
-                        <h2 class="section-title">Mã khuyến mãi/Voucher</h2>
+                        <h2 class="section-title">M� khuy?n m�i/Voucher</h2>
                         @if (AvailableVouchers.Any())
                         {
                             <div class="voucher-list">
@@ -125,13 +123,13 @@
                                             <label for="voucher_@voucher.VoucherId">
                                                 <span class="voucher-code">@voucher.VoucherCode</span>
                                                 <span class="voucher-discount">
-                                                    @(voucher.DiscountType == "Percentage" ? $"{voucher.DiscountValue}% giảm" : $"{voucher.DiscountValue.ToString("N0", System.Globalization.CultureInfo.CreateSpecificCulture("vi-VN"))} VNĐ giảm")
+                                                    @(voucher.DiscountType == "Percentage" ? $"{voucher.DiscountValue}% gi?m" : $"{voucher.DiscountValue.ToString("N0", System.Globalization.CultureInfo.CreateSpecificCulture("vi-VN"))} VN� gi?m")
                                                 </span>
                                                 <span class="voucher-info">
-                                                    Đơn tối thiểu: @(voucher.MinOrderValue?.ToString("N0", System.Globalization.CultureInfo.CreateSpecificCulture("vi-VN")) ?? "Không yêu cầu") VNĐ |
-                                                    Còn @(voucher.MaxUsage - voucher.UsedCount) lượt |
-                                                    Bạn đã dùng @voucher.UsedCountByUser/@voucher.DefaultUserMaxUsage lượt |
-                                                    Hạn: @((voucher.EndDate.HasValue ? voucher.EndDate.Value.ToString("dd/MM/yyyy") : "Chưa xác định"))
+                                                    �on t?i thi?u: @(voucher.MinOrderValue?.ToString("N0", System.Globalization.CultureInfo.CreateSpecificCulture("vi-VN")) ?? "Kh�ng y�u c?u") VN� |
+                                                    C�n @(voucher.MaxUsage - voucher.UsedCount) lu?t |
+                                                    B?n d� d�ng @voucher.UsedCountByUser/@voucher.DefaultUserMaxUsage lu?t |
+                                                    H?n: @((voucher.EndDate.HasValue ? voucher.EndDate.Value.ToString("dd/MM/yyyy") : "Chua x�c d?nh"))
                                                 </span>
                                             </label>
                                         </div>
@@ -141,12 +139,12 @@
                         }
                         else
                         {
-                            <p>Không có voucher nào khả dụng.</p>
+                            <p>Kh�ng c� voucher n�o kh? d?ng.</p>
                         }
                     </div>
                     <!-- Promotion Section -->
                     <div class="promotion-section">
-                        <h2 class="section-title">Chương trình khuyến mãi</h2>
+                        <h2 class="section-title">Chuong tr�nh khuy?n m�i</h2>
                         @if (AvailablePromotions.Any())
                         {
                             <div class="promotion-list">
@@ -159,12 +157,12 @@
                                             <label for="promotion_@promotion.PromotionId">
                                                 <span class="promotion-name">@promotion.PromotionName</span>
                                                 <span class="promotion-discount">
-                                                    @($"{promotion.Discount}% giảm")
+                                                    @($"{promotion.Discount}% gi?m")
                                                 </span>
                                                 <span class="promotion-info">
-                                                    Bắt đầu: @promotion.StartDate.ToString("dd/MM/yyyy") |
-                                                    Kết thúc: @promotion.EndDate.ToString("dd/MM/yyyy") |
-                                                    Bạn đã dùng @promotion.UsedCountByUser/@promotion.DefaultUserMaxUsage lượt
+                                                    B?t d?u: @promotion.StartDate.ToString("dd/MM/yyyy") |
+                                                    K?t th�c: @promotion.EndDate.ToString("dd/MM/yyyy") |
+                                                    B?n d� d�ng @promotion.UsedCountByUser/@promotion.DefaultUserMaxUsage lu?t
                                                 </span>
                                             </label>
                                         </div>
@@ -174,16 +172,16 @@
                         }
                         else
                         {
-                            <p>Không có chương trình khuyến mãi nào khả dụng.</p>
+                            <p>Kh�ng c� chuong tr�nh khuy?n m�i n�o kh? d?ng.</p>
                         }
                     </div>
                     <div class="payment-section">
-                        <h2 class="section-title">Hình thức thanh toán</h2>
+                        <h2 class="section-title">H�nh th?c thanh to�n</h2>
                         <div class="payment-options">
-                            <label><input type="radio" asp-for="PaymentID" value="1" checked> Thanh toán COD (Thanh toán khi nhận hàng)</label>
-                            <label><input type="radio" asp-for="PaymentID" value="2"> Thanh toán online (Chuyển khoản/Thẻ tín dụng)</label>
+                            <label><input type="radio" asp-for="PaymentID" value="1" checked> Thanh to�n COD (Thanh to�n khi nh?n h�ng)</label>
+                            <label><input type="radio" asp-for="PaymentID" value="2"> Thanh to�n online (Chuy?n kho?n/Th? t�n d?ng)</label>
                         </div>
-                        <button type="submit" form="checkoutForm" class="submit-btn" id="submitButton"><i class="fas fa-check-circle m-r-5"></i> Đặt hàng</button>
+                        <button type="submit" form="checkoutForm" class="submit-btn" id="submitButton"><i class="fas fa-check-circle m-r-5"></i> �?t h�ng</button>
                     </div>
                 </div>
             </div>
@@ -199,7 +197,7 @@
             if (typeof $.fn.niceSelect !== 'undefined') {
                 $('select').niceSelect();
             } else {
-                console.warn('niceSelect không được tải, bỏ qua tùy chỉnh dropdown.');
+                console.warn('niceSelect kh�ng du?c t?i, b? qua t�y ch?nh dropdown.');
             }
 
             let isSubmitting = false;
@@ -214,7 +212,7 @@
                     return parseInt($(this).val());
                 }).get();
                 $('#selectedProductDetailIds').val(JSON.stringify(selectedIds));
-                console.log("Cập nhật SelectedProductDetailIds:", selectedIds);
+                console.log("C?p nh?t SelectedProductDetailIds:", selectedIds);
                 updateTotal();
             }
 
@@ -241,7 +239,7 @@
                 lastVoucherId = $('input[name="VoucherId"]:checked').val();
                 lastPromotionId = $('input[name="PromotionId"]:checked').val();
 
-                console.log("Tổng tiền tính được:", total);
+                console.log("T?ng ti?n t�nh du?c:", total);
 
                 const voucherId = lastVoucherId;
                 const promotionId = lastPromotionId;
@@ -256,26 +254,26 @@
                         PromotionId: promotionId ? parseInt(promotionId) : null
                     }),
                     success: function (response) {
-                        console.log("Phản hồi từ calculate-discount:", response);
+                        console.log("Ph?n h?i t? calculate-discount:", response);
                         if (response.success && response.totalDiscount !== undefined) {
                             const totalDiscount = parseFloat(response.totalDiscount) || 0;
-                            $('.order-total-amount').text(total.toLocaleString('vi-VN') + ' VNĐ');
-                            $('.order-discount-amount').text(totalDiscount > 0 ? '-' + Math.round(totalDiscount).toLocaleString('vi-VN') + ' VNĐ' : '0 VNĐ');
-                            $('.final-total-amount').text((total - Math.round(totalDiscount)).toLocaleString('vi-VN') + ' VNĐ');
+                            $('.order-total-amount').text(total.toLocaleString('vi-VN') + ' VN�');
+                            $('.order-discount-amount').text(totalDiscount > 0 ? '-' + Math.round(totalDiscount).toLocaleString('vi-VN') + ' VN�' : '0 VN�');
+                            $('.final-total-amount').text((total - Math.round(totalDiscount)).toLocaleString('vi-VN') + ' VN�');
                             $('#selectedVoucherId').val(voucherId || '');
                             $('#selectedPromotionId').val(promotionId || '');
                         } else {
-                            console.error("Lỗi từ calculate-discount:", response.error || "Không có dữ liệu giảm giá");
-                            notyf.error(response.error || "Lỗi khi tính giảm giá. Vui lòng thử lại!");
-                            $('.order-discount-amount').text('0 VNĐ');
-                            $('.final-total-amount').text(total.toLocaleString('vi-VN') + ' VNĐ');
+                            console.error("L?i t? calculate-discount:", response.error || "Kh�ng c� d? li?u gi?m gi�");
+                            notyf.error(response.error || "L?i khi t�nh gi?m gi�. Vui l�ng th? l?i!");
+                            $('.order-discount-amount').text('0 VN�');
+                            $('.final-total-amount').text(total.toLocaleString('vi-VN') + ' VN�');
                         }
                     },
                     error: function (xhr, status, error) {
-                        console.error("Lỗi AJAX calculate-discount:", status, error, xhr.responseText);
-                        notyf.error("Lỗi khi tính giảm giá: " + (xhr.responseText || "Vui lòng thử lại!"));
-                        $('.order-discount-amount').text('0 VNĐ');
-                        $('.final-total-amount').text(total.toLocaleString('vi-VN') + ' VNĐ');
+                        console.error("L?i AJAX calculate-discount:", status, error, xhr.responseText);
+                        notyf.error("L?i khi t�nh gi?m gi�: " + (xhr.responseText || "Vui l�ng th? l?i!"));
+                        $('.order-discount-amount').text('0 VN�');
+                        $('.final-total-amount').text(total.toLocaleString('vi-VN') + ' VN�');
                     },
                     complete: function () {
                         isUpdatingTotal = false;
@@ -322,11 +320,11 @@
                 const paymentSelected = $('input[name="PaymentID"]:checked').length > 0;
                 console.log("PaymentID checked value:", $('input[name="PaymentID"]:checked').val());
                 $("#submitButton").prop('disabled', !isValid || !paymentSelected);
-                console.log("Form hợp lệ:", isValid, "Payment selected:", paymentSelected);
+                console.log("Form h?p l?:", isValid, "Payment selected:", paymentSelected);
                 if (!isValid) {
-                    notyf.error("Vui lòng điền đầy đủ thông tin hợp lệ.");
+                    notyf.error("Vui l�ng di?n d?y d? th�ng tin h?p l?.");
                 } else if (!paymentSelected) {
-                    notyf.error("Vui lòng chọn phương thức thanh toán!");
+                    notyf.error("Vui l�ng ch?n phuong th?c thanh to�n!");
                 }
                 return isValid && paymentSelected;
             }
@@ -334,26 +332,26 @@
             $("#checkoutForm").on("submit", function (e) {
                 e.preventDefault();
                 if (isSubmitting) {
-                    console.log("Đang gửi form, ngăn chặn gửi lại");
+                    console.log("�ang g?i form, ngan ch?n g?i l?i");
                     return;
                 }
 
                 if (!validateForm()) {
-                    console.log("Form không hợp lệ, ngăn chặn submit");
+                    console.log("Form kh�ng h?p l?, ngan ch?n submit");
                     return;
                 }
 
                 isSubmitting = true;
-                $("#submitButton").prop('disabled', true).text('Đang xử lý...');
+                $("#submitButton").prop('disabled', true).text('�ang x? l�...');
 
-                console.log("PaymentID trước khi gửi:", $('input[name="PaymentID"]:checked').val());
+                console.log("PaymentID tru?c khi g?i:", $('input[name="PaymentID"]:checked').val());
                 let formData = $(this).serialize();
-                // Thêm PaymentID thủ công
+                // Th�m PaymentID th? c�ng
                 const paymentId = $('input[name="PaymentID"]:checked').val();
                 if (paymentId) {
                     formData += (formData ? "&" : "") + "PaymentID=" + paymentId;
                 }
-                console.log("Form data sau khi thêm PaymentID:", formData);
+                console.log("Form data sau khi th�m PaymentID:", formData);
 
                 $.ajax({
                     url: $(this).attr('action'),
@@ -361,9 +359,9 @@
                     data: formData,
                     headers: { "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() },
                     success: function (res) {
-                        console.log("Phản hồi từ server:", JSON.stringify(res, null, 2));
+                        console.log("Ph?n h?i t? server:", JSON.stringify(res, null, 2));
                         if (typeof res.success === "undefined") {
-                            notyf.error("Lỗi không xác định từ server, có thể sản phẩm đã hết hàng hoặc thông tin chưa hợp lệ.");
+                            notyf.error("L?i kh�ng x�c d?nh t? server, c� th? s?n ph?m d� h?t h�ng ho?c th�ng tin chua h?p l?.");
                             return;
                         }
 
@@ -371,21 +369,21 @@
                             console.log("Redirecting to:", res.redirectUrl);
                             window.location.href = res.redirectUrl;
                         } else {
-                            notyf.error(res.message || "Không thể đặt hàng. Vui lòng kiểm tra lại thông tin.");
+                            notyf.error(res.message || "Kh�ng th? d?t h�ng. Vui l�ng ki?m tra l?i th�ng tin.");
                         }
                     },
                     error: function (xhr, status, error) {
-                        console.error("Lỗi AJAX khi submit form:", { status, error, responseText: xhr.responseText });
-                        notyf.error("Lỗi khi xử lý thanh toán: " + (xhr.responseText || "Vui lòng thử lại!"));
+                        console.error("L?i AJAX khi submit form:", { status, error, responseText: xhr.responseText });
+                        notyf.error("L?i khi x? l� thanh to�n: " + (xhr.responseText || "Vui l�ng th? l?i!"));
                     },
                     complete: function () {
                         isSubmitting = false;
-                        $("#submitButton").prop('disabled', false).text('Đặt hàng');
+                        $("#submitButton").prop('disabled', false).text('�?t h�ng');
                     }
                 });
             });
 
-            // Xử lý sự kiện rời trang
+            // X? l� s? ki?n r?i trang
             let isLeaving = false;
             window.addEventListener('beforeunload', function (e) {
                 if (isSubmitting || isLeaving) {
@@ -398,25 +396,25 @@
                     $.ajax({
                         url: '/checkout/restore-buy-now-to-cart',
                         type: 'POST',
-                        async: false, // Đảm bảo yêu cầu đồng bộ để hoàn tất trước khi rời trang
+                        async: false, // �?m b?o y�u c?u d?ng b? d? ho�n t?t tru?c khi r?i trang
                         headers: { "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() },
                         success: function (response) {
                             if (response.success) {
-                                console.log("Đã chuyển sản phẩm từ BuyNowCart về Cart.");
+                                console.log("�� chuy?n s?n ph?m t? BuyNowCart v? Cart.");
                             } else {
-                                console.error("Lỗi khi chuyển sản phẩm:", response.message);
+                                console.error("L?i khi chuy?n s?n ph?m:", response.message);
                             }
                         },
                         error: function (xhr, status, error) {
-                            console.error("Lỗi AJAX khi rời trang:", status, error, xhr.responseText);
+                            console.error("L?i AJAX khi r?i trang:", status, error, xhr.responseText);
                         }
                     });
                 }
             });
 
-            // Đảm bảo không gửi yêu cầu khi form được submit
+            // �?m b?o kh�ng g?i y�u c?u khi form du?c submit
             $("#checkoutForm").on("submit", function () {
-                isLeaving = false; // Ngăn chặn beforeunload khi submit form
+                isLeaving = false; // Ngan ch?n beforeunload khi submit form
             });
 
             updateSelectedProductDetailIds();

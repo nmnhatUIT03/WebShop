@@ -1,4 +1,4 @@
-﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
@@ -104,8 +104,6 @@ namespace WebShop.Controllers
                 .Include(x => x.Promotion)
                 .Include(x => x.Voucher)
                 .Include(x => x.OrderDetails)
-                .ThenInclude(od => od.ProductDetail)
-                .ThenInclude(pd => pd.Product)
                 .AsNoTracking()
                 .Where(x => x.CustomerId == parsedCustomerId && !x.Deleted)
                 .OrderByDescending(x => x.OrderDate)
@@ -113,13 +111,6 @@ namespace WebShop.Controllers
                 .ToList();
 
             _logger.LogInformation("Số lượng đơn hàng lấy được: {Count}", lsDonHang.Count);
-
-            foreach (var order in lsDonHang)
-            {
-                order.OrderDetails = order.OrderDetails
-                    .Where(od => od.ProductDetailId > 0 && od.ProductDetail != null)
-                    .ToList();
-            }
 
             ViewBag.DonHang = lsDonHang;
             ViewBag.CurrentCustomerFullName = customer.FullName;
@@ -451,26 +442,39 @@ namespace WebShop.Controllers
                     customerId, HttpContext.Session.GetString("CouponDiscount"),
                     JsonSerializer.Serialize(sessionCartItems));
 
+                // ✅ Xử lý BuyNow cart nếu có
                 var buyNowCart = GetBuyNowFromCookie("Anonymous");
-                if (buyNowCart != null && buyNowCart.Items.Any() || returnUrl == "/checkout.html")
+                if (buyNowCart != null && buyNowCart.Items.Any())
                 {
-                    if (buyNowCart != null && buyNowCart.Items.Any())
+                    var userBuyNowCart = new SimpleCart
                     {
-                        var userBuyNowCart = new SimpleCart
-                        {
-                            CustomerId = customerId,
-                            CartToken = buyNowCart.CartToken,
-                            Items = buyNowCart.Items
-                        };
-                        SaveBuyNowToCookie(userBuyNowCart, customerId);
-                        Response.Cookies.Delete("BuyNowCart_Anonymous");
-                    }
-                    _logger.LogInformation("Chuyển hướng đến checkout.html do có giỏ Mua ngay hoặc returnUrl=/checkout.html");
+                        CustomerId = customerId,
+                        CartToken = buyNowCart.CartToken,
+                        Items = buyNowCart.Items
+                    };
+                    SaveBuyNowToCookie(userBuyNowCart, customerId);
+                    Response.Cookies.Delete("BuyNowCart_Anonymous");
+                }
+
+                // ✅ Ưu tiên returnUrl nếu có
+                if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                {
+                    _logger.LogInformation("Chuyển hướng đến returnUrl: {ReturnUrl}", returnUrl);
+                    return isAjax
+                        ? Json(new { success = true, message = "Đăng nhập thành công", redirectUrl = returnUrl })
+                        : Redirect(returnUrl);
+                }
+
+                // ✅ Nếu có BuyNow cart -> chuyển đến checkout
+                if (buyNowCart != null && buyNowCart.Items.Any())
+                {
+                    _logger.LogInformation("Chuyển hướng đến checkout.html do có giỏ Mua ngay");
                     return isAjax
                         ? Json(new { success = true, message = "Đăng nhập thành công", redirectUrl = "/checkout.html" })
                         : Redirect("/checkout.html");
                 }
 
+                // ✅ Mặc định chuyển đến Dashboard
                 _logger.LogInformation("Chuyển hướng đến Dashboard do đăng nhập trực tiếp");
                 return isAjax
                     ? Json(new { success = true, message = "Đăng nhập thành công", redirectUrl = "/tai-khoan-cua-toi.html" })

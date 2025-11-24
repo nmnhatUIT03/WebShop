@@ -1,4 +1,4 @@
-﻿namespace WebShop.Areas.Admin.Models
+namespace WebShop.Areas.Admin.Models
 {
     public class PromotionViewModel
     {

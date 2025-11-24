@@ -1,4 +1,4 @@
-﻿namespace WebShop.ModelViews
+namespace WebShop.ModelViews
 {
     public class ProductDetailDTO
     {

@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace WebShop.ModelViews
 {
@@ -8,25 +8,34 @@ namespace WebShop.ModelViews
         public int CustomerId { get; set; }
 
         [Required(ErrorMessage = "Vui lòng nhập Họ và Tên")]
+        [MinLength(2, ErrorMessage = "Họ và tên phải có ít nhất 2 ký tự")]
         public string FullName { get; set; }
 
         [EmailAddress(ErrorMessage = "Địa chỉ email không hợp lệ")]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Vui lòng nhập số điện thoại")]
-        [RegularExpression(@"^\d{10,11}$", ErrorMessage = "Số điện thoại phải từ 10-11 chữ số")]
+        [MinLength(2, ErrorMessage = "Số điện thoại phải có ít nhất 2 ký tự")]
         public string Phone { get; set; }
 
         [Required(ErrorMessage = "Vui lòng nhập Địa chỉ nhận hàng")]
+        [MinLength(2, ErrorMessage = "Địa chỉ phải có ít nhất 2 ký tự")]
         public string Address { get; set; }
 
-        [Required(ErrorMessage = "Vui lòng chọn Tỉnh/Thành")]
+        // ✅ Giữ lại cho tương thích với code cũ
         public int TinhThanh { get; set; }
 
+        // ✅ Thêm property mới cho demo (text input)
+        [Required(ErrorMessage = "Vui lòng nhập Tỉnh/Thành")]
+        [MinLength(2, ErrorMessage = "Tỉnh/Thành phải có ít nhất 2 ký tự")]
+        public string TinhThanhText { get; set; }
+
         [Required(ErrorMessage = "Vui lòng nhập Quận/Huyện")]
+        [MinLength(2, ErrorMessage = "Quận/Huyện phải có ít nhất 2 ký tự")]
         public string QuanHuyen { get; set; }
 
         [Required(ErrorMessage = "Vui lòng nhập Phường/Xã")]
+        [MinLength(2, ErrorMessage = "Phường/Xã phải có ít nhất 2 ký tự")]
         public string PhuongXa { get; set; }
 
         [Required(ErrorMessage = "Vui lòng chọn phương thức thanh toán")]

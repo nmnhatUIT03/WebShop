@@ -1,4 +1,4 @@
-﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -574,6 +574,8 @@ namespace WebShop.Areas.Admin.Controllers
                 {
                     var productDetail = await _context.ProductDetails
                         .Include(pd => pd.Product)
+                        .Include(pd => pd.Size)
+                        .Include(pd => pd.Color)
                         .FirstOrDefaultAsync(pd => pd.ProductDetailId == ProductDetailIds[i]);
 
                     if (productDetail == null)
@@ -618,7 +620,9 @@ namespace WebShop.Areas.Admin.Controllers
                         Amount = Quantities[i],
                         Price = (int?)Prices[i],
                         Total = (int?)(Quantities[i] * Prices[i]),
-                        Quantity = Quantities[i]
+                        Quantity = Quantities[i],
+                        SizeName = productDetail.Size?.SizeName,
+                        ColorName = productDetail.Color?.ColorName
                     };
                     order.OrderDetails.Add(orderDetail);
                     order.TotalMoney += Quantities[i] * Prices[i];
@@ -991,6 +995,8 @@ namespace WebShop.Areas.Admin.Controllers
                 {
                     var productDetail = await _context.ProductDetails
                         .Include(pd => pd.Product)
+                        .Include(pd => pd.Size)
+                        .Include(pd => pd.Color)
                         .FirstOrDefaultAsync(pd => pd.ProductDetailId == ProductDetailIds[i]);
                     if (productDetail == null || !productDetail.Active || productDetail.Stock < Quantities[i])
                     {
@@ -1009,7 +1015,9 @@ namespace WebShop.Areas.Admin.Controllers
                         Amount = Quantities[i],
                         Price = (int?)Prices[i],
                         Total = (int?)(Quantities[i] * Prices[i]),
-                        Quantity = Quantities[i]
+                        Quantity = Quantities[i],
+                        SizeName = productDetail.Size?.SizeName,
+                        ColorName = productDetail.Color?.ColorName
                     };
                     existingOrder.OrderDetails.Add(orderDetail);
                     newTotalMoney += Quantities[i] * Prices[i];
