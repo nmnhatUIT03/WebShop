@@ -93,7 +93,7 @@
             <div class="col-lg-5 col-md-6">
                 <div class="product__details__text" style="padding: 30px; background: rgba(255, 255, 255, 0.95); border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);">
                     <h4 style="font-family: 'Playfair Display', serif; font-size: 2rem; color: #0A0A0A; margin-bottom: 20px; letter-spacing: 1px; text-align: center;">@Model.ProductName</h4>
-                    <div class="rating" style="font-family: 'Roboto', sans-serif; font-size: 0.9rem; color: #A0A0A0; margin-bottom: 20px; text-align: center;">
+                    <div class="rating" style="font-size: 0.9rem; color: #A0A0A0; margin-bottom: 20px; text-align: center;">
                         <i class="fa fa-star" style="color: #e64500;"></i>
                         <i class="fa fa-star" style="color: #e64500;"></i>
                         <i class="fa fa-star" style="color: #e64500;"></i>
@@ -101,7 +101,7 @@
                         <i class="fa fa-star-o" style="color: #A0A0A0;"></i>
                         <span style="margin-left: 10px;">- 5 Đánh giá</span>
                     </div>
-                    <h4 style="font-family: 'Roboto', sans-serif; font-size: 1.8rem; color: #FF4444; margin-bottom: 20px; text-align: center;">
+                    <h4 style="font-size: 1.8rem; color: #FF4444; margin-bottom: 20px; text-align: center;">
                         <span>@(Model.DiscountPrice.HasValue ? Model.DiscountPrice.Value.ToString("#,##0") : Model.Price.Value.ToString("#,##0")) VND</span>
                         @if (Model.DiscountPrice.HasValue && Model.DiscountPrice.Value != Model.Price.Value)
                         {
@@ -110,7 +110,7 @@
                     </h4>
                     <div class="product__details__option" style="margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 15px; align-items: flex-start;">
                         <div class="product__details__option__size" style="flex: 1; min-width: 200px;">
-                            <span style="font-family: 'Roboto', sans-serif; font-size: 1.2rem; color: #0A0A0A; font-weight: bold; display: block; margin-bottom: 8px;">Kích cỡ:</span>
+                            <span style="font-size: 1.2rem; color: #0A0A0A; font-weight: bold; display: block; margin-bottom: 8px;">Kích cỡ:</span>
                             <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
                                 @{
                                     var availableSizes = productDetails
@@ -145,18 +145,18 @@
                                     {
                                         foreach (var size in sizesToShow)
                                         {
-                                            <span class="size-option" data-size="@size.SizeName" data-size-id="@size.SizeId" style="font-family: 'Roboto', sans-serif; font-size: 0.85rem; color: #0A0A0A; padding: 8px 12px; border: 1px solid #A0A0A0; border-radius: 4px; cursor: pointer; transition: all 0.3s ease;">@size.SizeName</span>
+                                            <span class="size-option" data-size="@size.SizeName" data-size-id="@size.SizeId" style="font-size: 0.85rem; color: #0A0A0A; padding: 8px 12px; border: 1px solid #A0A0A0; border-radius: 4px; cursor: pointer; transition: all 0.3s ease;">@size.SizeName</span>
                                         }
                                     }
                                     else
                                     {
-                                        <span style="color: #999; font-size: 0.9rem; font-family: 'Roboto', sans-serif;">Không có kích cỡ khả dụng</span>
+                                        <span style="color: #999; font-size: 0.9rem;">Không có kích cỡ khả dụng</span>
                                     }
                                 }
                             </div>
                         </div>
                         <div class="product__details__option__color" style="flex: 1; min-width: 200px;">
-                            <span style="font-family: 'Roboto', sans-serif; font-size: 1.2rem; color: #0A0A0A; font-weight: bold; display: block; margin-bottom: 8px;">Màu sắc:</span>
+                            <span style="font-size: 1.2rem; color: #0A0A0A; font-weight: bold; display: block; margin-bottom: 8px;">Màu sắc:</span>
                             <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
                                 @{
                                     var availableColors = productDetails
@@ -193,7 +193,7 @@
                                     }
                                     else
                                     {
-                                        <span style="color: #999; font-size: 0.9rem; font-family: 'Roboto', sans-serif;">Không có màu sắc khả dụng</span>
+                                        <span style="color: #999; font-size: 0.9rem;">Không có màu sắc khả dụng</span>
                                     }
                                 }
                             </div>
@@ -201,11 +201,11 @@
                     </div>
                     <div class="product__details__cart__option" style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
                         <div class="add-to-cart" style="flex: 1; display: flex; gap: 10px;">
-                            <button type="button" class="primary-btn btn-custom-dark btn-add-cart" data-product-id="@Model.ProductId" style="background: #e64500; color: #FFFFFF; padding: 12px 15px; font-family: 'Roboto', sans-serif; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; border-radius: 4px; border: none; cursor: pointer; transition: all 0.3s ease; flex: 1; text-align: center; white-space: nowrap; font-weight: 600;">Thêm vào giỏ</button>
-                            <button type="button" class="primary-btn btn-custom-dark btn-buy-now" data-product-id="@Model.ProductId" style="background: #0A0A0A; color: #FFFFFF; padding: 12px 15px; font-family: 'Roboto', sans-serif; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; border-radius: 4px; border: none; cursor: pointer; transition: all 0.3s ease; flex: 1; text-align: center; white-space: nowrap; font-weight: 600;">Mua ngay</button>
+                            <button type="button" class="primary-btn btn-custom-dark btn-add-cart" data-product-id="@Model.ProductId" style="background: #e64500; color: #FFFFFF; padding: 12px 15px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; border-radius: 4px; border: none; cursor: pointer; transition: all 0.3s ease; flex: 1; text-align: center; white-space: nowrap; font-weight: 600;">Thêm vào giỏ</button>
+                            <button type="button" class="primary-btn btn-custom-dark btn-buy-now" data-product-id="@Model.ProductId" style="background: #0A0A0A; color: #FFFFFF; padding: 12px 15px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; border-radius: 4px; border: none; cursor: pointer; transition: all 0.3s ease; flex: 1; text-align: center; white-space: nowrap; font-weight: 600;">Mua ngay</button>
                         </div>
                     </div>
-                    <div class="product__details__last__option" style="font-family: 'Roboto', sans-serif; font-size: 0.9rem; color: #A0A0A0; text-align: center;">
+                    <div class="product__details__last__option" style="font-size: 0.9rem; color: #A0A0A0; text-align: center;">
                         <ul style="list-style: none; display: inline-block; margin-top: 10px;">
                             <li><span style="color: #0A0A0A;">Danh mục:</span> @Model.category?.CatName</li>
                             <li><span style="color: #0A0A0A;">Thẻ:</span> @(string.IsNullOrEmpty(Model.Tags) ? "Không có thẻ" : Model.Tags)</li>
@@ -228,7 +228,7 @@
                         </ul>
                         <div class="tab-content" style="background: #F8F9FA; padding: 15px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);">
                             <div class="tab-pane active" id="tabs-5" role="tabpanel">
-                                <p style="font-family: 'Roboto', sans-serif; font-size: 1rem; color: #666666; line-height: 1.8; margin: 0;">@Model.Description</p>
+                                <p style="font-size: 1rem; color: #666666; line-height: 1.8; margin: 0;">@Model.Description</p>
                             </div>
                         </div>
                     </div>
@@ -275,10 +275,10 @@
                                     }
                                 </div>
                                 <div class="product-text" style="padding: 15px; text-align: center;">
-                                    <h6 style="font-family: 'Playfair Display', serif; font-size: 1rem; color: #0A0A0A; margin-bottom: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                    <h6 style="font-size: 1rem; color: #0A0A0A; margin-bottom: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                                         <a href="@url" style="color: #0A0A0A; text-decoration: none;">@item.ProductName</a>
                                     </h6>
-                                    <p style="font-family: 'Roboto', sans-serif; font-size: 0.9rem; color: #A0A0A0;">
+                                    <p style="font-size: 0.9rem; color: #A0A0A0;">
                                         @if (item.Discount.HasValue && item.Discount.Value > 0)
                                         {
                                             <span style="text-decoration: line-through;">@item.Price.Value.ToString("#,##0") VND</span>
@@ -296,7 +296,7 @@
                 }
                 else
                 {
-                    <p style="text-align: center; font-family: 'Roboto', sans-serif; color: #A0A0A0; width: 100%;">Không có sản phẩm liên quan.</p>
+                    <p style="text-align: center; color: #A0A0A0; width: 100%;">Không có sản phẩm liên quan.</p>
                 }
             </div>
         </div>
@@ -305,10 +305,10 @@
 <!-- Shop Details Section End -->
 
 <style>
-    /* Global Vietnamese Font Support - Using Roboto */
+    /* Global Vietnamese Font Support - Using System Fonts */
     .shop-details,
     .shop-details * {
-        font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     }
 
     .shop-details h1,
@@ -317,7 +317,7 @@
     .shop-details h4,
     .shop-details h5,
     .shop-details h6 {
-        font-family: 'Playfair Display', 'Roboto', serif;
+        font-family: 'Playfair Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', serif;
     }
 
     /* Shop Details Section */
